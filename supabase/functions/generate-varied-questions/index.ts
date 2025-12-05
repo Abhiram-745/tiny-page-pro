@@ -222,74 +222,60 @@ function validateQuestionFormat(questionText: string): { valid: boolean; error?:
   return { valid: true };
 }
 
-// Generate difficulty-specific prompts based on real AQA past paper examples
+// Generate difficulty-specific prompts - EXAM QUESTIONS focus on APPLICATION/ANALYSIS (not recall)
 function getDifficultyPrompt(difficulty: string, studyContent: string, kws: string[]): { system: string; user: string; marksRange: string } {
   const shuffledKws = [...kws].sort(() => Math.random() - 0.5);
   
   if (difficulty === 'easy') {
     return {
       marksRange: "2-3",
-      system: `You are an expert GCSE AQA examiner creating EASY difficulty questions (2-3 marks each).
+      system: `You are an expert GCSE AQA examiner creating EASY difficulty EXAM questions (2-3 marks each).
 
-🎯 EASY QUESTION CHARACTERISTICS:
-- Simple recall and identification
-- Single-step reasoning
-- Data table interpretation
-- Basic naming/listing
+🎯 EXAM QUESTIONS TEST UNDERSTANDING - NOT JUST RECALL
+These questions require EXPLANATION or DESCRIPTION, not just naming/defining.
+(Simple recall is tested separately in Blurt practice)
 
-📝 AQA PAST PAPER EASY QUESTION EXAMPLES:
+📝 EASY EXAM QUESTION TYPES:
+- "Explain briefly why..." (2 marks)
+- "Describe what happens when..." (2-3 marks)
+- "Give a reason for..." (2 marks)
+- "Using the data, explain..." (2-3 marks)
 
-EXAMPLE 1 - Data Table (3 marks):
-"A student records the densities of different metals:
-Metal | Density (g/cm³)
-Sodium | 0.97
-Potassium | 0.86
-Iron | 7.87
-Copper | 8.96
-(a) Identify which metals in the table are transition metals. (1 mark)
-(b) Explain why transition metals have much higher densities than Group 1 metals. (2 marks)"
+🚫 DO NOT USE THESE (reserved for Blurt practice):
+- "Define..." 
+- "Name..."
+- "State..."
+- "What is..."
+- "Give an example of..."
 
-EXAMPLE 2 - Coloured Compounds (2 marks):
-"A sample of two metal salts is tested: Salt A is blue. Salt B is colourless.
-(a) Which salt is most likely to contain a transition metal? (1 mark)
-(b) Explain why transition metal compounds are often coloured. (1 mark)"
+✅ GOOD EASY EXAM QUESTIONS:
+- "Explain why transition metals have higher melting points than Group 1 metals. (2 marks)"
+- "Describe what happens to the particles during osmosis. (2 marks)"
+- "Give a reason why plants wilt in salt water. (2 marks)"
 
-EXAMPLE 3 - Reactivity (3 marks):
-"A student places sodium, iron, and copper into separate test tubes of cold water. Sodium reacts vigorously. Iron shows no visible reaction. Copper shows no visible reaction.
-(a) Identify which metals are transition metals. (1 mark)
-(b) Explain why transition metals react less vigorously with water than Group 1 metals. (2 marks)"
+❌ BAD (too simple - these are Blurt questions):
+- "Define osmosis."
+- "Name two transition metals."
+- "What is a catalyst?"
 
-EXAMPLE 4 - Variable Oxidation States (2 marks):
-"Iron can form both Fe²⁺ and Fe³⁺ ions.
-(a) What term is used to describe metals that can form ions with different charges? (1 mark)
-(b) Suggest one reason why this property makes transition metals useful as catalysts. (1 mark)"
-
-EXAMPLE 5 - Catalysts (2 marks):
-"Iron is used as a catalyst in the Haber process. Manganese dioxide (MnO₂) is used to speed up the decomposition of hydrogen peroxide. Explain why transition metals make good catalysts. (2 marks)"
-
-📚 COMMAND WORDS FOR EASY QUESTIONS:
-- State (1 mark) - Single word/phrase answer
-- Name (1 mark) - Give specific examples
-- Identify (1 mark) - Pick from given information
-- Give (1-2 marks) - List without explanation
-- Suggest (1-2 marks) - Basic application
+📊 DATA INTERPRETATION:
+Include simple data tables for students to interpret and explain patterns.
 
 🔴 REQUIREMENTS:
 1. Total marks: 2-3 marks per question
 2. Maximum 2 parts (a) and (b) only
-3. Focus on recall and simple data interpretation
-4. Use simple contexts students would recognize
-5. Include data tables where appropriate
+3. Require EXPLANATION or DESCRIPTION (not just recall)
+4. Use simple real-world contexts
 
 Output ONLY valid JSON format`,
-      user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 EASY AQA-style exam question (2-3 marks total) about ONLY the content above.
+      user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 EASY AQA-style EXAM question (2-3 marks total).
 
-REQUIREMENTS:
-✓ Use command words: State, Name, Identify, Give, or simple Explain
-✓ Maximum 2 parts: (a) and (b) only
-✓ Include data table if appropriate for the content
-✓ Focus on basic recall and simple identification
-✓ Total marks: 2-3 marks
+⚠️ IMPORTANT: This is an EXAM question, not a flashcard.
+- Require EXPLANATION or DESCRIPTION
+- Do NOT ask simple definitions or naming (those are for Blurt practice)
+
+GOOD: "Explain why..." / "Describe what happens when..." / "Give a reason for..."
+BAD: "Define..." / "Name..." / "State..." / "What is..."
 
 Include keywords from: ${shuffledKws.slice(0, 8).join(", ")}
 
@@ -301,77 +287,46 @@ Return ONLY this JSON:
   if (difficulty === 'hard') {
     return {
       marksRange: "5-8",
-      system: `You are an expert GCSE AQA examiner creating HARD difficulty questions (5-8 marks each) for Grade 8-9 students.
+      system: `You are an expert GCSE AQA examiner creating HARD difficulty EXAM questions (5-8 marks each) for Grade 8-9 students.
 
-🎯 HARD QUESTION CHARACTERISTICS:
-- Multi-step reasoning
-- Calculations with ionic equations
-- Evaluate and discuss
+🎯 HARD EXAM QUESTIONS TEST ANALYSIS & EVALUATION
+These require multi-step reasoning, calculations, and critical thinking.
+
+📝 HARD EXAM QUESTION TYPES:
+- "Explain fully why... Include..." (5-6 marks)
+- "Evaluate the advantages and disadvantages of..." (6 marks)
+- "Compare and contrast... with reference to..." (5-6 marks)
+- "Calculate... Show your working" (4-5 marks)
+- "Analyse the data and explain..." (5-6 marks)
+
+✅ INCLUDE WHERE APPROPRIATE:
+- Multi-part questions (a), (b), (c), (d)
+- Calculations with working
 - Data analysis with conclusions
-- Industrial applications
+- Evaluation of methods or outcomes
+- Application to unfamiliar contexts
 
-📝 AQA PAST PAPER HARD QUESTION EXAMPLES:
-
-EXAMPLE 1 - Displacement & Ion Formation (5 marks):
-"A student adds aqueous copper(II) sulfate to a piece of zinc metal. After a few minutes, solid copper forms on the zinc.
-(a) Write the ionic equation for this reaction. (2 marks)
-(b) Explain why zinc can displace copper from its compound. (2 marks)
-(c) Give one visible observation other than the appearance of copper. (1 mark)"
-
-EXAMPLE 2 - Data Comparison (6 marks):
-"A student compares three metals:
-Metal | Melting Point (°C) | Density (g/cm³) | Reaction with Water
-Lithium | 181 | 0.53 | Explosive
-Iron | 1538 | 7.87 | No reaction
-Copper | 1085 | 8.96 | No reaction
-(a) Identify which metals are transition metals. (1 mark)
-(b) Explain why transition metals have higher melting points and densities than lithium. (3 marks)
-(c) Suggest one reason why transition metals do not react explosively with water. (2 marks)"
-
-EXAMPLE 3 - Catalyst Mechanism (5 marks):
-"Transition metals and their compounds are widely used as catalysts. Explain fully why transition metals make effective catalysts. In your answer refer to surface area, adsorption, and variable oxidation states."
-
-EXAMPLE 4 - Colour & Electron Transitions (6 marks):
-"Iron(III) chloride is yellow-brown, while copper(II) sulfate is blue. Explain why transition metal compounds are coloured. Your answer should refer to d-electrons, energy levels, and light absorption."
-
-EXAMPLE 5 - Multi-step Reaction Comparison (4 marks):
-"Group 1 metals react vigorously with water but transition metals do not. Explain this difference in reactivity using ideas about: electron loss, attraction between the nucleus and outer electrons, the number of electron shells."
-
-EXAMPLE 6 - Alloy & Structure (5 marks):
-"Steel is an alloy mainly made of iron. Explain why pure iron is not used for construction and why alloying it improves its properties. Refer to layers, strength, and atomic structure."
-
-EXAMPLE 7 - Oxidation State Change (6 marks):
-"Iron(II) ions (Fe²⁺) can be oxidised to iron(III) ions (Fe³⁺).
-(a) Define oxidation in terms of electron transfer. (2 marks)
-(b) Explain why the ability to form multiple ions is characteristic of transition metals. (2 marks)
-(c) Suggest one industrial advantage of this property. (2 marks)"
-
-EXAMPLE 8 - Electrochemical Series (5 marks):
-"A student places strips of zinc and copper into solutions of different metal salts. They observe: Zinc displaces copper from copper sulfate. Zinc does not displace iron from iron(II) sulfate. Copper does not displace zinc from zinc sulfate. Use this information to rank zinc, copper, and iron in order of reactivity and justify your answer."
-
-📚 COMMAND WORDS FOR HARD QUESTIONS:
-- Explain fully (4-6 marks) - Detailed reasoning with links
-- Evaluate (5-6 marks) - Weigh advantages/disadvantages
-- Discuss (5-6 marks) - Consider multiple viewpoints
-- Compare (4-5 marks) - State similarities AND differences with reasons
-- Calculate (2-4 marks) - Multi-step calculations with working
+📊 INCLUDE:
+- Data tables for analysis
+- Graphs or trends to interpret
+- Experimental scenarios to evaluate
+- Industrial applications to discuss
 
 🔴 REQUIREMENTS:
 1. Total marks: 5-8 marks per question
 2. 3-4 parts: (a), (b), (c), and optionally (d)
-3. Include ionic equations where appropriate
-4. Require multi-step reasoning
-5. Include evaluation or discussion elements
+3. Require ANALYSIS, EVALUATION, or CALCULATION
+4. Multi-step reasoning required
 
 Output ONLY valid JSON format`,
-      user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 HARD AQA-style exam question (5-8 marks total) about ONLY the content above.
+      user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 HARD AQA-style EXAM question (5-8 marks total).
 
-REQUIREMENTS:
-✓ Use command words: Explain fully, Evaluate, Discuss, Compare, Calculate
-✓ Include 3-4 parts: (a), (b), (c), and optionally (d)
-✓ Require multi-step reasoning
-✓ Include ionic equations, calculations, or evaluation where appropriate
-✓ Total marks: 5-8 marks
+⚠️ IMPORTANT: This is a CHALLENGING exam question.
+- Require ANALYSIS, EVALUATION, or CALCULATION
+- Include multi-step reasoning
+- Use data interpretation where appropriate
+
+Include 3-4 parts: (a), (b), (c), and optionally (d)
 
 Include keywords from: ${shuffledKws.slice(0, 10).join(", ")}
 
@@ -383,73 +338,53 @@ Return ONLY this JSON:
   // Medium difficulty (default)
   return {
     marksRange: "3-4",
-    system: `You are an expert GCSE AQA examiner creating MEDIUM difficulty questions (3-4 marks each).
+    system: `You are an expert GCSE AQA examiner creating MEDIUM difficulty EXAM questions (3-4 marks each).
 
-🎯 MEDIUM QUESTION CHARACTERISTICS:
-- Explanation with context
-- Compare properties
-- Describe patterns
-- Apply knowledge to scenarios
+🎯 MEDIUM EXAM QUESTIONS TEST APPLICATION & COMPARISON
+These require applying knowledge to scenarios and comparing concepts.
 
-📝 AQA PAST PAPER MEDIUM QUESTION EXAMPLES:
+📝 MEDIUM EXAM QUESTION TYPES:
+- "Explain why..." (3 marks)
+- "Compare the properties of X and Y..." (4 marks)
+- "Describe the process of..." (3 marks)
+- "Using the data, explain the pattern..." (3-4 marks)
+- "Suggest why..." (2-3 marks)
 
-EXAMPLE 1 - Physical Properties (3 marks):
-"Explain why transition metals are used instead of Group 1 metals in the construction of buildings and bridges. Include at least two physical properties and one explanation."
+🚫 DO NOT USE (reserved for Blurt practice):
+- "Define..."
+- "Name..."
+- "State..."
+- "What is..."
 
-EXAMPLE 2 - Coloured Compounds (2 marks):
-"Copper(II) sulfate solution is blue, but sodium sulfate solution is colourless. Explain why only one of these compounds is coloured."
+✅ GOOD MEDIUM EXAM QUESTIONS:
+- "Explain why copper is used for electrical wiring. (3 marks)"
+- "Compare the reactivity of Group 1 metals with transition metals. (4 marks)"
+- "Describe what happens to plant cells in a concentrated salt solution. (3 marks)"
 
-EXAMPLE 3 - Density Data (3 marks):
-"A data table shows densities of four metals:
-Metal | Density (g/cm³)
-Lithium | 0.53
-Sodium | 0.97
-Iron | 7.87
-Nickel | 8.90
-(a) Which metals in the table are transition metals?
-(b) Suggest why transition metals have much higher densities than Group 1 metals."
+❌ BAD (too simple):
+- "Define a transition metal."
+- "Name two properties of copper."
 
-EXAMPLE 4 - Variable Oxidation States (3 marks):
-"Iron forms Fe²⁺ ions in some compounds and Fe³⁺ ions in others. Explain what this means and why it is unusual when compared to Group 1 metals."
-
-EXAMPLE 5 - Catalyst Application (2 marks):
-"Nickel is used as a catalyst in hydrogenation reactions. Explain what a catalyst is and why transition metals are often used as catalysts."
-
-EXAMPLE 6 - Reaction Comparison (3 marks):
-"A student adds potassium, iron and copper to cold water. Only potassium reacts. Explain why iron and copper do not react, referring to their position in the periodic table."
-
-EXAMPLE 7 - Compound Colours (3 marks):
-"A student observes: Copper(II) chloride – blue-green, Iron(III) nitrate – yellow-brown, Sodium chloride – white. Explain why only the first two compounds are coloured and relate your answer to electron structure."
-
-EXAMPLE 8 - Everyday Uses (4 marks):
-"Explain why copper is used for electrical wiring and why iron is used for building structures. Refer to their physical properties."
-
-EXAMPLE 9 - Reactions Comparison (3 marks):
-"Compare the reactions of transition metals with water and oxygen to those of Group 1 metals. Use specific examples."
-
-EXAMPLE 10 - Chemical Properties Summary (4 marks):
-"Describe two chemical properties that are typical of transition metals and explain how these differ from the properties of Group 1 metals."
-
-📚 COMMAND WORDS FOR MEDIUM QUESTIONS:
-- Explain (3-4 marks) - Give reasons with scientific vocabulary
-- Describe (2-3 marks) - Account of a process
-- Compare (3-4 marks) - Similarities AND differences
-- Suggest (2-3 marks) - Apply to unfamiliar context
+📊 INCLUDE:
+- Data tables showing properties or results
+- Real-world applications and contexts
+- Comparison scenarios
 
 🔴 REQUIREMENTS:
 1. Total marks: 3-4 marks per question
 2. 2-3 parts maximum: (a), (b), and optionally (c)
-3. Require explanation with reasoning
+3. Require EXPLANATION, COMPARISON, or APPLICATION
 4. Use realistic contexts
 
 Output ONLY valid JSON format`,
-    user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 MEDIUM AQA-style exam question (3-4 marks total) about ONLY the content above.
+    user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 MEDIUM AQA-style EXAM question (3-4 marks total).
 
-REQUIREMENTS:
-✓ Use command words: Explain, Describe, Compare, Suggest
-✓ Maximum 3 parts: (a), (b), and optionally (c)
-✓ Require explanation with reasoning
-✓ Total marks: 3-4 marks
+⚠️ IMPORTANT: This is an EXAM question, not a flashcard.
+- Require EXPLANATION, COMPARISON, or APPLICATION
+- Do NOT ask simple definitions or naming (those are for Blurt practice)
+
+GOOD: "Explain why..." / "Compare..." / "Describe the process..." / "Suggest why..."
+BAD: "Define..." / "Name..." / "State..." / "What is..."
 
 Include keywords from: ${shuffledKws.slice(0, 8).join(", ")}
 
