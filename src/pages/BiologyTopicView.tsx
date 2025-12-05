@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, BookOpen, GraduationCap, Star } from "lucide-react";
 import { biologyData } from "@/data/biologyData";
 import SectionContent from "@/components/SectionContent";
+import MockExamSetup from "@/components/MockExamSetup";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -165,6 +166,16 @@ const BiologyTopicView = () => {
             </CardContent>
           </Card>
         )}
+
+        {/* Mock Exams */}
+        <MockExamSetup
+          topicTitle={topic.title}
+          subsections={[{
+            title: topic.title,
+            content: topic.content_html ? new DOMParser().parseFromString(topic.content_html, 'text/html').body.textContent || '' : ''
+          }]}
+          subject="biology"
+        />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, BookOpen, HelpCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { getEconomicsChapterById, getEconomicsModuleById, getEconomicsSubsectionById } from "@/data/economicsData";
 import SectionContent from "@/components/SectionContent";
-import PracticeExamQuestions from "@/components/PracticeExamQuestions";
+import MockExamSetup from "@/components/MockExamSetup";
 import { AIChatbot } from "../components/AIChatbot";
 
 const EconomicsTopicView = () => {
@@ -109,11 +109,13 @@ const EconomicsTopicView = () => {
           </TabsContent>
 
           <TabsContent value="practice">
-            <PracticeExamQuestions
-              sectionContent={practiceContent}
-              sectionTitle={subsection.title}
+            <MockExamSetup
+              topicTitle={subsection.title}
+              subsections={[{
+                title: subsection.title,
+                content: practiceContent
+              }]}
               subject="economics"
-              moduleId={moduleId}
             />
           </TabsContent>
         </Tabs>

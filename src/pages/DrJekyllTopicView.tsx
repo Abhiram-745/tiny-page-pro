@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, BookOpen, Brain } from "lucide-react";
 import { drJekyllData } from "@/data/drJekyllData";
+import MockExamSetup from "@/components/MockExamSetup";
 
 const DrJekyllTopicView = () => {
   const { id } = useParams();
@@ -100,6 +101,16 @@ const DrJekyllTopicView = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Mock Exams */}
+        <MockExamSetup
+          topicTitle={section.title}
+          subsections={[{
+            title: section.title,
+            content: `Quote: "${section.quote}"\n\nThemes: ${section.themes}\n\nAO2: ${section.ao2}\n\nAO3: ${section.ao3}`
+          }]}
+          subject="english"
+        />
       </div>
     </div>
   );

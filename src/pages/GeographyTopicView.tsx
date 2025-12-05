@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { geographyData } from "@/data/geographyData";
+import MockExamSetup from "@/components/MockExamSetup";
 
 const GeographyTopicView = () => {
   const { id } = useParams();
@@ -87,6 +88,16 @@ const GeographyTopicView = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Mock Exams */}
+        <MockExamSetup
+          topicTitle={section.title}
+          subsections={[{
+            title: section.title,
+            content: section.content
+          }]}
+          subject="geography"
+        />
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import { ChevronDown } from "lucide-react";
 import { productDesignData, type TopicSection } from "@/data/productDesignData";
 import SectionContent from "@/components/SectionContent";
 import ColorLegend from "@/components/ColorLegend";
-import PracticeExamQuestions from "@/components/PracticeExamQuestions";
+import MockExamSetup from "@/components/MockExamSetup";
 import {
   Dialog,
   DialogContent,
@@ -195,9 +195,8 @@ const ProductDesignTopicView = () => {
           ))}
         </div>
 
-        <PracticeExamQuestions
-          sectionContent={allSubsectionContent}
-          sectionTitle={topic.title}
+        <MockExamSetup
+          topicTitle={topic.title}
           subsections={allSubsections}
           subject="product-design"
         />
