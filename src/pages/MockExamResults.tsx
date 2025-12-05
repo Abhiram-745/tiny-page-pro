@@ -4,15 +4,25 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Trophy, CheckCircle, XCircle, ChevronDown, ChevronUp, Target, Clock, FileText } from "lucide-react";
+import { ArrowLeft, Trophy, CheckCircle, XCircle, ChevronDown, ChevronUp, Target, Clock, FileText, BookOpen } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
+import AnimatedMarkSchemeComparison from "@/components/AnimatedMarkSchemeComparison";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+
+interface MarkingPoint {
+  markPoint: string;
+  studentText: string | null;
+  awarded: boolean;
+  marks: number;
+  explanation?: string;
+  improvedSentence?: string | null;
+}
 
 interface Question {
   id: string;
@@ -33,6 +43,7 @@ interface Result {
   key_points_missed: string[];
   what_done_well: string;
   areas_to_improve: string;
+  marking_breakdown?: MarkingPoint[];
 }
 
 interface Answer {
@@ -156,6 +167,57 @@ const MockExamResults = () => {
     return "destructive";
   };
 
+  // Convert key_points to marking breakdown format if marking_breakdown not available
+  const getMarkingBreakdown = (result: Result, answer: Answer | undefined): MarkingPoint[] => {
+    // If we have marking_breakdown from the API, use it
+    if (result.marking_breakdown && result.marking_breakdown.length > 0) {
+      return result.marking_breakdown;
+    }
+    
+    // Otherwise, construct from key_points_covered and key_points_missed
+    const breakdown: MarkingPoint[] = [];
+    const studentText = answer?.answer_text || "";
+    
+    result.key_points_covered?.forEach((point, idx) => {
+      breakdown.push({
+        markPoint: point,
+        studentText: studentText.length > 0 ? findMatchingText(studentText, point) : null,
+        awarded: true,
+        marks: 1,
+        explanation: "This point was correctly addressed in your answer."
+      });
+    });
+    
+    result.key_points_missed?.forEach((point, idx) => {
+      breakdown.push({
+        markPoint: point,
+        studentText: null,
+        awarded: false,
+        marks: 1,
+        explanation: "This key point was missing or incomplete.",
+        improvedSentence: point
+      });
+    });
+    
+    return breakdown;
+  };
+
+  // Helper to find matching text in student answer
+  const findMatchingText = (answer: string, point: string): string | null => {
+    const words = point.toLowerCase().split(' ').slice(0, 3);
+    const answerLower = answer.toLowerCase();
+    
+    for (const word of words) {
+      if (word.length > 4 && answerLower.includes(word)) {
+        const idx = answerLower.indexOf(word);
+        const start = Math.max(0, idx - 20);
+        const end = Math.min(answer.length, idx + word.length + 30);
+        return answer.substring(start, end);
+      }
+    }
+    return null;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -187,7 +249,7 @@ const MockExamResults = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-secondary/5">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="container mx-auto px-4 py-8 max-w-5xl">
         <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-6">
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Dashboard
@@ -252,13 +314,16 @@ const MockExamResults = () => {
                             Q{question.question_number}
                           </Badge>
                           <div>
-                            <p className="font-medium text-sm text-left">{question.topic}</p>
+                            <p className="font-medium text-sm text-left uppercase tracking-wide">{question.topic}</p>
                             <p className="text-xs text-muted-foreground">{question.marks} mark{question.marks !== 1 ? 's' : ''}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
                           {result && (
-                            <Badge variant={getScoreBadgeVariant(result.score, result.max_marks)}>
+                            <Badge 
+                              variant={getScoreBadgeVariant(result.score, result.max_marks)}
+                              className="text-base px-3 py-1"
+                            >
                               {result.score}/{result.max_marks}
                             </Badge>
                           )}
@@ -282,84 +347,66 @@ const MockExamResults = () => {
                         </div>
                       </div>
 
-                      {/* Your Answer */}
-                      <div className="bg-muted/30 rounded-lg p-4">
-                        <h4 className="font-semibold mb-2">Your Answer:</h4>
-                        {answer?.answer_image_url ? (
+                      {/* Animated Mark Scheme Comparison - Your Answer with Live Marking */}
+                      {result && answer && (answer.answer_text || answer.answer_image_url) && (
+                        <AnimatedMarkSchemeComparison
+                          markingBreakdown={getMarkingBreakdown(result, answer)}
+                          studentAnswer={answer.answer_text || "[Photo/Drawing submitted]"}
+                        />
+                      )}
+
+                      {/* Show image if submitted */}
+                      {answer?.answer_image_url && (
+                        <div className="bg-muted/30 rounded-lg p-4">
+                          <h4 className="font-semibold mb-2">Your Submitted Image:</h4>
                           <img
                             src={answer.answer_image_url}
                             alt="Your answer"
                             className="max-w-full rounded-lg border"
                           />
-                        ) : answer?.answer_text ? (
-                          <p className="whitespace-pre-wrap">{answer.answer_text}</p>
-                        ) : (
+                        </div>
+                      )}
+
+                      {/* No answer case */}
+                      {!answer?.answer_text && !answer?.answer_image_url && (
+                        <div className="bg-muted/30 rounded-lg p-4">
+                          <h4 className="font-semibold mb-2">Your Answer:</h4>
                           <p className="text-muted-foreground italic">No answer provided</p>
-                        )}
-                      </div>
+                        </div>
+                      )}
 
                       {result && (
                         <>
                           {/* Model Answer */}
                           <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
-                            <h4 className="font-semibold mb-2 text-green-700 dark:text-green-400">Model Answer:</h4>
+                            <h4 className="font-semibold mb-2 text-green-700 dark:text-green-400 flex items-center gap-2">
+                              <BookOpen className="h-4 w-4" />
+                              Model Answer:
+                            </h4>
                             <div className="prose prose-sm max-w-none dark:prose-invert">
                               <MarkdownRenderer content={result.model_answer || "Not available"} />
                             </div>
                           </div>
 
-                          {/* What you did well */}
-                          {result.what_done_well && (
-                            <div className="bg-green-500/5 border border-green-500/10 rounded-lg p-4">
-                              <h4 className="font-semibold mb-2 flex items-center gap-2 text-green-700 dark:text-green-400">
-                                <CheckCircle className="h-4 w-4" />
-                                What You Did Well
-                              </h4>
-                              <p>{result.what_done_well}</p>
-                            </div>
-                          )}
-
-                          {/* Areas to improve */}
-                          {result.areas_to_improve && (
-                            <div className="bg-yellow-500/5 border border-yellow-500/10 rounded-lg p-4">
-                              <h4 className="font-semibold mb-2 flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
-                                <XCircle className="h-4 w-4" />
-                                Areas to Improve
-                              </h4>
-                              <p>{result.areas_to_improve}</p>
-                            </div>
-                          )}
-
-                          {/* Key Points */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {result.key_points_covered && result.key_points_covered.length > 0 && (
-                              <div className="bg-green-500/5 rounded-lg p-4">
-                                <h5 className="font-semibold mb-2 text-sm text-green-700 dark:text-green-400">
-                                  ✓ Points Covered
-                                </h5>
-                                <ul className="text-sm space-y-1">
-                                  {result.key_points_covered.map((point, i) => (
-                                    <li key={i} className="flex items-start gap-2">
-                                      <CheckCircle className="h-3 w-3 mt-1 text-green-500" />
-                                      {point}
-                                    </li>
-                                  ))}
-                                </ul>
+                          {/* What you did well & Areas to improve - side by side */}
+                          <div className="grid md:grid-cols-2 gap-4">
+                            {result.what_done_well && (
+                              <div className="bg-green-500/5 border border-green-500/10 rounded-lg p-4">
+                                <h4 className="font-semibold mb-2 flex items-center gap-2 text-green-700 dark:text-green-400">
+                                  <CheckCircle className="h-4 w-4" />
+                                  What You Did Well
+                                </h4>
+                                <p className="text-sm">{result.what_done_well}</p>
                               </div>
                             )}
-                            {result.key_points_missed && result.key_points_missed.length > 0 && (
-                              <div className="bg-red-500/5 rounded-lg p-4">
-                                <h5 className="font-semibold mb-2 text-sm text-red-700 dark:text-red-400">
-                                  ✗ Points Missed
-                                </h5>
-                                <ul className="text-sm space-y-1">
-                                  {result.key_points_missed.map((point, i) => (
-                                    <li key={i} className="flex items-start gap-2">
-                                      <XCircle className="h-3 w-3 mt-1 text-red-500" />
-                                      {point}
-                                    </li>
-                                  ))}
-                                </ul>
+
+                            {result.areas_to_improve && (
+                              <div className="bg-yellow-500/5 border border-yellow-500/10 rounded-lg p-4">
+                                <h4 className="font-semibold mb-2 flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
+                                  <XCircle className="h-4 w-4" />
+                                  Areas to Improve
+                                </h4>
+                                <p className="text-sm">{result.areas_to_improve}</p>
                               </div>
                             )}
                           </div>
