@@ -3,7 +3,7 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Timer, Send, BookOpen, CheckCircle, ChevronDown, Camera, Pen, Save, Maximize2, Minimize2 } from "lucide-react";
+import { ArrowLeft, Timer, Send, BookOpen, CheckCircle, ChevronDown, Camera, Pen, Save, Maximize2, Minimize2, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { sectionsData, PracticeItem } from "@/data/sectionsData";
@@ -22,6 +22,8 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import MarkingAnimation from "@/components/MarkingAnimation";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import { supabase } from "@/integrations/supabase/client";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 import {
   Collapsible,
@@ -1735,11 +1737,31 @@ const BlurPractice = () => {
                     />
                   </div>
                   
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <Button onClick={handleSubmit} className="flex-1 btn-press" size="lg">
                       <Send className="mr-2 h-4 w-4" />
                       Submit Answer
                     </Button>
+                    <Sheet>
+                      <SheetTrigger asChild>
+                        <Button 
+                          variant="outline" 
+                          size="lg"
+                          className="btn-press"
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Notes
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+                        <SheetHeader>
+                          <SheetTitle>Study Notes</SheetTitle>
+                        </SheetHeader>
+                        <ScrollArea className="h-[calc(100vh-100px)] mt-4">
+                          <SectionContent html={buildPairContent()} />
+                        </ScrollArea>
+                      </SheetContent>
+                    </Sheet>
                     <Button 
                       variant="outline" 
                       onClick={() => setShowPhotoUpload(!showPhotoUpload)}
