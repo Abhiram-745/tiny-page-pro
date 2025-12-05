@@ -44,6 +44,8 @@ import EconomicsTopicView from "./pages/EconomicsTopicView";
 import BiologyDashboard from "./pages/BiologyDashboard";
 import BiologySections from "./pages/BiologySections";
 import BiologyTopicView from "./pages/BiologyTopicView";
+import MockExam from "./pages/MockExam";
+import MockExamResults from "./pages/MockExamResults";
 
 const queryClient = new QueryClient();
 
@@ -104,6 +106,8 @@ const App = () => (
             <Route path="/progress" element={<Progress />} />
             <Route path="/review" element={<SpacedRepetition />} />
             <Route path="/help" element={<Help />} />
+            <Route path="/mock-exam/:examId" element={<MockExam />} />
+            <Route path="/mock-exam-results/:examId" element={<MockExamResults />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />
