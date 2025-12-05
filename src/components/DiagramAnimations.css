@@ -1,0 +1,551 @@
+/* ============================================
+   REUSABLE DIAGRAM ANIMATIONS
+   Use these classes on SVG elements in notes
+   ============================================ */
+
+/* ===== ROTATION ANIMATIONS ===== */
+
+/* Clockwise rotation - gears, wheels */
+.anim-rotate-cw {
+  animation: rotateCW 4s linear infinite;
+  transform-origin: center;
+}
+
+.anim-rotate-cw-slow {
+  animation: rotateCW 8s linear infinite;
+  transform-origin: center;
+}
+
+.anim-rotate-cw-fast {
+  animation: rotateCW 2s linear infinite;
+  transform-origin: center;
+}
+
+/* Counter-clockwise rotation - opposing gears */
+.anim-rotate-ccw {
+  animation: rotateCCW 4s linear infinite;
+  transform-origin: center;
+}
+
+.anim-rotate-ccw-slow {
+  animation: rotateCCW 8s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes rotateCW {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotateCCW {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* ===== BOUNCE ANIMATIONS ===== */
+
+/* Vertical bounce - springs, balls */
+.anim-bounce {
+  animation: bounce 1.5s ease-in-out infinite;
+}
+
+.anim-bounce-slow {
+  animation: bounce 2.5s ease-in-out infinite;
+}
+
+.anim-bounce-small {
+  animation: bounceSmall 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes bounceSmall {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ===== SPRING ANIMATIONS ===== */
+
+/* Spring stretch/compress */
+.anim-spring-stretch {
+  animation: springStretch 2s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+.anim-spring-compress {
+  animation: springCompress 2s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes springStretch {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.3); }
+}
+
+@keyframes springCompress {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.7); }
+}
+
+/* ===== OSCILLATION ANIMATIONS ===== */
+
+/* Pendulum swing */
+.anim-pendulum {
+  animation: pendulum 2s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@keyframes pendulum {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(15deg); }
+}
+
+/* Horizontal oscillation - waves */
+.anim-oscillate-x {
+  animation: oscillateX 1.5s ease-in-out infinite;
+}
+
+/* Vertical oscillation */
+.anim-oscillate-y {
+  animation: oscillateY 1.5s ease-in-out infinite;
+}
+
+@keyframes oscillateX {
+  0%, 100% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+}
+
+@keyframes oscillateY {
+  0%, 100% { transform: translateY(-5px); }
+  50% { transform: translateY(5px); }
+}
+
+/* ===== WAVE ANIMATIONS ===== */
+
+/* Wave motion - ripples, sound waves */
+.anim-wave {
+  animation: wave 2s ease-in-out infinite;
+}
+
+.anim-wave-delayed {
+  animation: wave 2s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+@keyframes wave {
+  0%, 100% { 
+    transform: translateY(0) scaleX(1); 
+    opacity: 1;
+  }
+  50% { 
+    transform: translateY(-3px) scaleX(1.02); 
+    opacity: 0.8;
+  }
+}
+
+/* Ripple expansion - water, sound */
+.anim-ripple {
+  animation: ripple 2s ease-out infinite;
+  transform-origin: center;
+}
+
+@keyframes ripple {
+  0% { 
+    transform: scale(0.8); 
+    opacity: 1; 
+  }
+  100% { 
+    transform: scale(1.5); 
+    opacity: 0; 
+  }
+}
+
+/* ===== PULSE ANIMATIONS ===== */
+
+/* Glow pulse - energy, reactions */
+.anim-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.anim-pulse-fast {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.anim-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.1); 
+    opacity: 0.8;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 2px currentColor);
+    opacity: 1;
+  }
+  50% { 
+    filter: drop-shadow(0 0 8px currentColor);
+    opacity: 0.9;
+  }
+}
+
+/* ===== FLOW ANIMATIONS ===== */
+
+/* Flow along path - current, electrons, particles */
+.anim-flow-right {
+  animation: flowRight 2s linear infinite;
+}
+
+.anim-flow-left {
+  animation: flowLeft 2s linear infinite;
+}
+
+.anim-flow-down {
+  animation: flowDown 2s linear infinite;
+}
+
+.anim-flow-up {
+  animation: flowUp 2s linear infinite;
+}
+
+@keyframes flowRight {
+  0% { transform: translateX(-10px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(10px); opacity: 0; }
+}
+
+@keyframes flowLeft {
+  0% { transform: translateX(10px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(-10px); opacity: 0; }
+}
+
+@keyframes flowDown {
+  0% { transform: translateY(-10px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+
+@keyframes flowUp {
+  0% { transform: translateY(10px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(-10px); opacity: 0; }
+}
+
+/* ===== PARTICLE ANIMATIONS ===== */
+
+/* Particle vibration - kinetic theory, heat */
+.anim-vibrate {
+  animation: vibrate 0.3s linear infinite;
+}
+
+.anim-vibrate-slow {
+  animation: vibrate 0.5s linear infinite;
+}
+
+@keyframes vibrate {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-2px, 1px); }
+  50% { transform: translate(1px, -2px); }
+  75% { transform: translate(-1px, 2px); }
+}
+
+/* Brownian motion - random particle movement */
+.anim-brownian {
+  animation: brownian 3s ease-in-out infinite;
+}
+
+.anim-brownian-2 {
+  animation: brownian2 3.5s ease-in-out infinite;
+}
+
+.anim-brownian-3 {
+  animation: brownian3 4s ease-in-out infinite;
+}
+
+@keyframes brownian {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(5px, -3px); }
+  50% { transform: translate(-2px, 4px); }
+  75% { transform: translate(3px, 2px); }
+}
+
+@keyframes brownian2 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(-4px, 2px); }
+  50% { transform: translate(3px, -4px); }
+  75% { transform: translate(-2px, -2px); }
+}
+
+@keyframes brownian3 {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(2px, 4px); }
+  50% { transform: translate(-5px, -1px); }
+  75% { transform: translate(4px, -3px); }
+}
+
+/* ===== CHEMICAL REACTION ANIMATIONS ===== */
+
+/* Electron transfer - ionic bonding */
+.anim-electron-transfer {
+  animation: electronTransfer 3s ease-in-out infinite;
+}
+
+@keyframes electronTransfer {
+  0%, 10% { transform: translateX(0); opacity: 1; }
+  40%, 60% { transform: translateX(40px); opacity: 1; }
+  90%, 100% { transform: translateX(40px); opacity: 0.5; }
+}
+
+/* Bond formation */
+.anim-bond-form {
+  animation: bondForm 2s ease-out infinite;
+  transform-origin: left center;
+}
+
+@keyframes bondForm {
+  0% { transform: scaleX(0); opacity: 0; }
+  50%, 100% { transform: scaleX(1); opacity: 1; }
+}
+
+/* Bubble rise - electrolysis, reactions */
+.anim-bubble-rise {
+  animation: bubbleRise 3s ease-out infinite;
+}
+
+.anim-bubble-rise-2 {
+  animation: bubbleRise 3.5s ease-out infinite;
+  animation-delay: 0.5s;
+}
+
+.anim-bubble-rise-3 {
+  animation: bubbleRise 4s ease-out infinite;
+  animation-delay: 1s;
+}
+
+@keyframes bubbleRise {
+  0% { 
+    transform: translateY(0) scale(0.5); 
+    opacity: 0;
+  }
+  20% { opacity: 1; }
+  100% { 
+    transform: translateY(-60px) scale(1); 
+    opacity: 0;
+  }
+}
+
+/* Energy release - exothermic */
+.anim-energy-release {
+  animation: energyRelease 2s ease-out infinite;
+}
+
+@keyframes energyRelease {
+  0% { 
+    transform: scale(0.5) translateY(0); 
+    opacity: 0;
+  }
+  30% { opacity: 1; }
+  100% { 
+    transform: scale(1.5) translateY(-30px); 
+    opacity: 0;
+  }
+}
+
+/* ===== FORCE ANIMATIONS ===== */
+
+/* Force arrow pulse */
+.anim-force-pulse {
+  animation: forcePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes forcePulse {
+  0%, 100% { 
+    stroke-width: 3;
+    filter: none;
+  }
+  50% { 
+    stroke-width: 4;
+    filter: drop-shadow(0 0 3px currentColor);
+  }
+}
+
+/* Compression/stretch indicator */
+.anim-compress {
+  animation: compress 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.anim-stretch {
+  animation: stretch 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes compress {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(0.8); }
+}
+
+@keyframes stretch {
+  0%, 100% { transform: scaleX(1); }
+  50% { transform: scaleX(1.2); }
+}
+
+/* ===== SEESAW / LEVER ANIMATIONS ===== */
+
+.anim-seesaw {
+  animation: seesaw 3s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes seesaw {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+/* ===== DRAW/PATH ANIMATIONS ===== */
+
+/* Line drawing effect */
+.anim-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawLine 2s ease-out forwards;
+}
+
+.anim-draw-infinite {
+  stroke-dasharray: 100;
+  animation: drawLineInfinite 3s ease-in-out infinite;
+}
+
+@keyframes drawLine {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes drawLineInfinite {
+  0%, 100% { stroke-dashoffset: 100; }
+  50% { stroke-dashoffset: 0; }
+}
+
+/* ===== FADE ANIMATIONS ===== */
+
+.anim-fade-in-out {
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+.anim-blink {
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ===== COLOR SHIFT ANIMATIONS ===== */
+
+/* Temperature change - heating/cooling */
+.anim-heat-up {
+  animation: heatUp 3s ease-in-out infinite;
+}
+
+.anim-cool-down {
+  animation: coolDown 3s ease-in-out infinite;
+}
+
+@keyframes heatUp {
+  0%, 100% { fill: #3b82f6; } /* blue - cold */
+  50% { fill: #ef4444; } /* red - hot */
+}
+
+@keyframes coolDown {
+  0%, 100% { fill: #ef4444; } /* red - hot */
+  50% { fill: #3b82f6; } /* blue - cold */
+}
+
+/* ===== MAGNET FIELD LINES ===== */
+
+.anim-field-flow {
+  stroke-dasharray: 8 4;
+  animation: fieldFlow 1s linear infinite;
+}
+
+@keyframes fieldFlow {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -12; }
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Pause animation on hover for inspection */
+.anim-pause-hover:hover,
+.anim-pause-hover:hover * {
+  animation-play-state: paused;
+}
+
+/* Delay classes */
+.anim-delay-100 { animation-delay: 0.1s; }
+.anim-delay-200 { animation-delay: 0.2s; }
+.anim-delay-300 { animation-delay: 0.3s; }
+.anim-delay-500 { animation-delay: 0.5s; }
+.anim-delay-700 { animation-delay: 0.7s; }
+.anim-delay-1000 { animation-delay: 1s; }
+
+/* Duration modifiers */
+.anim-faster { animation-duration: 0.5s !important; }
+.anim-fast { animation-duration: 1s !important; }
+.anim-slow { animation-duration: 3s !important; }
+.anim-slower { animation-duration: 5s !important; }
+
+/* === ADDITIONAL DIAGRAM ANIMATIONS === */
+
+/* Diagram-specific class aliases for inline SVG usage */
+.diagram-pulse { animation: pulse 2s ease-in-out infinite; }
+.diagram-bounce { animation: bounceSmall 1.5s ease-in-out infinite; }
+.diagram-float { animation: bounceSmall 3s ease-in-out infinite; }
+.diagram-glow { animation: pulseGlow 2s ease-in-out infinite; }
+.diagram-glow-warm { animation: pulseGlow 2s ease-in-out infinite; filter: drop-shadow(0 0 4px #f97316); }
+.diagram-gear-rotate { animation: rotateCW 4s linear infinite; transform-origin: center; }
+.diagram-spring-oscillate { animation: springStretch 2s ease-in-out infinite; }
+.diagram-spring-stretch { animation: stretch 2s ease-in-out infinite; }
+.diagram-electron-orbit { animation: brownian 3s ease-in-out infinite; }
+.diagram-magnet-attract { animation: oscillateX 2s ease-in-out infinite; }
+.diagram-nucleus-vibrate { animation: vibrate 0.5s linear infinite; }
+.diagram-current-flow { animation: flowRight 1.5s linear infinite; }
+.diagram-heat-rise { animation: flowUp 2s ease-out infinite; }
+.diagram-wave-propagate { animation: wave 2s ease-in-out infinite; }
+
+/* Hover to pause */
+.hover-pause:hover,
+.hover-pause:hover * {
+  animation-play-state: paused;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

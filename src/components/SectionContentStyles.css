@@ -1,0 +1,415 @@
+/* Color-coded content styling for chemistry notes */
+
+.section-content-wrapper {
+  @apply space-y-6;
+}
+
+/* Subsection containers */
+.subsection {
+  @apply mb-8 p-6 bg-card rounded-lg border;
+}
+
+.subsection-heading {
+  @apply text-2xl font-bold mb-6 text-foreground;
+}
+
+.subsection-subheading {
+  @apply text-xl font-semibold mb-4 mt-6 text-foreground;
+}
+
+/* Definition blocks - Blue */
+.definition-block {
+  @apply mb-6 p-4 rounded-lg border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-950/20;
+}
+
+.definition-block h4 {
+  @apply text-lg font-semibold text-blue-700 dark:text-blue-400 mb-2;
+}
+
+.definition-block p {
+  @apply text-foreground;
+}
+
+.definition-block ul {
+  @apply list-disc list-inside space-y-1 text-foreground;
+}
+
+/* Key Facts blocks - Green */
+.key-facts-block {
+  @apply mb-6 p-4 rounded-lg border-l-4 border-green-500 bg-green-50 dark:bg-green-950/20;
+}
+
+.key-facts-block h4 {
+  @apply text-lg font-semibold text-green-700 dark:text-green-400 mb-2;
+}
+
+.key-facts-block ul {
+  @apply list-disc list-inside space-y-1 text-foreground;
+}
+
+.key-facts-block p {
+  @apply text-foreground;
+}
+
+/* Example blocks - Teal/Turquoise */
+.example-block {
+  @apply mb-6 p-4 rounded-lg border-l-4 border-teal-500 bg-teal-50 dark:bg-teal-950/20;
+}
+
+.example-block h4 {
+  @apply text-lg font-semibold text-teal-700 dark:text-teal-400 mb-2;
+}
+
+.example-block p {
+  @apply text-foreground;
+}
+
+.example-block ul {
+  @apply list-disc list-inside space-y-1 text-foreground;
+}
+
+/* Exam Tip blocks - Yellow */
+.exam-tip-block {
+  @apply mb-6 p-4 rounded-lg border-l-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950/30;
+}
+
+.exam-tip-block h4 {
+  @apply text-lg font-semibold text-yellow-700 dark:text-yellow-400 mb-2;
+}
+
+.exam-tip-block p {
+  @apply text-foreground;
+}
+
+/* Warning blocks - Red */
+.warning-block {
+  @apply mb-6 p-4 rounded-lg border-l-4 border-red-500 bg-red-50 dark:bg-red-950/20;
+}
+
+.warning-block h4 {
+  @apply text-lg font-semibold text-red-700 dark:text-red-400 mb-2;
+}
+
+.warning-block p {
+  @apply text-foreground;
+}
+
+.warning-block ul {
+  @apply list-disc list-inside space-y-1 text-foreground;
+}
+
+/* Specification Point blocks - Purple */
+.spec-point-block {
+  @apply mb-6 p-4 rounded-lg border-l-4 border-purple-500 bg-purple-50 dark:bg-purple-950/20;
+}
+
+.spec-point-block h4 {
+  @apply text-lg font-semibold text-purple-700 dark:text-purple-400 mb-2;
+}
+
+.spec-point-block p,
+.spec-point-block ul {
+  @apply text-foreground;
+}
+
+.spec-point-block ul {
+  @apply list-disc list-inside space-y-1;
+}
+
+/* Key Idea blocks - Orange/Amber */
+.key-idea-block {
+  @apply mb-6 p-4 rounded-lg border-l-4 border-orange-500 bg-orange-50 dark:bg-orange-950/20;
+}
+
+.key-idea-block h4 {
+  @apply text-lg font-semibold text-orange-700 dark:text-orange-400 mb-2;
+}
+
+.key-idea-block p,
+.key-idea-block ul {
+  @apply text-foreground;
+}
+
+.key-idea-block ul {
+  @apply list-disc list-inside space-y-1;
+}
+
+/* Key Point blocks - Primary color themed */
+.key-point {
+  @apply mb-6 p-5 rounded-xl border-l-4 border-primary bg-primary/5;
+}
+
+.key-point h4 {
+  @apply text-lg font-semibold text-primary mb-3;
+}
+
+.key-point p {
+  @apply text-foreground;
+}
+
+.key-point ul {
+  @apply list-disc ml-6 space-y-1 text-foreground;
+}
+
+/* Method Step blocks */
+.method-step {
+  @apply mb-4 p-4 rounded-lg bg-accent/10 border-l-4 border-accent;
+}
+
+.method-step h5 {
+  @apply text-base font-semibold text-primary mb-2;
+}
+
+.method-step ol,
+.method-step ul {
+  @apply ml-6 space-y-1 text-foreground;
+}
+
+.method-step ol {
+  @apply list-decimal;
+}
+
+.method-step ul {
+  @apply list-disc;
+}
+
+.method-step p {
+  @apply text-foreground;
+}
+
+/* Formula/Equation boxes */
+.formula-box {
+  @apply text-center p-4 bg-muted rounded-lg my-4;
+}
+
+.formula-box p {
+  @apply text-lg font-semibold text-primary mb-0;
+}
+
+.formula-box .formula-note {
+  @apply text-sm text-muted-foreground mt-2;
+}
+
+/* Info Grid - Two column layout */
+.info-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4 my-4;
+}
+
+/* Error/Improvement cards */
+.error-card {
+  @apply p-4 rounded-lg bg-red-50 dark:bg-red-950/20 border-l-4 border-red-500;
+}
+
+.error-card h5 {
+  @apply text-base font-semibold text-red-700 dark:text-red-400 mb-2;
+}
+
+.error-card ul {
+  @apply ml-4 space-y-1 text-foreground text-sm;
+}
+
+.improvement-card {
+  @apply p-4 rounded-lg bg-green-50 dark:bg-green-950/20 border-l-4 border-green-500;
+}
+
+.improvement-card h5 {
+  @apply text-base font-semibold text-green-700 dark:text-green-400 mb-2;
+}
+
+.improvement-card ul {
+  @apply ml-4 space-y-1 text-foreground text-sm;
+}
+
+/* Safety block */
+.safety-block {
+  @apply mb-6 p-4 rounded-lg border-l-4 border-red-500 bg-red-50 dark:bg-red-950/20;
+}
+
+.safety-block h4 {
+  @apply text-lg font-semibold text-red-700 dark:text-red-400 mb-2;
+}
+
+.safety-block ul {
+  @apply ml-6 space-y-1 text-foreground list-disc;
+}
+
+/* Conclusion block */
+.conclusion-block {
+  @apply mb-6 p-5 rounded-xl bg-gradient-to-r from-primary/5 to-accent/5 border-l-4 border-primary;
+}
+
+.conclusion-block h4 {
+  @apply text-lg font-semibold text-primary mb-3;
+}
+
+.conclusion-block p {
+  @apply text-foreground;
+}
+
+.conclusion-block ul {
+  @apply ml-6 space-y-1 text-foreground list-disc;
+}
+
+/* Styled table - for apparatus, results, etc. */
+.styled-table {
+  @apply w-full border-collapse rounded-lg overflow-hidden my-4;
+}
+
+.styled-table thead tr {
+  @apply bg-primary text-primary-foreground;
+}
+
+.styled-table th {
+  @apply p-3 text-left font-semibold;
+}
+
+.styled-table td {
+  @apply p-3 border-b border-border;
+}
+
+.styled-table tbody tr:nth-child(odd) {
+  @apply bg-muted/30;
+}
+
+.styled-table tbody tr:hover {
+  @apply bg-accent/30;
+}
+
+/* Table container blocks */
+.table-block {
+  @apply mb-6 overflow-x-auto;
+}
+
+.table-block h4 {
+  @apply text-lg font-semibold mb-3 text-foreground;
+}
+
+.table-block table {
+  @apply w-full border-collapse rounded-lg overflow-hidden;
+}
+
+.table-block thead {
+  @apply bg-muted;
+}
+
+.table-block th,
+.table-block td {
+  @apply p-3 border border-border text-left;
+}
+
+.table-block tbody tr:hover {
+  @apply bg-accent/50;
+}
+
+/* Equation styling */
+p.equation {
+  @apply font-mono text-lg bg-muted/50 px-4 py-2 rounded-md my-3 text-center;
+}
+
+/* Highlight box for important formulas */
+p.highlight-box {
+  @apply font-semibold bg-primary/10 text-primary px-4 py-2 rounded-md inline-block my-2;
+}
+
+/* Data tables - Neutral background with clear gridlines */
+.data-table {
+  @apply w-full border-collapse bg-muted/30 rounded-lg overflow-hidden my-4;
+}
+
+.data-table thead {
+  @apply bg-muted;
+}
+
+.data-table th {
+  @apply p-3 text-left font-semibold border-b-2 border-border;
+}
+
+.data-table td {
+  @apply p-3 border-b border-border;
+}
+
+.data-table tbody tr:hover {
+  @apply bg-accent/50;
+}
+
+/* Standard HTML tables (fallback) */
+.section-content-wrapper table {
+  @apply w-full border-collapse bg-muted/30 rounded-lg overflow-hidden my-4;
+}
+
+.section-content-wrapper table thead {
+  @apply bg-primary;
+}
+
+.section-content-wrapper table thead th {
+  @apply text-primary-foreground;
+}
+
+.section-content-wrapper table th {
+  @apply p-3 text-left font-semibold border-b-2 border-border;
+}
+
+.section-content-wrapper table td {
+  @apply p-3 border-b border-border;
+}
+
+.section-content-wrapper table tbody tr:nth-child(odd) {
+  @apply bg-muted/30;
+}
+
+.section-content-wrapper table tbody tr:hover {
+  @apply bg-accent/50;
+}
+
+/* Lists */
+.section-content-wrapper ul {
+  @apply space-y-1 ml-4;
+}
+
+.section-content-wrapper ol {
+  @apply space-y-1 ml-4 list-decimal;
+}
+
+/* Paragraphs */
+.section-content-wrapper p {
+  @apply mb-2 leading-relaxed;
+}
+
+/* Strong/Bold text */
+.section-content-wrapper strong {
+  @apply font-bold text-foreground;
+}
+
+/* Diagram container */
+.diagram-container {
+  @apply flex justify-center my-6;
+}
+
+.diagram-container svg {
+  @apply max-w-full h-auto;
+}
+
+/* Responsive tables */
+@media (max-width: 768px) {
+  .data-table,
+  .table-block table,
+  .styled-table,
+  .section-content-wrapper table {
+    @apply text-sm;
+  }
+  
+  .data-table th,
+  .data-table td,
+  .table-block th,
+  .table-block td,
+  .styled-table th,
+  .styled-table td,
+  .section-content-wrapper table th,
+  .section-content-wrapper table td {
+    @apply p-2;
+  }
+  
+  .info-grid {
+    @apply grid-cols-1;
+  }
+}
