@@ -2,13 +2,21 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, CheckCircle, AlertTriangle, BookOpen, FileQuestion, PenLine, CheckCircle as CheckIcon, Star } from "lucide-react";
+import { ArrowLeft, CheckCircle, AlertTriangle, BookOpen, FileQuestion, PenLine, CheckCircle as CheckIcon, Star, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import { LiveAnswerMarking } from "@/components/LiveAnswerMarking";
 import AnimatedMarkSchemeComparison from "@/components/AnimatedMarkSchemeComparison";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
+import SectionContent from "@/components/SectionContent";
+import { sectionsData } from "@/data/sectionsData";
+import { physicsData } from "@/data/physicsData";
+import { productDesignData } from "@/data/productDesignData";
+import { biologyData } from "@/data/biologyData";
+import { getEconomicsChapterById, getEconomicsModuleById, getEconomicsSubsectionById } from "@/data/economicsData";
 import { toast } from "sonner";
 
 interface MarkingPoint {
@@ -57,6 +65,36 @@ const Results = () => {
   const percentage = Math.round((score / maxMarks) * 100);
 
   console.log("Results page - received currentPairIndex:", currentPairIndex);
+
+  // Get the notes content for this subsection
+  const getNotesContent = () => {
+    if (subject === 'economics' && moduleId) {
+      const subsection = getEconomicsSubsectionById(topicId, moduleId, subsectionId);
+      return subsection?.content || '';
+    }
+    
+    const dataSource = subject === 'physics' ? physicsData : 
+                       subject === 'product-design' ? productDesignData :
+                       subject === 'biology' ? biologyData :
+                       sectionsData;
+    
+    const topic = dataSource.find((t: any) => t.id === topicId) as any;
+    if (!topic) return '';
+    
+    // Check modules first (for physics/biology)
+    if (topic.modules) {
+      for (const mod of topic.modules) {
+        const subsection = mod.subsections?.find((s: any) => s.id === subsectionId);
+        if (subsection) return subsection.content_html || '';
+      }
+    }
+    
+    // Check direct subsections
+    const subsection = topic.subsections?.find((s: any) => s.id === subsectionId);
+    return subsection?.content_html || '';
+  };
+  
+  const notesContent = getNotesContent();
 
   // Determine the correct base path based on subject from state
   const basePath = subject === 'physics' ? '/physics/blur-practice' : 
@@ -339,7 +377,31 @@ const Results = () => {
           photoImage={photoImage}
         />
 
-        <div className="grid gap-4 md:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-5">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full"
+              >
+                <Eye className="mr-2 h-5 w-5" />
+                View Notes
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+              <SheetHeader>
+                <SheetTitle>Study Notes</SheetTitle>
+              </SheetHeader>
+              <ScrollArea className="h-[calc(100vh-100px)] mt-4">
+                {notesContent ? (
+                  <SectionContent html={notesContent} />
+                ) : (
+                  <p className="text-muted-foreground">No notes available for this section.</p>
+                )}
+              </ScrollArea>
+            </SheetContent>
+          </Sheet>
           <Button
             variant="outline"
             size="lg"
