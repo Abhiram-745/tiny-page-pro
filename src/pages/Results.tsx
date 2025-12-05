@@ -136,7 +136,7 @@ const Results = () => {
           questions_count: 1,
           key_ideas_covered: keyIdeasCovered,
           key_ideas_missed: keyIdeasMissed,
-        });
+        } as any);
 
         if (error) {
           console.error("Error saving practice session:", error);

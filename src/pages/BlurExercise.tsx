@@ -222,7 +222,7 @@ const BlurExercise = () => {
       score: Math.round((totalScore / maxScore) * 100),
       keywords_found: allCoveredKeywords,
       keywords_missed: allMissedKeywords,
-    });
+    } as any);
 
     toast.success("Progress saved!");
     navigate("/sections");

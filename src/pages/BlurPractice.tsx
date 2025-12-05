@@ -168,10 +168,11 @@ const BlurPractice = () => {
         .upsert({
           user_id: user.id,
           topic_slug: topicId,
+          subtopic_id: subsectionId,
           subsection_slug: subsectionId,
           last_pair_index: pairIndex,
           last_practiced_at: new Date().toISOString()
-        }, {
+        } as any, {
           onConflict: 'user_id,topic_slug,subsection_slug'
         });
 

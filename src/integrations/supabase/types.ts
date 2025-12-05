@@ -14,16 +14,389 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      blurt_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          key_ideas_covered: number | null
+          max_score: number | null
+          pair_number: number | null
+          score: number | null
+          subsection_slug: string | null
+          topic_slug: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_ideas_covered?: number | null
+          max_score?: number | null
+          pair_number?: number | null
+          score?: number | null
+          subsection_slug?: string | null
+          topic_slug?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_ideas_covered?: number | null
+          max_score?: number | null
+          pair_number?: number | null
+          score?: number | null
+          subsection_slug?: string | null
+          topic_slug?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      practice_sessions: {
+        Row: {
+          created_at: string
+          id: string
+          key_ideas_covered: string[] | null
+          key_ideas_missed: string[] | null
+          max_marks: number | null
+          overall_score: number | null
+          questions_count: number | null
+          section_id: string | null
+          subsection_slug: string | null
+          subsection_title: string | null
+          topic_slug: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key_ideas_covered?: string[] | null
+          key_ideas_missed?: string[] | null
+          max_marks?: number | null
+          overall_score?: number | null
+          questions_count?: number | null
+          section_id?: string | null
+          subsection_slug?: string | null
+          subsection_title?: string | null
+          topic_slug?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key_ideas_covered?: string[] | null
+          key_ideas_missed?: string[] | null
+          max_marks?: number | null
+          overall_score?: number | null
+          questions_count?: number | null
+          section_id?: string | null
+          subsection_slug?: string | null
+          subsection_title?: string | null
+          topic_slug?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      sections: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: string
+          keywords: string[] | null
+          learning_objectives: string[] | null
+          level: string | null
+          spec_tag: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          learning_objectives?: string[] | null
+          level?: string | null
+          spec_tag?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          keywords?: string[] | null
+          learning_objectives?: string[] | null
+          level?: string | null
+          spec_tag?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      starred_questions: {
+        Row: {
+          created_at: string
+          diagram_url: string | null
+          id: string
+          marks: number | null
+          markscheme: string | null
+          model_answer: string | null
+          question_data: Json | null
+          question_text: string | null
+          question_type: string | null
+          subject: string | null
+          subsection_slug: string | null
+          subsection_title: string | null
+          topic: string | null
+          topic_slug: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          diagram_url?: string | null
+          id?: string
+          marks?: number | null
+          markscheme?: string | null
+          model_answer?: string | null
+          question_data?: Json | null
+          question_text?: string | null
+          question_type?: string | null
+          subject?: string | null
+          subsection_slug?: string | null
+          subsection_title?: string | null
+          topic?: string | null
+          topic_slug?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          diagram_url?: string | null
+          id?: string
+          marks?: number | null
+          markscheme?: string | null
+          model_answer?: string | null
+          question_data?: Json | null
+          question_text?: string | null
+          question_type?: string | null
+          subject?: string | null
+          subsection_slug?: string | null
+          subsection_title?: string | null
+          topic?: string | null
+          topic_slug?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      starred_subsections: {
+        Row: {
+          created_at: string
+          id: string
+          subject: string | null
+          subsection_id: string
+          subsection_slug: string | null
+          subsection_title: string | null
+          topic: string | null
+          topic_slug: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          subject?: string | null
+          subsection_id: string
+          subsection_slug?: string | null
+          subsection_title?: string | null
+          topic?: string | null
+          topic_slug?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          subject?: string | null
+          subsection_id?: string
+          subsection_slug?: string | null
+          subsection_title?: string | null
+          topic?: string | null
+          topic_slug?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      submissions: {
+        Row: {
+          content: string | null
+          created_at: string
+          feedback: string | null
+          id: string
+          keywords_found: string[] | null
+          keywords_missed: string[] | null
+          score: number | null
+          section_id: string | null
+          user_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          keywords_found?: string[] | null
+          keywords_missed?: string[] | null
+          score?: number | null
+          section_id?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          keywords_found?: string[] | null
+          keywords_missed?: string[] | null
+          score?: number | null
+          section_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subtopic_progress: {
+        Row: {
+          completed: boolean | null
+          created_at: string
+          id: string
+          last_pair_index: number | null
+          last_practiced_at: string | null
+          score: number | null
+          subsection_slug: string | null
+          subtopic_id: string
+          topic_slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string
+          id?: string
+          last_pair_index?: number | null
+          last_practiced_at?: string | null
+          score?: number | null
+          subsection_slug?: string | null
+          subtopic_id: string
+          topic_slug: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string
+          id?: string
+          last_pair_index?: number | null
+          last_practiced_at?: string | null
+          score?: number | null
+          subsection_slug?: string | null
+          subtopic_id?: string
+          topic_slug?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_settings: {
+        Row: {
+          created_at: string
+          id: string
+          notifications_enabled: boolean | null
+          theme: string | null
+          timer_enabled: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notifications_enabled?: boolean | null
+          theme?: string | null
+          timer_enabled?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notifications_enabled?: boolean | null
+          theme?: string | null
+          timer_enabled?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +523,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

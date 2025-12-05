@@ -94,8 +94,9 @@ const TopicView = () => {
             topic_slug: id!,
             subsection_slug: subsectionId,
             subsection_title: subsectionTitle,
-            subject: "chemistry"
-          });
+            subject: "chemistry",
+            subsection_id: subsectionId
+          } as any);
 
         if (error) throw error;
 
