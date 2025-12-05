@@ -19,6 +19,7 @@ serve(async (req) => {
     if (!BYTEZ_API_KEY) {
       throw new Error("BYTEZ_API_KEY_FLASH not configured");
     }
+    console.log("BYTEZ_API_KEY_FLASH found, length:", BYTEZ_API_KEY.length);
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -110,6 +111,7 @@ Be fair but rigorous. Award partial marks for partial understanding.
 Return ONLY valid JSON.`;
 
       try {
+        // Use the correct Bytez API endpoint format
         const response = await fetch('https://api.bytez.com/chat/completions', {
           method: 'POST',
           headers: {
@@ -122,12 +124,15 @@ Return ONLY valid JSON.`;
               { role: 'system', content: 'You are an expert exam marker. Return only valid JSON.' },
               { role: 'user', content: prompt }
             ],
-            max_tokens: 1500,
-            temperature: 0.3
+            max_tokens: 1500
           }),
         });
 
+        console.log(`Bytez API response status for question ${i + 1}:`, response.status);
+
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`Bytez API error for question ${i + 1}:`, response.status, errorText);
           throw new Error(`Bytez API error: ${response.status}`);
         }
 

@@ -108,6 +108,7 @@ serve(async (req) => {
       console.error("BYTEZ_API_KEY_PRO not configured");
       throw new Error("BYTEZ_API_KEY_PRO not configured");
     }
+    console.log("BYTEZ_API_KEY_PRO found, length:", BYTEZ_API_KEY.length);
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -168,7 +169,8 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
 
         console.log(`Calling Bytez API for ${count} x ${marks}-mark questions`);
         
-        const response = await fetch('https://api.bytez.com/models/google/gemini-2.5-pro/chat/completions', {
+        // Use the correct Bytez API endpoint format
+        const response = await fetch('https://api.bytez.com/chat/completions', {
           method: 'POST',
           headers: {
             'Authorization': `Key ${BYTEZ_API_KEY}`,
@@ -184,6 +186,8 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
           }),
         });
 
+        console.log("Bytez API response status:", response.status);
+
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Bytez API error:", response.status, errorText);
@@ -191,7 +195,7 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
         }
 
         const data = await response.json();
-        console.log("Bytez API response received");
+        console.log("Bytez API response received successfully");
         
         let content = data.choices?.[0]?.message?.content || '';
         
@@ -245,6 +249,8 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
       console.error("Error inserting questions:", insertError);
       throw insertError;
     }
+
+    console.log("Questions inserted successfully");
 
     return new Response(JSON.stringify({ 
       success: true, 
