@@ -62,8 +62,9 @@ const BiologyTopicView = () => {
           topic_slug: chapterId || '',
           subsection_slug: topicId || '',
           subsection_title: topic.title,
-          subject: 'biology'
-        });
+          subject: 'biology',
+          subsection_id: topicId || ''
+        } as any);
       
       setIsStarred(true);
       toast({ title: "Added to starred" });
