@@ -100,8 +100,27 @@ serve(async (req) => {
   }
 
   try {
-    const { examId, topics, totalMarks, subject } = await req.json();
-    console.log("Generating mock exam:", { examId, topicsCount: topics?.length, totalMarks, subject });
+    const { 
+      userId, 
+      subject, 
+      topicTitle, 
+      selectedTopics, 
+      timeLimitMinutes, 
+      totalMarks, 
+      submissionMethod, 
+      topics 
+    } = await req.json();
+    
+    console.log("Generate mock exam request:", { 
+      userId, 
+      subject, 
+      topicTitle, 
+      selectedTopicsCount: selectedTopics?.length,
+      timeLimitMinutes,
+      totalMarks, 
+      submissionMethod,
+      topicsCount: topics?.length 
+    });
 
     const BYTEZ_API_KEY = Deno.env.get('BYTEZ_API_KEY_PRO');
     if (!BYTEZ_API_KEY) {
@@ -114,14 +133,38 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Calculate question distribution for target marks
+    // Step 1: Create the exam record using service role (bypasses PostgREST cache)
+    console.log("Creating exam record with service role...");
+    const { data: exam, error: examError } = await supabase
+      .from('mock_exams')
+      .insert({
+        user_id: userId,
+        subject,
+        topic_title: topicTitle,
+        selected_topics: selectedTopics,
+        time_limit_minutes: timeLimitMinutes,
+        total_marks: totalMarks,
+        submission_method: submissionMethod,
+        status: 'in_progress'
+      })
+      .select()
+      .single();
+
+    if (examError) {
+      console.error("Error creating exam record:", examError);
+      throw new Error(`Failed to create exam: ${examError.message}`);
+    }
+
+    console.log("Exam record created successfully:", exam.id);
+
+    // Step 2: Calculate question distribution for target marks
     const distribution = calculateQuestionDistribution(totalMarks);
     console.log("Question distribution:", distribution);
 
     let questionNumber = 1;
     const allQuestions: any[] = [];
 
-    // Generate questions for each topic (page)
+    // Step 3: Generate questions for each topic (page)
     for (let pageNumber = 0; pageNumber < topics.length; pageNumber++) {
       const topic = topics[pageNumber];
       const pageMarks = Math.floor(totalMarks / topics.length);
@@ -169,7 +212,6 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
 
         console.log(`Calling Bytez API for ${count} x ${marks}-mark questions`);
         
-        // Use the correct Bytez API endpoint format
         const response = await fetch('https://api.bytez.com/chat/completions', {
           method: 'POST',
           headers: {
@@ -223,7 +265,7 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
         // Add questions with proper numbering
         for (const q of parsed.questions || []) {
           allQuestions.push({
-            exam_id: examId,
+            exam_id: exam.id,
             topic: topic.title,
             question_number: questionNumber++,
             question_text: q.question_text,
@@ -240,13 +282,15 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
 
     console.log(`Generated ${allQuestions.length} questions total`);
 
-    // Insert all questions
+    // Step 4: Insert all questions
     const { error: insertError } = await supabase
       .from('mock_exam_questions')
       .insert(allQuestions);
 
     if (insertError) {
       console.error("Error inserting questions:", insertError);
+      // Clean up the exam record if questions fail
+      await supabase.from('mock_exams').delete().eq('id', exam.id);
       throw insertError;
     }
 
@@ -254,6 +298,7 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
 
     return new Response(JSON.stringify({ 
       success: true, 
+      examId: exam.id,
       questionsGenerated: allQuestions.length 
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

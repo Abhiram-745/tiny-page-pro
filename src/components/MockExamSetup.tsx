@@ -64,45 +64,25 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
         .filter(sub => selectedTopics.includes(sub.title))
         .map(sub => ({ title: sub.title, content: sub.content }));
 
-      console.log("Creating exam record...", { 
-        user_id: user.id,
+      console.log("Calling generate-mock-exam edge function...", { 
+        userId: user.id,
         subject,
-        topic_title: topicTitle,
-        selected_topics: selectedTopics
+        topicTitle,
+        selectedTopics
       });
 
-      // Create exam record with explicit typing
-      const examInsert = {
-        user_id: user.id,
-        subject,
-        topic_title: topicTitle,
-        selected_topics: selectedTopics,
-        time_limit_minutes: parseInt(timeLimit),
-        total_marks: parseInt(totalMarks),
-        submission_method: submissionMethod
-      };
-
-      const { data: exam, error: examError } = await supabase
-        .from("mock_exams")
-        .insert(examInsert)
-        .select()
-        .single();
-
-      if (examError) {
-        console.error("Error creating exam:", examError);
-        throw new Error(`Database error: ${examError.message}`);
-      }
-
-      console.log("Exam created:", exam.id);
-
-      // Generate questions via edge function
-      console.log("Invoking generate-mock-exam function...");
+      // Call edge function which handles both exam creation and question generation
+      // This bypasses PostgREST by using service role key directly
       const { data, error } = await supabase.functions.invoke('generate-mock-exam', {
         body: {
-          examId: exam.id,
-          topics: selectedContent,
+          userId: user.id,
+          subject,
+          topicTitle,
+          selectedTopics,
+          timeLimitMinutes: parseInt(timeLimit),
           totalMarks: parseInt(totalMarks),
-          subject
+          submissionMethod,
+          topics: selectedContent
         }
       });
 
@@ -111,15 +91,20 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
         throw new Error(`Generation error: ${error.message}`);
       }
 
-      console.log("Questions generated:", data);
+      if (data?.error) {
+        console.error("Edge function returned error:", data.error);
+        throw new Error(data.error);
+      }
+
+      console.log("Exam generated successfully:", data);
 
       toast({
         title: "Exam generated!",
         description: `Your ${totalMarks}-mark exam is ready. Good luck!`
       });
 
-      // Navigate to exam page
-      navigate(`/mock-exam/${exam.id}`);
+      // Navigate to exam page using the exam ID returned from edge function
+      navigate(`/mock-exam/${data.examId}`);
     } catch (error) {
       console.error("Error creating exam:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
