@@ -64,24 +64,39 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
         .filter(sub => selectedTopics.includes(sub.title))
         .map(sub => ({ title: sub.title, content: sub.content }));
 
-      // Create exam record
+      console.log("Creating exam record...", { 
+        user_id: user.id,
+        subject,
+        topic_title: topicTitle,
+        selected_topics: selectedTopics
+      });
+
+      // Create exam record with explicit typing
+      const examInsert = {
+        user_id: user.id,
+        subject,
+        topic_title: topicTitle,
+        selected_topics: selectedTopics,
+        time_limit_minutes: parseInt(timeLimit),
+        total_marks: parseInt(totalMarks),
+        submission_method: submissionMethod
+      };
+
       const { data: exam, error: examError } = await supabase
         .from("mock_exams")
-        .insert({
-          user_id: user.id,
-          subject,
-          topic_title: topicTitle,
-          selected_topics: selectedTopics,
-          time_limit_minutes: parseInt(timeLimit),
-          total_marks: parseInt(totalMarks),
-          submission_method: submissionMethod
-        } as any)
+        .insert(examInsert)
         .select()
         .single();
 
-      if (examError) throw examError;
+      if (examError) {
+        console.error("Error creating exam:", examError);
+        throw new Error(`Database error: ${examError.message}`);
+      }
+
+      console.log("Exam created:", exam.id);
 
       // Generate questions via edge function
+      console.log("Invoking generate-mock-exam function...");
       const { data, error } = await supabase.functions.invoke('generate-mock-exam', {
         body: {
           examId: exam.id,
@@ -91,7 +106,12 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Edge function error:", error);
+        throw new Error(`Generation error: ${error.message}`);
+      }
+
+      console.log("Questions generated:", data);
 
       toast({
         title: "Exam generated!",
@@ -102,9 +122,10 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
       navigate(`/mock-exam/${exam.id}`);
     } catch (error) {
       console.error("Error creating exam:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       toast({
         title: "Error",
-        description: "Failed to generate exam. Please try again.",
+        description: `Failed to generate exam: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {
