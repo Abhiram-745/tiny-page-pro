@@ -5,15 +5,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { FileText, Keyboard, Pencil, Clock, Target, PlayCircle } from "lucide-react";
+import { FileText, Keyboard, Pencil, Clock, Target, PlayCircle, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import StepLoadingSpinner from "@/components/StepLoadingSpinner";
+import MockExamPriorityList from "@/components/MockExamPriorityList";
 
 interface MockExamSetupProps {
   topicTitle: string;
-  subsections: Array<{ title: string; content: string }>;
+  subsections: Array<{ title: string; content: string; slug?: string }>;
   subject?: string;
 }
 
@@ -25,8 +26,10 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
   const [totalMarks, setTotalMarks] = useState<string>("40");
   const [submissionMethod, setSubmissionMethod] = useState<string>("keyboard");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showPriorityList, setShowPriorityList] = useState(false);
 
   const topics = subsections.map(sub => sub.title);
+  const topicSlugs = subsections.map(sub => sub.slug || sub.title.toLowerCase().replace(/\s+/g, '-'));
 
   const toggleTopic = (topic: string) => {
     setSelectedTopics(prev =>
@@ -34,6 +37,10 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
         ? prev.filter(t => t !== topic)
         : [...prev, topic]
     );
+  };
+
+  const handlePriorityListConfirm = (topics: string[]) => {
+    setSelectedTopics(topics);
   };
 
   const handleStartExam = async () => {
@@ -130,12 +137,23 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Topic Selection */}
+        {/* Topic Selection with Smart Priority */}
         <div>
-          <h3 className="font-semibold mb-3 flex items-center gap-2">
-            <Target className="h-4 w-4 text-primary" />
-            Select Topics for Your Exam:
-          </h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold flex items-center gap-2">
+              <Target className="h-4 w-4 text-primary" />
+              Select Topics for Your Exam:
+            </h3>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowPriorityList(true)}
+              className="gap-2"
+            >
+              <BarChart3 className="h-4 w-4" />
+              Smart Select
+            </Button>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 p-4 bg-muted/30 rounded-lg">
             {topics.map((topic) => (
               <div key={topic} className="flex items-center space-x-2">
@@ -258,6 +276,16 @@ const MockExamSetup = ({ topicTitle, subsections, subject = "general" }: MockExa
         </Button>
 
         {isGenerating && <StepLoadingSpinner />}
+
+        {/* Priority List Modal */}
+        <MockExamPriorityList
+          open={showPriorityList}
+          onOpenChange={setShowPriorityList}
+          topicTitles={topics}
+          topicSlugs={topicSlugs}
+          subject={subject}
+          onConfirm={handlePriorityListConfirm}
+        />
       </CardContent>
     </Card>
   );

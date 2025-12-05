@@ -63,6 +63,125 @@ function getGCSEContext(subject: string): string {
   return contexts[subject] || contexts['chemistry'];
 }
 
+function getDiagramInstructions(subject: string): string {
+  const diagramGuides: Record<string, string> = {
+    'biology': `**SVG DIAGRAM REQUIREMENTS (include for ~40% of questions):**
+Generate diagrams for questions involving:
+- Cell structures (animal cells, plant cells, bacterial cells)
+- Organ systems (heart, lungs, digestive system)
+- Biological processes (osmosis, diffusion, mitosis)
+- Graphs showing enzyme activity, photosynthesis rates
+
+Example SVG structure:
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .label { font-size: 12px; fill: currentColor; }
+    .structure { stroke: currentColor; stroke-width: 2; }
+    .anim-pulse { animation: pulse 2s ease-in-out infinite; }
+  </style>
+  <!-- Cell membrane -->
+  <ellipse cx="200" cy="150" rx="150" ry="100" class="structure" fill="none"/>
+  <!-- Nucleus -->
+  <circle cx="200" cy="150" r="40" class="structure anim-pulse" fill="hsl(220, 70%, 50%)" fill-opacity="0.3"/>
+  <text x="200" y="155" class="label" text-anchor="middle">Nucleus</text>
+  <!-- Labels with lines -->
+  <line x1="280" y1="100" x2="320" y2="80" class="structure"/>
+  <text x="325" y="85" class="label">Cell membrane</text>
+</svg>`,
+
+    'chemistry': `**SVG DIAGRAM REQUIREMENTS (include for ~40% of questions):**
+Generate diagrams for questions involving:
+- Atomic structure (electron shells, subatomic particles)
+- Apparatus setups (titration, distillation, electrolysis)
+- Energy level diagrams (exothermic/endothermic)
+- Molecular structures and bonding
+
+Example SVG structure:
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .label { font-size: 12px; fill: currentColor; }
+    .apparatus { stroke: currentColor; stroke-width: 2; fill: none; }
+    .liquid { fill: hsl(200, 70%, 60%); fill-opacity: 0.5; }
+  </style>
+  <!-- Beaker -->
+  <path d="M 100 100 L 100 250 L 200 250 L 200 100" class="apparatus"/>
+  <rect x="105" y="180" width="90" height="65" class="liquid"/>
+  <text x="150" y="280" class="label" text-anchor="middle">Beaker</text>
+</svg>`,
+
+    'physics': `**SVG DIAGRAM REQUIREMENTS (include for ~40% of questions):**
+Generate diagrams for questions involving:
+- Circuit diagrams (series, parallel, components)
+- Force diagrams (arrows showing forces)
+- Wave diagrams (transverse, longitudinal)
+- Energy transfer diagrams (Sankey diagrams)
+
+Example SVG structure:
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .label { font-size: 12px; fill: currentColor; }
+    .wire { stroke: currentColor; stroke-width: 2; fill: none; }
+    .component { stroke: currentColor; stroke-width: 2; }
+  </style>
+  <!-- Battery symbol -->
+  <line x1="50" y1="140" x2="50" y2="160" class="component" stroke-width="4"/>
+  <line x1="60" y1="130" x2="60" y2="170" class="component" stroke-width="2"/>
+  <!-- Wire connections -->
+  <path d="M 60 150 L 150 150" class="wire"/>
+  <text x="55" y="190" class="label" text-anchor="middle">Cell</text>
+</svg>`,
+
+    'economics': `**SVG DIAGRAM REQUIREMENTS (include for ~50% of questions):**
+Generate diagrams for questions involving:
+- Supply and demand curves
+- Market equilibrium shifts
+- Production possibility frontiers
+- Cost/revenue curves
+
+Example SVG structure:
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .label { font-size: 12px; fill: currentColor; }
+    .axis { stroke: currentColor; stroke-width: 2; }
+    .demand { stroke: hsl(0, 70%, 50%); stroke-width: 2; fill: none; }
+    .supply { stroke: hsl(120, 70%, 40%); stroke-width: 2; fill: none; }
+  </style>
+  <!-- Axes -->
+  <line x1="50" y1="250" x2="350" y2="250" class="axis"/>
+  <line x1="50" y1="250" x2="50" y2="50" class="axis"/>
+  <!-- Labels -->
+  <text x="200" y="280" class="label" text-anchor="middle">Quantity</text>
+  <text x="30" y="150" class="label" transform="rotate(-90, 30, 150)">Price</text>
+  <!-- Demand curve -->
+  <path d="M 80 80 Q 200 150 320 220" class="demand"/>
+  <text x="330" y="225" class="label" fill="hsl(0, 70%, 50%)">D</text>
+  <!-- Supply curve -->
+  <path d="M 80 220 Q 200 150 320 80" class="supply"/>
+  <text x="330" y="85" class="label" fill="hsl(120, 70%, 40%)">S</text>
+</svg>`,
+
+    'geography': `**SVG DIAGRAM REQUIREMENTS (include for ~30% of questions):**
+Generate diagrams for questions involving:
+- Cross-sections (river valleys, coastal features)
+- Climate graphs and population pyramids
+- Tectonic processes
+- Urban models
+
+Use clear labels and arrows to indicate processes.`,
+
+    'product-design': `**SVG DIAGRAM REQUIREMENTS (include for ~40% of questions):**
+Generate diagrams for questions involving:
+- Product sketches with annotations
+- Manufacturing processes
+- Material cross-sections
+- Assembly diagrams
+
+Use clear labels, dimensions where relevant, and annotation lines.`
+  };
+
+  return diagramGuides[subject] || '';
+}
+
 function getMarkGuidelines(marks: number): string {
   switch (marks) {
     case 1:
@@ -164,6 +283,11 @@ serve(async (req) => {
     let questionNumber = 1;
     const allQuestions: any[] = [];
 
+    // Determine if this subject should have diagrams
+    const diagramSubjects = ['biology', 'chemistry', 'physics', 'economics'];
+    const shouldIncludeDiagrams = diagramSubjects.includes(subject.toLowerCase());
+    const diagramInstructions = shouldIncludeDiagrams ? getDiagramInstructions(subject.toLowerCase()) : '';
+
     // Step 3: Generate questions for each topic (page)
     for (let pageNumber = 0; pageNumber < topics.length; pageNumber++) {
       const topic = topics[pageNumber];
@@ -188,21 +312,36 @@ serve(async (req) => {
 
 ${subjectContext}
 
+${diagramInstructions}
+
 **Study content for context:**
 ${topic.content.substring(0, 3000)}
 
 **Question Requirements for ${marks}-mark questions:**
 ${getMarkGuidelines(marks)}
 
+**IMPORTANT DIAGRAM GUIDELINES:**
+${shouldIncludeDiagrams ? `
+- For approximately 40% of questions, include an SVG diagram in the "diagram_svg" field
+- Diagrams should ADD CONTEXT to the question (e.g., "Use Figure 1 to answer this question")
+- For science subjects: include cell diagrams, apparatus, circuits, graphs, energy diagrams
+- For economics: include supply/demand curves, market diagrams, economic graphs
+- SVG must use viewBox="0 0 400 300"
+- Use "currentColor" for text and strokes so it works in dark mode
+- Include clear labels with the class "label"
+- Use animation classes like "anim-pulse" or "anim-flow-right" for key elements
+- Reference the diagram in the question text (e.g., "Figure 1 shows...", "The diagram shows...")
+` : '- No diagrams needed for this subject'}
+
 **Return a JSON array with this exact structure:**
 {
   "questions": [
     {
-      "question_text": "The complete question text with any context, data, or scenario",
+      "question_text": "The complete question text with any context, data, or scenario. Reference any diagram as 'Figure 1'",
       "marks": ${marks},
       "expected_key_points": ["specific marking point 1", "specific marking point 2"],
       "markscheme": "Detailed markscheme using AO1/AO2/AO3 where applicable. Each mark point should be on a new line with [1] notation",
-      "diagram_svg": null,
+      "diagram_svg": ${shouldIncludeDiagrams ? '"<svg viewBox=\\"0 0 400 300\\" xmlns=\\"http://www.w3.org/2000/svg\\">...</svg>" or null if no diagram needed' : 'null'},
       "table_html": null
     }
   ]
@@ -221,7 +360,7 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
           body: JSON.stringify({
             model: 'google/gemini-2.5-flash',
             messages: [
-              { role: 'system', content: 'You are an expert GCSE examiner who writes authentic exam questions following UK exam board standards (AQA, Edexcel, OCR). Always return valid JSON without markdown formatting.' },
+              { role: 'system', content: `You are an expert GCSE examiner who writes authentic exam questions following UK exam board standards (AQA, Edexcel, OCR). Always return valid JSON without markdown formatting. ${shouldIncludeDiagrams ? 'When creating SVG diagrams, ensure they are well-formed, use currentColor for accessibility, and include helpful labels.' : ''}` },
               { role: 'user', content: prompt }
             ],
           }),

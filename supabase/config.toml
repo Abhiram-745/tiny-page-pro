@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.mark-mock-exam]
 verify_jwt = false
+
+[functions.generate-priority-analysis]
+verify_jwt = false
