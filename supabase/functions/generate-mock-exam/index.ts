@@ -122,12 +122,12 @@ serve(async (req) => {
       topicsCount: topics?.length 
     });
 
-    const BYTEZ_API_KEY = Deno.env.get('BYTEZ_API_KEY_PRO');
-    if (!BYTEZ_API_KEY) {
-      console.error("BYTEZ_API_KEY_PRO not configured");
-      throw new Error("BYTEZ_API_KEY_PRO not configured");
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY not configured");
+      throw new Error("LOVABLE_API_KEY not configured");
     }
-    console.log("BYTEZ_API_KEY_PRO found, length:", BYTEZ_API_KEY.length);
+    console.log("LOVABLE_API_KEY found, length:", LOVABLE_API_KEY.length);
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -210,34 +210,39 @@ ${getMarkGuidelines(marks)}
 
 Return ONLY valid JSON, no markdown code blocks, no other text.`;
 
-        console.log(`Calling Bytez API for ${count} x ${marks}-mark questions`);
+        console.log(`Calling Lovable AI for ${count} x ${marks}-mark questions`);
         
-        const response = await fetch('https://api.bytez.com/chat/completions', {
+        const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
           method: 'POST',
           headers: {
-            'Authorization': `Key ${BYTEZ_API_KEY}`,
+            'Authorization': `Bearer ${LOVABLE_API_KEY}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'google/gemini-2.5-pro',
+            model: 'google/gemini-2.5-flash',
             messages: [
               { role: 'system', content: 'You are an expert GCSE examiner who writes authentic exam questions following UK exam board standards (AQA, Edexcel, OCR). Always return valid JSON without markdown formatting.' },
               { role: 'user', content: prompt }
             ],
-            max_tokens: 4000
           }),
         });
 
-        console.log("Bytez API response status:", response.status);
+        console.log("Lovable AI response status:", response.status);
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error("Bytez API error:", response.status, errorText);
-          throw new Error(`Bytez API error: ${response.status} - ${errorText}`);
+          console.error("Lovable AI error:", response.status, errorText);
+          if (response.status === 429) {
+            throw new Error("Rate limit exceeded. Please try again later.");
+          }
+          if (response.status === 402) {
+            throw new Error("AI credits exhausted. Please add credits to continue.");
+          }
+          throw new Error(`AI error: ${response.status} - ${errorText}`);
         }
 
         const data = await response.json();
-        console.log("Bytez API response received successfully");
+        console.log("Lovable AI response received successfully");
         
         let content = data.choices?.[0]?.message?.content || '';
         
