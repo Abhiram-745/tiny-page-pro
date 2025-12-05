@@ -45,7 +45,7 @@ export const biologyData: BiologyChapter[] = [
     subsections: [],
     modules: [
       // ========================================
-      // MODULE 1: CELL STRUCTURE (NEW)
+      // MODULE 1: CELL STRUCTURE
       // ========================================
       {
         id: "cell-structure-module",
@@ -67,7 +67,7 @@ export const biologyData: BiologyChapter[] = [
   </div>
 
   <div class="definition-block">
-    <h4>🔵 Eukaryotic Cells (Plants & Animals)</h4>
+    <h4>🧬 Eukaryotic Cells (Plants & Animals)</h4>
     <ul>
       <li>Have a <strong>cell membrane</strong>, <strong>cytoplasm</strong>, and genetic material enclosed in a <strong>nucleus</strong></li>
       <li>DNA is organised into <strong>chromosomes</strong></li>
@@ -78,7 +78,7 @@ export const biologyData: BiologyChapter[] = [
   </div>
 
   <div class="definition-block">
-    <h4>🔵 Prokaryotic Cells (Bacteria)</h4>
+    <h4>🦠 Prokaryotic Cells (Bacteria)</h4>
     <ul>
       <li>Much smaller: typically <strong>1–5 μm</strong></li>
       <li>Genetic material is <strong>not inside a nucleus</strong> but in a single <strong>circular DNA loop</strong></li>
@@ -89,133 +89,166 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
-  <!-- Animated Eukaryotic Cell Diagram -->
+  <!-- Eukaryotic Animal Cell Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
     <h4>🔬 Eukaryotic Animal Cell (hover to pause)</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="400" height="320" viewBox="0 0 400 320">
+      <svg width="450" height="380" viewBox="0 0 450 380">
         <defs>
-          <radialGradient id="cellGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:0.6"/>
-            <stop offset="100%" style="stop-color:#fde68a;stop-opacity:0.3"/>
+          <radialGradient id="cellGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:#fef3c7;stop-opacity:0.7"/>
+            <stop offset="100%" style="stop-color:#fde68a;stop-opacity:0.4"/>
           </radialGradient>
-          <radialGradient id="nucleusGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style="stop-color:#c084fc;stop-opacity:0.8"/>
-            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.6"/>
+          <radialGradient id="nucleusGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:#c084fc;stop-opacity:0.9"/>
+            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.7"/>
+          </radialGradient>
+          <radialGradient id="mitoGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:#fca5a5"/>
+            <stop offset="100%" style="stop-color:#ef4444"/>
           </radialGradient>
         </defs>
         
-        <!-- Cell membrane -->
-        <ellipse cx="200" cy="160" rx="180" ry="140" fill="url(#cellGradient)" stroke="#f59e0b" stroke-width="4"/>
+        <!-- Cell membrane - irregular blob shape -->
+        <path d="M225,30 Q380,40 400,190 Q410,340 225,350 Q40,340 50,190 Q60,40 225,30" 
+              fill="url(#cellGrad)" stroke="#f59e0b" stroke-width="5"/>
         
         <!-- Cytoplasm label -->
-        <text x="80" y="80" fill="currentColor" font-size="10" font-weight="bold">Cytoplasm</text>
-        <line x1="95" y1="85" x2="150" y2="120" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="90" y="70" fill="currentColor" font-size="11" font-weight="bold">Cytoplasm</text>
+        <line x1="115" y1="75" x2="150" y2="110" stroke="currentColor" stroke-width="1" stroke-dasharray="3,3"/>
         
-        <!-- Nucleus -->
+        <!-- Nucleus with nucleolus -->
         <g class="anim-pulse">
-          <ellipse cx="200" cy="160" rx="60" ry="50" fill="url(#nucleusGradient)" stroke="#7c3aed" stroke-width="3"/>
-          <!-- Chromosomes inside nucleus -->
-          <path d="M180,145 Q175,160 180,175" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
-          <path d="M200,140 Q195,160 200,180" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
-          <path d="M220,145 Q225,160 220,175" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
+          <ellipse cx="225" cy="180" rx="75" ry="60" fill="url(#nucleusGrad)" stroke="#7c3aed" stroke-width="3"/>
+          <!-- Nuclear pores -->
+          <circle cx="160" cy="165" r="4" fill="#ddd6fe"/>
+          <circle cx="170" cy="200" r="4" fill="#ddd6fe"/>
+          <circle cx="280" cy="170" r="4" fill="#ddd6fe"/>
+          <circle cx="290" cy="195" r="4" fill="#ddd6fe"/>
+          <!-- Nucleolus -->
+          <circle cx="225" cy="180" r="20" fill="#581c87" opacity="0.8"/>
+          <!-- Chromosomes (DNA) -->
+          <path d="M200,160 Q195,180 200,200" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M225,150 Q220,180 225,210" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M250,160 Q255,180 250,200" fill="none" stroke="#1e3a8a" stroke-width="3" stroke-linecap="round"/>
         </g>
-        <text x="280" y="140" fill="#7c3aed" font-size="10" font-weight="bold">Nucleus</text>
-        <text x="280" y="152" fill="#7c3aed" font-size="8">(contains DNA)</text>
-        <line x1="260" y1="155" x2="265" y2="155" stroke="#7c3aed" stroke-width="1"/>
+        <text x="330" y="145" fill="#7c3aed" font-size="11" font-weight="bold">Nucleus</text>
+        <text x="330" y="160" fill="#7c3aed" font-size="9">(contains DNA in</text>
+        <text x="330" y="173" fill="#7c3aed" font-size="9">chromosomes)</text>
+        <line x1="300" y1="175" x2="315" y2="175" stroke="#7c3aed" stroke-width="1"/>
         
-        <!-- Mitochondria -->
-        <g class="anim-pulse-fast" style="animation-delay: 0.3s;">
-          <ellipse cx="100" cy="200" rx="25" ry="12" fill="#ef4444" opacity="0.7" stroke="#dc2626" stroke-width="2"/>
-          <path d="M80,200 Q90,195 100,200 Q110,205 120,200" fill="none" stroke="#fca5a5" stroke-width="2"/>
+        <!-- Mitochondria (multiple) -->
+        <g class="anim-pulse-fast" style="animation-delay: 0.2s;">
+          <ellipse cx="100" cy="250" rx="30" ry="15" fill="url(#mitoGrad)" stroke="#dc2626" stroke-width="2"/>
+          <path d="M75,250 Q85,243 100,250 Q115,257 125,250" fill="none" stroke="#fca5a5" stroke-width="2"/>
+          <path d="M80,245 L80,255" stroke="#fca5a5" stroke-width="1"/>
+          <path d="M90,243 L90,257" stroke="#fca5a5" stroke-width="1"/>
+          <path d="M100,242 L100,258" stroke="#fca5a5" stroke-width="1"/>
+          <path d="M110,243 L110,257" stroke="#fca5a5" stroke-width="1"/>
+          <path d="M120,245 L120,255" stroke="#fca5a5" stroke-width="1"/>
         </g>
-        <g class="anim-pulse-fast" style="animation-delay: 0.6s;">
-          <ellipse cx="300" cy="220" rx="25" ry="12" fill="#ef4444" opacity="0.7" stroke="#dc2626" stroke-width="2"/>
-          <path d="M280,220 Q290,215 300,220 Q310,225 320,220" fill="none" stroke="#fca5a5" stroke-width="2"/>
+        <g class="anim-pulse-fast" style="animation-delay: 0.5s;">
+          <ellipse cx="340" cy="270" rx="28" ry="14" fill="url(#mitoGrad)" stroke="#dc2626" stroke-width="2"/>
+          <path d="M317,270 Q327,263 340,270 Q353,277 363,270" fill="none" stroke="#fca5a5" stroke-width="2"/>
         </g>
-        <text x="50" y="235" fill="#dc2626" font-size="9" font-weight="bold">Mitochondria</text>
-        <text x="50" y="247" fill="#dc2626" font-size="8">(respiration)</text>
+        <g class="anim-pulse-fast" style="animation-delay: 0.8s;">
+          <ellipse cx="150" cy="310" rx="25" ry="12" fill="url(#mitoGrad)" stroke="#dc2626" stroke-width="2"/>
+        </g>
+        <text x="50" y="290" fill="#dc2626" font-size="10" font-weight="bold">Mitochondria</text>
+        <text x="50" y="303" fill="#dc2626" font-size="9">(aerobic respiration</text>
+        <text x="50" y="316" fill="#dc2626" font-size="9">→ releases energy)</text>
         
-        <!-- Ribosomes -->
+        <!-- Ribosomes (many small dots) -->
         <g class="anim-vibrate-slow">
-          <circle cx="140" cy="120" r="4" fill="#10b981"/>
-          <circle cx="155" cy="130" r="4" fill="#10b981"/>
-          <circle cx="250" cy="110" r="4" fill="#10b981"/>
-          <circle cx="265" cy="125" r="4" fill="#10b981"/>
-          <circle cx="130" cy="250" r="4" fill="#10b981"/>
-          <circle cx="270" cy="260" r="4" fill="#10b981"/>
+          <circle cx="160" cy="100" r="5" fill="#10b981"/>
+          <circle cx="180" cy="115" r="5" fill="#10b981"/>
+          <circle cx="280" cy="95" r="5" fill="#10b981"/>
+          <circle cx="300" cy="110" r="5" fill="#10b981"/>
+          <circle cx="140" cy="280" r="5" fill="#10b981"/>
+          <circle cx="290" cy="310" r="5" fill="#10b981"/>
+          <circle cx="200" cy="290" r="5" fill="#10b981"/>
+          <circle cx="260" cy="300" r="5" fill="#10b981"/>
         </g>
-        <text x="280" y="95" fill="#10b981" font-size="9" font-weight="bold">Ribosomes</text>
-        <text x="280" y="107" fill="#10b981" font-size="8">(protein synthesis)</text>
+        <text x="320" y="85" fill="#10b981" font-size="10" font-weight="bold">Ribosomes</text>
+        <text x="320" y="98" fill="#10b981" font-size="9">(protein synthesis)</text>
         
         <!-- Cell membrane label -->
-        <text x="320" y="280" fill="#f59e0b" font-size="9" font-weight="bold">Cell Membrane</text>
-        <line x1="350" y1="265" x2="350" y2="250" stroke="#f59e0b" stroke-width="1"/>
+        <text x="340" y="340" fill="#f59e0b" font-size="10" font-weight="bold">Cell Membrane</text>
+        <text x="340" y="353" fill="#f59e0b" font-size="9">(controls entry/exit)</text>
+        <line x1="370" y1="320" x2="370" y2="305" stroke="#f59e0b" stroke-width="1"/>
       </svg>
     </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Eukaryotic cells have a nucleus containing DNA organised into chromosomes</p>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Eukaryotic cells have a nucleus containing DNA organised into chromosomes</p>
   </div>
 
-  <!-- Animated Prokaryotic Cell Diagram -->
+  <!-- Prokaryotic Bacterial Cell Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
     <h4>🦠 Prokaryotic Bacterial Cell (hover to pause)</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="400" height="260" viewBox="0 0 400 260">
+      <svg width="450" height="300" viewBox="0 0 450 300">
         <defs>
-          <radialGradient id="bacteriaGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style="stop-color:#dbeafe;stop-opacity:0.8"/>
-            <stop offset="100%" style="stop-color:#93c5fd;stop-opacity:0.5"/>
+          <radialGradient id="bacteriaGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:#dbeafe;stop-opacity:0.9"/>
+            <stop offset="100%" style="stop-color:#93c5fd;stop-opacity:0.6"/>
           </radialGradient>
         </defs>
         
-        <!-- Cell wall -->
-        <ellipse cx="200" cy="130" rx="150" ry="90" fill="none" stroke="#1d4ed8" stroke-width="6"/>
+        <!-- Cell wall (outer) -->
+        <ellipse cx="225" cy="150" rx="170" ry="100" fill="none" stroke="#1d4ed8" stroke-width="8"/>
         
-        <!-- Cell membrane -->
-        <ellipse cx="200" cy="130" rx="140" ry="80" fill="url(#bacteriaGradient)" stroke="#3b82f6" stroke-width="3"/>
+        <!-- Cell membrane (inner) -->
+        <ellipse cx="225" cy="150" rx="155" ry="85" fill="url(#bacteriaGrad)" stroke="#3b82f6" stroke-width="3"/>
         
-        <!-- Circular DNA loop -->
+        <!-- Circular DNA loop (main genetic material) -->
         <g class="anim-pulse">
-          <ellipse cx="200" cy="130" rx="50" ry="35" fill="none" stroke="#ef4444" stroke-width="4" stroke-dasharray="8,4"/>
+          <ellipse cx="225" cy="150" rx="60" ry="40" fill="none" stroke="#ef4444" stroke-width="5" stroke-dasharray="12,6"/>
         </g>
-        <text x="200" y="135" fill="#ef4444" font-size="9" text-anchor="middle" font-weight="bold">Circular DNA</text>
+        <text x="225" y="155" fill="#ef4444" font-size="10" text-anchor="middle" font-weight="bold">Circular DNA</text>
+        <text x="225" y="168" fill="#ef4444" font-size="9" text-anchor="middle">(no nucleus!)</text>
         
-        <!-- Plasmids -->
-        <g class="anim-rotate-cw-slow" style="transform-origin: 100px 100px;">
-          <circle cx="100" cy="100" r="15" fill="none" stroke="#f59e0b" stroke-width="3"/>
+        <!-- Plasmids (extra DNA rings) -->
+        <g class="anim-rotate-cw-slow" style="transform-origin: 110px 110px;">
+          <circle cx="110" cy="110" r="18" fill="none" stroke="#f59e0b" stroke-width="4"/>
         </g>
-        <g class="anim-rotate-ccw" style="transform-origin: 290px 160px;">
-          <circle cx="290" cy="160" r="12" fill="none" stroke="#f59e0b" stroke-width="3"/>
+        <g class="anim-rotate-ccw" style="transform-origin: 320px 180px;">
+          <circle cx="320" cy="180" r="15" fill="none" stroke="#f59e0b" stroke-width="4"/>
         </g>
-        <text x="70" y="80" fill="#f59e0b" font-size="9" font-weight="bold">Plasmids</text>
+        <g class="anim-rotate-cw-slow" style="transform-origin: 140px 200px; animation-delay: 0.5s;">
+          <circle cx="140" cy="200" r="12" fill="none" stroke="#f59e0b" stroke-width="3"/>
+        </g>
+        <text x="70" y="85" fill="#f59e0b" font-size="10" font-weight="bold">Plasmids</text>
+        <text x="70" y="98" fill="#f59e0b" font-size="9">(extra DNA rings)</text>
         
         <!-- Ribosomes -->
         <g class="anim-vibrate-slow">
-          <circle cx="150" cy="90" r="4" fill="#10b981"/>
-          <circle cx="170" cy="170" r="4" fill="#10b981"/>
-          <circle cx="240" cy="95" r="4" fill="#10b981"/>
-          <circle cx="260" cy="165" r="4" fill="#10b981"/>
-          <circle cx="130" cy="140" r="4" fill="#10b981"/>
+          <circle cx="170" cy="100" r="5" fill="#10b981"/>
+          <circle cx="195" cy="200" r="5" fill="#10b981"/>
+          <circle cx="270" cy="105" r="5" fill="#10b981"/>
+          <circle cx="285" cy="195" r="5" fill="#10b981"/>
+          <circle cx="145" cy="150" r="5" fill="#10b981"/>
+          <circle cx="305" cy="140" r="5" fill="#10b981"/>
         </g>
-        <text x="310" y="90" fill="#10b981" font-size="9" font-weight="bold">Ribosomes</text>
+        <text x="350" y="100" fill="#10b981" font-size="10" font-weight="bold">Ribosomes</text>
         
-        <!-- Flagellum -->
+        <!-- Flagellum (tail for movement) -->
         <g class="anim-wave">
-          <path d="M50,130 Q30,110 20,130 Q10,150 0,130" fill="none" stroke="#8b5cf6" stroke-width="3"/>
+          <path d="M55,150 Q35,120 20,150 Q5,180 -15,150 Q-30,120 -45,150" fill="none" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/>
         </g>
-        <text x="5" y="165" fill="#8b5cf6" font-size="9" font-weight="bold">Flagellum</text>
+        <text x="10" y="200" fill="#8b5cf6" font-size="10" font-weight="bold">Flagellum</text>
+        <text x="10" y="213" fill="#8b5cf6" font-size="9">(movement)</text>
         
         <!-- Labels -->
-        <text x="320" y="50" fill="#1d4ed8" font-size="9" font-weight="bold">Cell Wall</text>
-        <line x1="320" y1="55" x2="300" y2="70" stroke="#1d4ed8" stroke-width="1"/>
+        <text x="360" y="50" fill="#1d4ed8" font-size="10" font-weight="bold">Cell Wall</text>
+        <text x="360" y="63" fill="#1d4ed8" font-size="9">(protection)</text>
+        <line x1="370" y1="68" x2="350" y2="85" stroke="#1d4ed8" stroke-width="1"/>
         
-        <text x="320" y="200" fill="#3b82f6" font-size="9" font-weight="bold">Cell Membrane</text>
-        <line x1="320" y1="190" x2="310" y2="175" stroke="#3b82f6" stroke-width="1"/>
+        <text x="360" y="240" fill="#3b82f6" font-size="10" font-weight="bold">Cell Membrane</text>
+        <line x1="370" y1="225" x2="355" y2="210" stroke="#3b82f6" stroke-width="1"/>
         
-        <text x="150" y="240" fill="currentColor" font-size="9">Cytoplasm</text>
+        <text x="180" y="280" fill="currentColor" font-size="10" text-anchor="middle">Cytoplasm</text>
       </svg>
     </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Prokaryotic cells have NO nucleus — DNA floats freely in the cytoplasm</p>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Prokaryotic cells have NO nucleus — DNA floats freely in the cytoplasm</p>
   </div>
 
   <div class="table-block">
@@ -254,7 +287,7 @@ export const biologyData: BiologyChapter[] = [
   </div>
 
   <div class="key-facts-block">
-    <h4>🧠 Scale & Order of Magnitude</h4>
+    <h4>📏 Scale & Order of Magnitude</h4>
     <ul>
       <li><strong>1 mm = 1000 μm</strong></li>
       <li><strong>1 μm = 1000 nm</strong></li>
@@ -379,80 +412,84 @@ export const biologyData: BiologyChapter[] = [
     </table>
   </div>
 
-  <!-- Animated Plant Cell Diagram -->
+  <!-- Detailed Plant Cell Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
     <h4>🌿 Plant Cell Structure (hover to pause)</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="420" height="350" viewBox="0 0 420 350">
+      <svg width="480" height="400" viewBox="0 0 480 400">
         <defs>
-          <linearGradient id="vacuoleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#c7d2fe;stop-opacity:0.8"/>
-            <stop offset="100%" style="stop-color:#a5b4fc;stop-opacity:0.6"/>
+          <linearGradient id="vacuoleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#c7d2fe;stop-opacity:0.9"/>
+            <stop offset="100%" style="stop-color:#a5b4fc;stop-opacity:0.7"/>
           </linearGradient>
-          <radialGradient id="chloroplastGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style="stop-color:#86efac;stop-opacity:0.9"/>
-            <stop offset="100%" style="stop-color:#22c55e;stop-opacity:0.7"/>
+          <radialGradient id="chloroplastGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:#86efac;stop-opacity:0.95"/>
+            <stop offset="100%" style="stop-color:#22c55e;stop-opacity:0.8"/>
           </radialGradient>
         </defs>
         
         <!-- Cell wall (outer rectangle) -->
-        <rect x="20" y="20" width="380" height="310" rx="10" fill="none" stroke="#84cc16" stroke-width="8"/>
+        <rect x="25" y="25" width="430" height="350" rx="15" fill="none" stroke="#84cc16" stroke-width="10"/>
         
         <!-- Cell membrane -->
-        <rect x="35" y="35" width="350" height="280" rx="8" fill="#fef9c3" stroke="#eab308" stroke-width="3"/>
+        <rect x="45" y="45" width="390" height="310" rx="10" fill="#fef9c3" stroke="#eab308" stroke-width="4"/>
         
         <!-- Large central vacuole -->
         <g class="anim-pulse">
-          <ellipse cx="210" cy="175" rx="120" ry="100" fill="url(#vacuoleGradient)" stroke="#6366f1" stroke-width="3"/>
+          <ellipse cx="240" cy="200" rx="140" ry="110" fill="url(#vacuoleGrad)" stroke="#6366f1" stroke-width="3"/>
         </g>
-        <text x="210" y="175" fill="#4f46e5" font-size="11" text-anchor="middle" font-weight="bold">Vacuole</text>
-        <text x="210" y="190" fill="#4f46e5" font-size="9" text-anchor="middle">(cell sap)</text>
+        <text x="240" y="195" fill="#4f46e5" font-size="12" text-anchor="middle" font-weight="bold">Vacuole</text>
+        <text x="240" y="212" fill="#4f46e5" font-size="10" text-anchor="middle">(contains cell sap)</text>
         
         <!-- Nucleus -->
         <g class="anim-pulse-fast" style="animation-delay: 0.2s;">
-          <ellipse cx="100" cy="100" rx="40" ry="35" fill="#c084fc" stroke="#7c3aed" stroke-width="2"/>
-          <circle cx="100" cy="100" r="10" fill="#581c87"/>
+          <ellipse cx="110" cy="110" rx="45" ry="38" fill="#c084fc" stroke="#7c3aed" stroke-width="3"/>
+          <circle cx="110" cy="110" r="12" fill="#581c87"/>
+          <!-- Chromosomes -->
+          <path d="M95,100 Q90,110 95,120" fill="none" stroke="#1e3a8a" stroke-width="2"/>
+          <path d="M125,100 Q130,110 125,120" fill="none" stroke="#1e3a8a" stroke-width="2"/>
         </g>
-        <text x="100" y="150" fill="#7c3aed" font-size="9" text-anchor="middle" font-weight="bold">Nucleus</text>
+        <text x="110" y="165" fill="#7c3aed" font-size="10" text-anchor="middle" font-weight="bold">Nucleus</text>
         
-        <!-- Chloroplasts -->
+        <!-- Chloroplasts (multiple) -->
         <g class="anim-pulse" style="animation-delay: 0.3s;">
-          <ellipse cx="320" cy="85" rx="30" ry="15" fill="url(#chloroplastGradient)" stroke="#16a34a" stroke-width="2"/>
-          <line x1="300" y1="85" x2="340" y2="85" stroke="#166534" stroke-width="1"/>
-          <line x1="305" y1="80" x2="335" y2="80" stroke="#166534" stroke-width="1"/>
-          <line x1="305" y1="90" x2="335" y2="90" stroke="#166534" stroke-width="1"/>
+          <ellipse cx="380" cy="95" rx="35" ry="18" fill="url(#chloroplastGrad)" stroke="#16a34a" stroke-width="2"/>
+          <!-- Grana (stacks) -->
+          <line x1="355" y1="95" x2="405" y2="95" stroke="#166534" stroke-width="2"/>
+          <line x1="360" y1="88" x2="400" y2="88" stroke="#166534" stroke-width="1.5"/>
+          <line x1="360" y1="102" x2="400" y2="102" stroke="#166534" stroke-width="1.5"/>
         </g>
-        <g class="anim-pulse" style="animation-delay: 0.5s;">
-          <ellipse cx="90" cy="260" rx="30" ry="15" fill="url(#chloroplastGradient)" stroke="#16a34a" stroke-width="2"/>
-          <line x1="70" y1="260" x2="110" y2="260" stroke="#166534" stroke-width="1"/>
+        <g class="anim-pulse" style="animation-delay: 0.6s;">
+          <ellipse cx="100" cy="300" rx="35" ry="18" fill="url(#chloroplastGrad)" stroke="#16a34a" stroke-width="2"/>
+          <line x1="75" y1="300" x2="125" y2="300" stroke="#166534" stroke-width="2"/>
         </g>
-        <g class="anim-pulse" style="animation-delay: 0.7s;">
-          <ellipse cx="330" cy="280" rx="30" ry="15" fill="url(#chloroplastGradient)" stroke="#16a34a" stroke-width="2"/>
+        <g class="anim-pulse" style="animation-delay: 0.9s;">
+          <ellipse cx="380" cy="320" rx="30" ry="15" fill="url(#chloroplastGrad)" stroke="#16a34a" stroke-width="2"/>
         </g>
-        <text x="355" y="60" fill="#16a34a" font-size="9" font-weight="bold">Chloroplasts</text>
-        <text x="355" y="72" fill="#16a34a" font-size="8">(photosynthesis)</text>
+        <text x="415" y="65" fill="#16a34a" font-size="10" font-weight="bold">Chloroplasts</text>
+        <text x="415" y="78" fill="#16a34a" font-size="9">(photosynthesis)</text>
         
         <!-- Mitochondria -->
         <g class="anim-pulse-fast" style="animation-delay: 0.4s;">
-          <ellipse cx="320" cy="200" rx="20" ry="10" fill="#fca5a5" stroke="#ef4444" stroke-width="2"/>
-          <path d="M305,200 Q312,195 320,200 Q328,205 335,200" fill="none" stroke="#b91c1c" stroke-width="1"/>
+          <ellipse cx="370" cy="200" rx="25" ry="12" fill="#fca5a5" stroke="#ef4444" stroke-width="2"/>
+          <path d="M350,200 Q360,193 370,200 Q380,207 390,200" fill="none" stroke="#b91c1c" stroke-width="1.5"/>
         </g>
-        <text x="350" y="225" fill="#ef4444" font-size="9" font-weight="bold">Mitochondria</text>
+        <text x="410" y="230" fill="#ef4444" font-size="10" font-weight="bold">Mitochondria</text>
         
         <!-- Ribosomes -->
         <g class="anim-vibrate-slow">
-          <circle cx="180" cy="75" r="3" fill="#10b981"/>
-          <circle cx="165" cy="85" r="3" fill="#10b981"/>
-          <circle cx="270" cy="290" r="3" fill="#10b981"/>
+          <circle cx="200" cy="80" r="4" fill="#10b981"/>
+          <circle cx="180" cy="95" r="4" fill="#10b981"/>
+          <circle cx="300" cy="330" r="4" fill="#10b981"/>
         </g>
         
         <!-- Labels -->
-        <text x="30" y="15" fill="#84cc16" font-size="10" font-weight="bold">Cell Wall</text>
-        <text x="350" y="330" fill="#eab308" font-size="9" font-weight="bold">Cell Membrane</text>
-        <text x="55" y="310" fill="currentColor" font-size="9">Cytoplasm</text>
+        <text x="35" y="18" fill="#84cc16" font-size="11" font-weight="bold">Cell Wall</text>
+        <text x="400" y="380" fill="#eab308" font-size="10" font-weight="bold">Cell Membrane</text>
+        <text x="65" y="360" fill="currentColor" font-size="10">Cytoplasm</text>
       </svg>
     </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Plant cells have a regular, box-like shape due to their stiff cell wall</p>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Plant cells have a regular, box-like shape due to their stiff cell wall</p>
   </div>
 
   <div class="table-block">
@@ -541,7 +578,7 @@ export const biologyData: BiologyChapter[] = [
     <p>Explain how the structure of specialised cells is adapted to their function in animals and plants.</p>
   </div>
 
-  <!-- Nerve Cell -->
+  <!-- ======= NERVE CELL ======= -->
   <div class="definition-block">
     <h4>🧠 Nerve Cell (Neurone)</h4>
     <ul>
@@ -552,65 +589,75 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
-  <!-- Animated Nerve Cell -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>⚡ Nerve Cell Structure (hover to pause)</h4>
+    <h4>⚡ Nerve Cell (Neurone) Structure</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="450" height="160" viewBox="0 0 450 160">
+      <svg width="520" height="200" viewBox="0 0 520 200">
         <defs>
-          <linearGradient id="axonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient id="axonGrad" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:#8b5cf6"/>
             <stop offset="100%" style="stop-color:#c084fc"/>
           </linearGradient>
         </defs>
         
-        <!-- Cell body -->
+        <!-- Cell body with nucleus -->
         <g class="anim-pulse">
-          <circle cx="70" cy="80" r="35" fill="#c084fc" stroke="#7c3aed" stroke-width="2"/>
-          <circle cx="70" cy="80" r="12" fill="#581c87"/>
+          <circle cx="80" cy="100" r="45" fill="#c084fc" stroke="#7c3aed" stroke-width="3"/>
+          <circle cx="80" cy="100" r="15" fill="#581c87"/>
+          <!-- Mitochondria in cell body -->
+          <ellipse cx="60" cy="85" rx="8" ry="4" fill="#ef4444"/>
+          <ellipse cx="100" cy="115" rx="8" ry="4" fill="#ef4444"/>
+          <ellipse cx="70" cy="125" rx="7" ry="3" fill="#ef4444"/>
         </g>
-        <text x="70" y="130" fill="currentColor" font-size="9" text-anchor="middle">Cell body</text>
+        <text x="80" y="160" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Cell body</text>
+        <text x="80" y="173" fill="currentColor" font-size="9" text-anchor="middle">(nucleus + mitochondria)</text>
         
-        <!-- Dendrites -->
+        <!-- Dendrites (branching inputs) -->
         <g class="anim-pulse-fast">
-          <path d="M35,60 Q15,45 5,30" fill="none" stroke="#a78bfa" stroke-width="3"/>
-          <path d="M35,80 Q15,80 0,75" fill="none" stroke="#a78bfa" stroke-width="3"/>
-          <path d="M35,100 Q15,115 5,130" fill="none" stroke="#a78bfa" stroke-width="3"/>
+          <path d="M35,65 Q10,45 5,25" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+          <path d="M35,85 Q10,80 0,70" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+          <path d="M35,100 Q10,100 0,100" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+          <path d="M35,115 Q10,120 0,130" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
+          <path d="M35,135 Q10,155 5,175" fill="none" stroke="#a78bfa" stroke-width="4" stroke-linecap="round"/>
         </g>
-        <text x="5" y="145" fill="#a78bfa" font-size="8">Dendrites</text>
+        <text x="15" y="195" fill="#a78bfa" font-size="9" font-weight="bold">Dendrites</text>
         
-        <!-- Axon -->
-        <line x1="105" y1="80" x2="400" y2="80" stroke="url(#axonGradient)" stroke-width="8"/>
+        <!-- Axon (long tube) -->
+        <line x1="125" y1="100" x2="460" y2="100" stroke="url(#axonGrad)" stroke-width="10"/>
+        <text x="290" y="145" fill="#8b5cf6" font-size="10" text-anchor="middle" font-weight="bold">Long Axon</text>
+        <text x="290" y="158" fill="#8b5cf6" font-size="9" text-anchor="middle">(carries impulses long distances)</text>
         
         <!-- Myelin sheath segments -->
         <g class="anim-fade-in-out">
-          <ellipse cx="150" cy="80" rx="20" ry="12" fill="#fbbf24" opacity="0.7"/>
-          <ellipse cx="210" cy="80" rx="20" ry="12" fill="#fbbf24" opacity="0.7"/>
-          <ellipse cx="270" cy="80" rx="20" ry="12" fill="#fbbf24" opacity="0.7"/>
-          <ellipse cx="330" cy="80" rx="20" ry="12" fill="#fbbf24" opacity="0.7"/>
+          <ellipse cx="170" cy="100" rx="25" ry="15" fill="#fbbf24" opacity="0.75"/>
+          <ellipse cx="240" cy="100" rx="25" ry="15" fill="#fbbf24" opacity="0.75"/>
+          <ellipse cx="310" cy="100" rx="25" ry="15" fill="#fbbf24" opacity="0.75"/>
+          <ellipse cx="380" cy="100" rx="25" ry="15" fill="#fbbf24" opacity="0.75"/>
         </g>
-        <text x="270" y="50" fill="#f59e0b" font-size="9" text-anchor="middle" font-weight="bold">Myelin sheath</text>
-        <text x="270" y="62" fill="#f59e0b" font-size="8" text-anchor="middle">(insulation)</text>
+        <text x="310" y="60" fill="#f59e0b" font-size="10" text-anchor="middle" font-weight="bold">Myelin sheath</text>
+        <text x="310" y="73" fill="#f59e0b" font-size="9" text-anchor="middle">(insulates → speeds impulses)</text>
         
-        <!-- Nerve ending -->
+        <!-- Nerve endings (synaptic terminals) -->
         <g class="anim-pulse">
-          <path d="M400,80 L420,60 L430,65" fill="none" stroke="#ec4899" stroke-width="3"/>
-          <path d="M400,80 L425,80" fill="none" stroke="#ec4899" stroke-width="3"/>
-          <path d="M400,80 L420,100 L430,95" fill="none" stroke="#ec4899" stroke-width="3"/>
+          <path d="M460,100 L485,75 L500,78" fill="none" stroke="#ec4899" stroke-width="4" stroke-linecap="round"/>
+          <path d="M460,100 L495,100" fill="none" stroke="#ec4899" stroke-width="4" stroke-linecap="round"/>
+          <path d="M460,100 L485,125 L500,122" fill="none" stroke="#ec4899" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="500" cy="78" r="5" fill="#ec4899"/>
+          <circle cx="495" cy="100" r="5" fill="#ec4899"/>
+          <circle cx="500" cy="122" r="5" fill="#ec4899"/>
         </g>
-        <text x="420" y="120" fill="#ec4899" font-size="8">Nerve endings</text>
+        <text x="485" y="150" fill="#ec4899" font-size="9" font-weight="bold">Nerve</text>
+        <text x="485" y="162" fill="#ec4899" font-size="9" font-weight="bold">endings</text>
         
         <!-- Signal animation -->
         <g class="anim-flow-right">
-          <circle cx="180" cy="80" r="4" fill="#22c55e"/>
+          <circle cx="200" cy="100" r="6" fill="#22c55e"/>
         </g>
-        
-        <text x="250" y="145" fill="currentColor" font-size="9" text-anchor="middle">Long axon carries impulses over long distances</text>
       </svg>
     </div>
   </div>
 
-  <!-- Muscle Cell -->
+  <!-- ======= MUSCLE CELL ======= -->
   <div class="definition-block">
     <h4>💪 Muscle Cell</h4>
     <ul>
@@ -620,7 +667,63 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
-  <!-- Sperm Cell -->
+  <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
+    <h4>💪 Muscle Cell (Fibre) Structure</h4>
+    <div style="display: flex; justify-content: center; padding: 0.5rem;">
+      <svg width="500" height="160" viewBox="0 0 500 160">
+        <defs>
+          <linearGradient id="muscleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#f87171"/>
+            <stop offset="50%" style="stop-color:#ef4444"/>
+            <stop offset="100%" style="stop-color:#f87171"/>
+          </linearGradient>
+        </defs>
+        
+        <!-- Long muscle fibre shape -->
+        <path d="M30,80 Q50,40 100,50 L400,50 Q450,40 470,80 Q450,120 400,110 L100,110 Q50,120 30,80" 
+              fill="url(#muscleGrad)" stroke="#dc2626" stroke-width="3"/>
+        
+        <!-- Protein filaments (striations) -->
+        <g class="anim-compress">
+          <line x1="80" y1="55" x2="80" y2="105" stroke="#fca5a5" stroke-width="3"/>
+          <line x1="120" y1="52" x2="120" y2="108" stroke="#fca5a5" stroke-width="3"/>
+          <line x1="160" y1="51" x2="160" y2="109" stroke="#fca5a5" stroke-width="3"/>
+          <line x1="200" y1="50" x2="200" y2="110" stroke="#fca5a5" stroke-width="3"/>
+          <line x1="240" y1="50" x2="240" y2="110" stroke="#fca5a5" stroke-width="3"/>
+          <line x1="280" y1="50" x2="280" y2="110" stroke="#fca5a5" stroke-width="3"/>
+          <line x1="320" y1="50" x2="320" y2="110" stroke="#fca5a5" stroke-width="3"/>
+          <line x1="360" y1="51" x2="360" y2="109" stroke="#fca5a5" stroke-width="3"/>
+          <line x1="400" y1="52" x2="400" y2="108" stroke="#fca5a5" stroke-width="3"/>
+        </g>
+        
+        <!-- Multiple nuclei -->
+        <g class="anim-pulse-fast">
+          <ellipse cx="140" cy="80" rx="15" ry="8" fill="#581c87" opacity="0.8"/>
+          <ellipse cx="250" cy="80" rx="15" ry="8" fill="#581c87" opacity="0.8"/>
+          <ellipse cx="360" cy="80" rx="15" ry="8" fill="#581c87" opacity="0.8"/>
+        </g>
+        
+        <!-- Mitochondria (many) -->
+        <g class="anim-pulse">
+          <ellipse cx="100" cy="70" rx="10" ry="5" fill="#fbbf24"/>
+          <ellipse cx="180" cy="90" rx="10" ry="5" fill="#fbbf24"/>
+          <ellipse cx="220" cy="65" rx="10" ry="5" fill="#fbbf24"/>
+          <ellipse cx="300" cy="95" rx="10" ry="5" fill="#fbbf24"/>
+          <ellipse cx="340" cy="68" rx="10" ry="5" fill="#fbbf24"/>
+          <ellipse cx="410" cy="85" rx="10" ry="5" fill="#fbbf24"/>
+        </g>
+        
+        <!-- Labels -->
+        <text x="250" y="145" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Long fibre shape → contracts in one direction</text>
+        <text x="80" y="25" fill="#fbbf24" font-size="9" font-weight="bold">Many mitochondria</text>
+        <text x="80" y="37" fill="#fbbf24" font-size="8">(energy for contraction)</text>
+        <text x="350" y="25" fill="#fca5a5" font-size="9" font-weight="bold">Protein filaments</text>
+        <text x="350" y="37" fill="#fca5a5" font-size="8">(slide to shorten cell)</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ======= SPERM CELL ======= -->
   <div class="definition-block">
     <h4>🏊 Sperm Cell</h4>
     <ul>
@@ -631,44 +734,49 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
-  <!-- Animated Sperm Cell -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🏊 Sperm Cell Structure (hover to pause)</h4>
+    <h4>🏊 Sperm Cell Structure</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="400" height="120" viewBox="0 0 400 120">
+      <svg width="480" height="150" viewBox="0 0 480 150">
         <!-- Head -->
         <g class="anim-pulse">
-          <ellipse cx="60" cy="60" rx="30" ry="20" fill="#3b82f6"/>
-          <!-- Acrosome -->
-          <path d="M30,60 Q20,50 30,40 Q40,50 30,60" fill="#1d4ed8"/>
-          <!-- Nucleus -->
-          <ellipse cx="65" cy="60" rx="18" ry="12" fill="#1e3a8a"/>
+          <ellipse cx="70" cy="75" rx="40" ry="28" fill="#3b82f6"/>
+          <!-- Acrosome (cap) -->
+          <path d="M30,75 Q15,60 30,45 Q50,60 30,75" fill="#1d4ed8"/>
+          <!-- Nucleus (main part of head) -->
+          <ellipse cx="80" cy="75" rx="25" ry="18" fill="#1e3a8a"/>
         </g>
-        <text x="60" y="95" fill="currentColor" font-size="8" text-anchor="middle">Head</text>
-        <text x="25" y="35" fill="#1d4ed8" font-size="7">Acrosome</text>
+        <text x="70" y="115" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Head</text>
+        <text x="25" y="35" fill="#1d4ed8" font-size="9" font-weight="bold">Acrosome</text>
+        <text x="25" y="47" fill="#1d4ed8" font-size="8">(enzymes)</text>
+        <text x="80" y="128" fill="#1e3a8a" font-size="8" text-anchor="middle">Haploid nucleus</text>
         
         <!-- Midpiece -->
         <g class="anim-pulse-fast">
-          <rect x="90" y="52" width="40" height="16" rx="3" fill="#ef4444" opacity="0.8"/>
-          <line x1="95" y1="55" x2="95" y2="67" stroke="#b91c1c" stroke-width="1"/>
-          <line x1="105" y1="55" x2="105" y2="67" stroke="#b91c1c" stroke-width="1"/>
-          <line x1="115" y1="55" x2="115" y2="67" stroke="#b91c1c" stroke-width="1"/>
-          <line x1="125" y1="55" x2="125" y2="67" stroke="#b91c1c" stroke-width="1"/>
+          <rect x="110" y="62" width="55" height="26" rx="5" fill="#ef4444" opacity="0.9"/>
+          <!-- Mitochondria spirals -->
+          <line x1="118" y1="66" x2="118" y2="84" stroke="#fca5a5" stroke-width="2"/>
+          <line x1="128" y1="66" x2="128" y2="84" stroke="#fca5a5" stroke-width="2"/>
+          <line x1="138" y1="66" x2="138" y2="84" stroke="#fca5a5" stroke-width="2"/>
+          <line x1="148" y1="66" x2="148" y2="84" stroke="#fca5a5" stroke-width="2"/>
+          <line x1="158" y1="66" x2="158" y2="84" stroke="#fca5a5" stroke-width="2"/>
         </g>
-        <text x="110" y="85" fill="#ef4444" font-size="8" text-anchor="middle">Midpiece</text>
-        <text x="110" y="95" fill="#ef4444" font-size="7" text-anchor="middle">(mitochondria)</text>
+        <text x="137" y="105" fill="#ef4444" font-size="10" text-anchor="middle" font-weight="bold">Midpiece</text>
+        <text x="137" y="118" fill="#ef4444" font-size="9" text-anchor="middle">(packed with</text>
+        <text x="137" y="130" fill="#ef4444" font-size="9" text-anchor="middle">mitochondria)</text>
         
-        <!-- Tail -->
+        <!-- Tail (flagellum) - wavy -->
         <g class="anim-wave">
-          <path d="M130,60 Q180,40 230,60 Q280,80 330,60 Q360,50 380,60" fill="none" stroke="#8b5cf6" stroke-width="3"/>
+          <path d="M165,75 Q220,50 275,75 Q330,100 385,75 Q420,60 450,75" fill="none" stroke="#8b5cf6" stroke-width="4" stroke-linecap="round"/>
         </g>
-        <text x="280" y="45" fill="#8b5cf6" font-size="8">Tail (flagellum)</text>
+        <text x="340" y="45" fill="#8b5cf6" font-size="10" font-weight="bold">Tail (flagellum)</text>
+        <text x="340" y="58" fill="#8b5cf6" font-size="9">for swimming</text>
       </svg>
     </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Streamlined head + tail for swimming • Mitochondria provide energy</p>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Streamlined head + tail for swimming • Mitochondria provide energy for movement</p>
   </div>
 
-  <!-- Root Hair Cell -->
+  <!-- ======= ROOT HAIR CELL ======= -->
   <div class="definition-block">
     <h4>🌱 Root Hair Cell</h4>
     <ul>
@@ -679,61 +787,65 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
-  <!-- Animated Root Hair Cell -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🌱 Root Hair Cell (hover to pause)</h4>
+    <h4>🌱 Root Hair Cell Structure</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="380" height="180" viewBox="0 0 380 180">
+      <svg width="450" height="200" viewBox="0 0 450 200">
         <!-- Cell body -->
-        <rect x="40" y="50" width="100" height="80" rx="5" fill="#d9f99d" stroke="#84cc16" stroke-width="3"/>
+        <rect x="30" y="50" width="110" height="100" rx="8" fill="#d9f99d" stroke="#84cc16" stroke-width="4"/>
         
         <!-- Root hair extension -->
         <g class="anim-pulse">
-          <path d="M140,90 Q220,90 300,90" fill="none" stroke="#84cc16" stroke-width="40" stroke-linecap="round"/>
+          <path d="M140,100 Q240,100 350,100" fill="none" stroke="#84cc16" stroke-width="50" stroke-linecap="round"/>
         </g>
         
         <!-- Nucleus -->
-        <circle cx="90" cy="90" r="20" fill="#c084fc" stroke="#7c3aed" stroke-width="2"/>
-        <circle cx="90" cy="90" r="7" fill="#581c87"/>
+        <circle cx="85" cy="100" r="25" fill="#c084fc" stroke="#7c3aed" stroke-width="2"/>
+        <circle cx="85" cy="100" r="8" fill="#581c87"/>
         
         <!-- Vacuole -->
-        <ellipse cx="70" cy="100" rx="15" ry="20" fill="#a5b4fc" opacity="0.5"/>
+        <ellipse cx="65" cy="115" rx="18" ry="25" fill="#a5b4fc" opacity="0.5"/>
         
-        <!-- Mitochondria -->
+        <!-- Mitochondria in extension (many for active transport) -->
         <g class="anim-pulse-fast">
-          <ellipse cx="200" cy="90" rx="12" ry="6" fill="#ef4444"/>
-          <ellipse cx="240" cy="90" rx="12" ry="6" fill="#ef4444"/>
-          <ellipse cx="280" cy="90" rx="12" ry="6" fill="#ef4444"/>
+          <ellipse cx="180" cy="100" rx="15" ry="8" fill="#ef4444"/>
+          <ellipse cx="220" cy="100" rx="15" ry="8" fill="#ef4444"/>
+          <ellipse cx="260" cy="100" rx="15" ry="8" fill="#ef4444"/>
+          <ellipse cx="300" cy="100" rx="15" ry="8" fill="#ef4444"/>
+          <ellipse cx="340" cy="100" rx="12" ry="6" fill="#ef4444"/>
         </g>
         
         <!-- Water movement arrows -->
         <g class="anim-flow-left">
-          <path d="M350,70 L310,85" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
-          <path d="M360,90 L320,90" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
-          <path d="M350,110 L310,95" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowBlue)"/>
+          <path d="M420,75 L365,90" stroke="#3b82f6" stroke-width="3" marker-end="url(#waterArrow)"/>
+          <path d="M430,100 L380,100" stroke="#3b82f6" stroke-width="3" marker-end="url(#waterArrow)"/>
+          <path d="M420,125 L365,110" stroke="#3b82f6" stroke-width="3" marker-end="url(#waterArrow)"/>
         </g>
         <defs>
-          <marker id="arrowBlue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <polygon points="0 0, 6 3, 0 6" fill="#3b82f6"/>
+          <marker id="waterArrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <polygon points="0 0, 8 4, 0 8" fill="#3b82f6"/>
           </marker>
         </defs>
         
         <!-- Soil particles -->
-        <circle cx="340" cy="60" r="8" fill="#92400e" opacity="0.6"/>
-        <circle cx="365" cy="80" r="6" fill="#92400e" opacity="0.6"/>
-        <circle cx="355" cy="120" r="10" fill="#92400e" opacity="0.6"/>
+        <circle cx="400" cy="55" r="12" fill="#92400e" opacity="0.6"/>
+        <circle cx="430" cy="80" r="8" fill="#92400e" opacity="0.6"/>
+        <circle cx="415" cy="130" r="14" fill="#92400e" opacity="0.6"/>
+        <circle cx="440" cy="150" r="10" fill="#92400e" opacity="0.6"/>
         
         <!-- Labels -->
-        <text x="90" y="150" fill="currentColor" font-size="9" text-anchor="middle">Cell body</text>
-        <text x="220" y="140" fill="currentColor" font-size="9" text-anchor="middle">Long hair extension</text>
-        <text x="220" y="152" fill="currentColor" font-size="8" text-anchor="middle">(↑ surface area)</text>
-        <text x="350" y="150" fill="#92400e" font-size="8">Soil</text>
-        <text x="340" cy="50" fill="#3b82f6" font-size="8">Water</text>
+        <text x="85" y="165" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Cell body</text>
+        <text x="260" y="160" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Long hair extension</text>
+        <text x="260" y="175" fill="currentColor" font-size="9" text-anchor="middle">(↑ surface area for absorption)</text>
+        <text x="415" y="180" fill="#92400e" font-size="10" font-weight="bold">Soil</text>
+        <text x="400" y="40" fill="#3b82f6" font-size="9" font-weight="bold">Water enters</text>
+        <text x="180" y="70" fill="#ef4444" font-size="9" font-weight="bold">Many mitochondria</text>
+        <text x="180" y="82" fill="#ef4444" font-size="8">(for active transport)</text>
       </svg>
     </div>
   </div>
 
-  <!-- Xylem -->
+  <!-- ======= XYLEM VESSEL ======= -->
   <div class="definition-block">
     <h4>💧 Xylem Vessel</h4>
     <ul>
@@ -746,7 +858,7 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
-  <!-- Phloem -->
+  <!-- ======= PHLOEM VESSEL ======= -->
   <div class="definition-block">
     <h4>🍬 Phloem Vessel</h4>
     <ul>
@@ -758,109 +870,128 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
-  <!-- Xylem and Phloem Diagram -->
+  <!-- Xylem & Phloem Comparison Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🌿 Xylem & Phloem Vessels (hover to pause)</h4>
+    <h4>🌿 Xylem & Phloem Vessels Comparison</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="400" height="200" viewBox="0 0 400 200">
-        <!-- Xylem -->
+      <svg width="450" height="260" viewBox="0 0 450 260">
+        <!-- XYLEM -->
         <g>
-          <text x="100" y="20" fill="#3b82f6" font-size="11" text-anchor="middle" font-weight="bold">XYLEM</text>
-          <!-- Vessel wall with lignin -->
-          <rect x="70" y="30" width="60" height="150" fill="none" stroke="#1d4ed8" stroke-width="4"/>
+          <text x="110" y="25" fill="#3b82f6" font-size="13" text-anchor="middle" font-weight="bold">XYLEM</text>
+          <text x="110" y="40" fill="#3b82f6" font-size="9" text-anchor="middle">(water transport)</text>
+          
+          <!-- Vessel wall with lignin spiral -->
+          <rect x="70" y="55" width="80" height="180" fill="none" stroke="#1d4ed8" stroke-width="5"/>
+          
           <!-- Lignin spirals -->
           <g class="anim-draw-infinite">
-            <path d="M75,40 Q90,50 75,60 Q90,70 75,80 Q90,90 75,100 Q90,110 75,120 Q90,130 75,140 Q90,150 75,160" fill="none" stroke="#60a5fa" stroke-width="2"/>
-            <path d="M125,40 Q110,50 125,60 Q110,70 125,80 Q110,90 125,100 Q110,110 125,120 Q110,130 125,140 Q110,150 125,160" fill="none" stroke="#60a5fa" stroke-width="2"/>
+            <path d="M80,65 Q95,75 80,85 Q95,95 80,105 Q95,115 80,125 Q95,135 80,145 Q95,155 80,165 Q95,175 80,185 Q95,195 80,205 Q95,215 80,225" 
+                  fill="none" stroke="#60a5fa" stroke-width="3"/>
+            <path d="M140,65 Q125,75 140,85 Q125,95 140,105 Q125,115 140,125 Q125,135 140,145 Q125,155 140,165 Q125,175 140,185 Q125,195 140,205 Q125,215 140,225" 
+                  fill="none" stroke="#60a5fa" stroke-width="3"/>
           </g>
-          <!-- Water flow -->
+          
+          <!-- Water flow upward -->
           <g class="anim-flow-up">
-            <circle cx="100" cy="140" r="4" fill="#22d3ee"/>
-            <circle cx="95" cy="100" r="4" fill="#22d3ee"/>
-            <circle cx="105" cy="60" r="4" fill="#22d3ee"/>
+            <circle cx="110" cy="200" r="6" fill="#22d3ee"/>
+            <circle cx="105" cy="150" r="6" fill="#22d3ee"/>
+            <circle cx="115" cy="100" r="6" fill="#22d3ee"/>
           </g>
+          
           <!-- Pit -->
-          <ellipse cx="70" cy="90" rx="3" ry="8" fill="#93c5fd"/>
-          <text x="50" y="90" fill="#3b82f6" font-size="7" text-anchor="end">Pit</text>
-          <text x="100" y="195" fill="currentColor" font-size="8" text-anchor="middle">Water ↑</text>
+          <ellipse cx="70" cy="130" rx="4" ry="12" fill="#93c5fd"/>
+          <text x="45" y="130" fill="#3b82f6" font-size="8" text-anchor="end">Pit</text>
+          
+          <!-- No end walls indicator -->
+          <text x="110" y="250" fill="currentColor" font-size="9" text-anchor="middle">Water ↑</text>
+          <text x="45" y="180" fill="#60a5fa" font-size="8">Lignin</text>
+          <text x="45" y="192" fill="#60a5fa" font-size="8">spiral</text>
         </g>
         
-        <!-- Phloem -->
+        <!-- PHLOEM -->
         <g>
-          <text x="300" y="20" fill="#22c55e" font-size="11" text-anchor="middle" font-weight="bold">PHLOEM</text>
+          <text x="340" y="25" fill="#22c55e" font-size="13" text-anchor="middle" font-weight="bold">PHLOEM</text>
+          <text x="340" y="40" fill="#22c55e" font-size="9" text-anchor="middle">(sugar transport)</text>
+          
           <!-- Sieve tube -->
-          <rect x="270" y="30" width="40" height="150" fill="#dcfce7" stroke="#16a34a" stroke-width="3"/>
-          <!-- Sieve plates -->
+          <rect x="300" y="55" width="50" height="180" fill="#dcfce7" stroke="#16a34a" stroke-width="4"/>
+          
+          <!-- Sieve plates with pores -->
           <g class="anim-fade-in-out">
-            <line x1="270" y1="70" x2="310" y2="70" stroke="#15803d" stroke-width="2" stroke-dasharray="4,2"/>
-            <line x1="270" y1="110" x2="310" y2="110" stroke="#15803d" stroke-width="2" stroke-dasharray="4,2"/>
-            <line x1="270" y1="150" x2="310" y2="150" stroke="#15803d" stroke-width="2" stroke-dasharray="4,2"/>
+            <line x1="300" y1="100" x2="350" y2="100" stroke="#15803d" stroke-width="3" stroke-dasharray="6,3"/>
+            <line x1="300" y1="145" x2="350" y2="145" stroke="#15803d" stroke-width="3" stroke-dasharray="6,3"/>
+            <line x1="300" y1="190" x2="350" y2="190" stroke="#15803d" stroke-width="3" stroke-dasharray="6,3"/>
           </g>
-          <text x="250" y="70" fill="#16a34a" font-size="7" text-anchor="end">Sieve</text>
-          <text x="250" y="78" fill="#16a34a" font-size="7" text-anchor="end">plate</text>
           
           <!-- Companion cell -->
-          <rect x="320" y="60" width="30" height="80" fill="#bbf7d0" stroke="#22c55e" stroke-width="2"/>
-          <circle cx="335" cy="100" r="8" fill="#166534"/>
+          <rect x="360" y="80" width="35" height="120" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+          <!-- Companion cell mitochondria -->
           <g class="anim-pulse-fast">
-            <ellipse cx="330" cy="80" rx="6" ry="3" fill="#ef4444"/>
-            <ellipse cx="340" cy="120" rx="6" ry="3" fill="#ef4444"/>
+            <ellipse cx="377" cy="100" rx="8" ry="4" fill="#ef4444"/>
+            <ellipse cx="377" cy="130" rx="8" ry="4" fill="#ef4444"/>
+            <ellipse cx="377" cy="160" rx="8" ry="4" fill="#ef4444"/>
           </g>
-          <text x="335" y="155" fill="#22c55e" font-size="7" text-anchor="middle">Companion</text>
-          <text x="335" y="163" fill="#22c55e" font-size="7" text-anchor="middle">cell</text>
+          <!-- Companion cell nucleus -->
+          <ellipse cx="377" cy="140" rx="10" ry="8" fill="#8b5cf6"/>
           
-          <!-- Sugar flow (both ways) -->
+          <!-- Sugar flow (bidirectional) -->
           <g class="anim-flow-down">
-            <circle cx="290" cy="50" r="4" fill="#fbbf24"/>
+            <circle cx="325" cy="80" r="5" fill="#fbbf24"/>
+            <circle cx="325" cy="130" r="5" fill="#fbbf24"/>
+            <circle cx="325" cy="175" r="5" fill="#fbbf24"/>
           </g>
-          <text x="290" y="195" fill="currentColor" font-size="8" text-anchor="middle">Sugars ↑↓</text>
+          
+          <!-- Labels -->
+          <text x="325" y="250" fill="currentColor" font-size="9" text-anchor="middle">Sugar ↑↓</text>
+          <text x="410" y="140" fill="#f59e0b" font-size="9" font-weight="bold">Companion</text>
+          <text x="410" y="153" fill="#f59e0b" font-size="9" font-weight="bold">cell</text>
+          <text x="260" y="145" fill="#15803d" font-size="8">Sieve</text>
+          <text x="260" y="157" fill="#15803d" font-size="8">plate</text>
         </g>
       </svg>
     </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Xylem: Dead cells, lignin walls, water transport UP only • Phloem: Living cells, sieve plates, sugars BOTH ways</p>
   </div>
 
   <div class="exam-tip-block">
     <h4>🧠 Exam Tip</h4>
-    <p>For every specialised cell, learn at least <strong>3 structural adaptations</strong> and explain <strong>how each helps its function</strong>.</p>
+    <p>Always link <strong>structure to function</strong>! E.g., "Root hair cells have a long extension to increase surface area for water absorption."</p>
   </div>
 </div>
             `,
             canonical_keywords: [
-              "nerve cell", "neurone", "axon", "dendrite", "myelin sheath", "impulse",
+              "nerve cell", "neurone", "axon", "dendrite", "myelin sheath",
               "muscle cell", "mitochondria", "protein filaments",
-              "sperm cell", "tail", "acrosome", "haploid",
+              "sperm cell", "acrosome", "flagellum", "haploid",
               "root hair cell", "surface area", "active transport",
-              "xylem", "lignin", "transpiration",
-              "phloem", "sieve plate", "companion cell", "translocation"
+              "xylem", "lignin", "phloem", "sieve plate", "companion cell"
             ],
             practice_items: [
               {
                 id: "bio-spec-p1",
-                prompt_template: "Explain how the structure of a nerve cell is adapted for its function.",
+                prompt_template: "Explain how the structure of a nerve cell is adapted to its function.",
                 marks: 4,
                 type: "short-answer",
                 difficulty: "medium",
                 randomise: true,
-                expected_keywords: ["axon", "long", "impulse", "myelin", "insulation", "dendrites", "connections", "mitochondria", "energy"]
+                expected_keywords: ["axon", "long", "impulses", "myelin", "dendrites", "mitochondria"]
               },
               {
                 id: "bio-spec-p2",
-                prompt_template: "Describe how a root hair cell is adapted for absorbing water and mineral ions.",
+                prompt_template: "Describe how the root hair cell is adapted for absorbing water and mineral ions.",
                 marks: 4,
                 type: "short-answer",
                 difficulty: "medium",
                 randomise: true,
-                expected_keywords: ["long extension", "surface area", "thin wall", "mitochondria", "active transport", "osmosis"]
+                expected_keywords: ["long extension", "surface area", "thin wall", "mitochondria", "active transport"]
               },
               {
                 id: "bio-spec-p3",
-                prompt_template: "Compare the structure and function of xylem and phloem vessels.",
+                prompt_template: "Compare the structure of xylem and phloem vessels.",
                 marks: 6,
                 type: "short-answer",
                 difficulty: "hard",
                 randomise: true,
-                expected_keywords: ["xylem", "water", "dead", "lignin", "one-way", "phloem", "sugar", "living", "sieve plate", "two-way"]
+                expected_keywords: ["xylem", "hollow", "dead", "lignin", "water", "phloem", "sieve tube", "companion cell", "living", "sugar"]
               }
             ]
           },
@@ -871,11 +1002,11 @@ export const biologyData: BiologyChapter[] = [
             study_group: 2,
             content_html: `
 <div class="subsection">
-  <h3 class="subsection-heading">Microscopy — Parts, Use, Magnification & Resolution</h3>
+  <h3 class="subsection-heading">Microscopy — Parts, Use, Magnification, Resolution</h3>
   
   <div class="spec-point-block">
     <h4>📋 AQA Specification</h4>
-    <p>Use microscopes to observe, draw and label cells. Calculate magnification. Compare light and electron microscopes.</p>
+    <p>Be able to use a light microscope, calculate magnification, and compare light and electron microscopes.</p>
   </div>
 
   <div class="table-block">
@@ -926,63 +1057,67 @@ export const biologyData: BiologyChapter[] = [
 
   <!-- Microscope Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🔬 Light Microscope (hover to pause)</h4>
+    <h4>🔬 Light Microscope Parts</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="300" height="350" viewBox="0 0 300 350">
+      <svg width="350" height="400" viewBox="0 0 350 400">
         <!-- Base -->
-        <rect x="80" y="310" width="140" height="20" rx="5" fill="#374151"/>
+        <rect x="90" y="350" width="160" height="25" rx="6" fill="#374151"/>
         
-        <!-- Arm -->
-        <path d="M150,310 L150,100 Q150,80 170,80 L180,80" fill="none" stroke="#4b5563" stroke-width="15" stroke-linecap="round"/>
+        <!-- Arm (curved support) -->
+        <path d="M170,350 L170,120 Q170,90 200,90 L215,90" fill="none" stroke="#4b5563" stroke-width="18" stroke-linecap="round"/>
         
         <!-- Stage -->
-        <rect x="60" y="200" width="180" height="10" fill="#6b7280"/>
-        <rect x="140" y="205" width="20" height="5" fill="#9ca3af"/>
+        <rect x="70" y="230" width="200" height="12" fill="#6b7280"/>
+        <rect x="160" y="237" width="20" height="6" fill="#9ca3af"/>
         
         <!-- Eyepiece -->
         <g class="anim-pulse">
-          <rect x="165" y="60" width="30" height="40" rx="5" fill="#1f2937"/>
-          <ellipse cx="180" cy="55" rx="12" ry="5" fill="#374151"/>
+          <rect x="195" y="65" width="40" height="50" rx="6" fill="#1f2937"/>
+          <ellipse cx="215" cy="58" rx="16" ry="6" fill="#374151"/>
         </g>
-        <text x="220" y="75" fill="currentColor" font-size="8">Eyepiece</text>
-        <text x="220" y="85" fill="currentColor" font-size="7">(×10)</text>
+        <text x="255" y="80" fill="currentColor" font-size="10" font-weight="bold">Eyepiece</text>
+        <text x="255" y="93" fill="currentColor" font-size="9">(×10)</text>
         
-        <!-- Objective lenses -->
+        <!-- Objective lenses (revolving nosepiece) -->
         <g>
-          <rect x="155" y="145" width="50" height="15" rx="3" fill="#1f2937"/>
-          <g class="anim-rotate-cw-slow" style="transform-origin: 180px 160px;">
-            <rect x="160" y="160" width="10" height="25" rx="2" fill="#ef4444"/>
-            <rect x="175" y="160" width="10" height="35" rx="2" fill="#3b82f6"/>
-            <rect x="190" y="160" width="10" height="45" rx="2" fill="#22c55e"/>
+          <rect x="180" y="160" width="70" height="18" rx="4" fill="#1f2937"/>
+          <g class="anim-rotate-cw-slow" style="transform-origin: 215px 178px;">
+            <rect x="185" y="178" width="12" height="30" rx="3" fill="#ef4444"/>
+            <rect x="203" y="178" width="12" height="42" rx="3" fill="#3b82f6"/>
+            <rect x="221" y="178" width="12" height="55" rx="3" fill="#22c55e"/>
           </g>
         </g>
-        <text x="220" y="175" fill="currentColor" font-size="8">Objective</text>
-        <text x="220" y="185" fill="currentColor" font-size="7">lenses</text>
+        <text x="265" y="195" fill="currentColor" font-size="10" font-weight="bold">Objective</text>
+        <text x="265" y="208" fill="currentColor" font-size="9">lenses</text>
+        <text x="265" y="221" fill="currentColor" font-size="9">(×4, ×10, ×40)</text>
         
         <!-- Focus wheels -->
         <g class="anim-pulse">
-          <circle cx="95" cy="250" r="20" fill="#4b5563" stroke="#374151" stroke-width="3"/>
-          <circle cx="95" cy="250" r="8" fill="#1f2937"/>
+          <circle cx="115" cy="280" r="25" fill="#4b5563" stroke="#374151" stroke-width="4"/>
+          <circle cx="115" cy="280" r="10" fill="#1f2937"/>
         </g>
-        <text x="40" y="230" fill="currentColor" font-size="7">Coarse</text>
-        <text x="40" y="240" fill="currentColor" font-size="7">focus</text>
+        <text x="35" y="260" fill="currentColor" font-size="9" font-weight="bold">Coarse</text>
+        <text x="35" y="273" fill="currentColor" font-size="9">focus</text>
         
         <g class="anim-pulse" style="animation-delay: 0.3s;">
-          <circle cx="95" cy="285" r="12" fill="#6b7280" stroke="#4b5563" stroke-width="2"/>
+          <circle cx="115" cy="320" r="15" fill="#6b7280" stroke="#4b5563" stroke-width="3"/>
         </g>
-        <text x="40" y="290" fill="currentColor" font-size="7">Fine focus</text>
+        <text x="35" y="325" fill="currentColor" font-size="9" font-weight="bold">Fine focus</text>
         
         <!-- Light -->
         <g class="anim-pulse-glow">
-          <circle cx="150" cy="260" r="15" fill="#fbbf24" opacity="0.6"/>
-          <circle cx="150" cy="260" r="8" fill="#fef3c7"/>
+          <circle cx="170" cy="295" r="18" fill="#fbbf24" opacity="0.6"/>
+          <circle cx="170" cy="295" r="10" fill="#fef3c7"/>
         </g>
-        <text x="175" y="270" fill="currentColor" font-size="7">Light</text>
+        <text x="200" y="305" fill="currentColor" font-size="9" font-weight="bold">Light</text>
         
         <!-- Stage clips -->
-        <rect x="70" y="195" width="15" height="8" fill="#9ca3af"/>
-        <rect x="215" y="195" width="15" height="8" fill="#9ca3af"/>
-        <text x="60" y="220" fill="currentColor" font-size="7">Clips</text>
+        <rect x="80" y="225" width="18" height="10" fill="#9ca3af"/>
+        <rect x="242" y="225" width="18" height="10" fill="#9ca3af"/>
+        <text x="70" y="255" fill="currentColor" font-size="8">Clips</text>
+        
+        <!-- Stage label -->
+        <text x="280" y="245" fill="currentColor" font-size="10" font-weight="bold">Stage</text>
       </svg>
     </div>
   </div>
@@ -1005,7 +1140,7 @@ export const biologyData: BiologyChapter[] = [
   </div>
 
   <div class="key-facts-block">
-    <h4>🧠 Magnification & Resolution</h4>
+    <h4>🧮 Magnification & Resolution</h4>
     <ul>
       <li><strong>Magnification</strong> = how much larger the image is compared to the actual specimen</li>
       <li><strong>Resolution</strong> = how well a microscope can distinguish two close points as separate</li>
@@ -1111,7 +1246,7 @@ export const biologyData: BiologyChapter[] = [
         ]
       },
       // ========================================
-      // MODULE 2: CELL TRANSPORT (NEW)
+      // MODULE 2: CELL TRANSPORT
       // ========================================
       {
         id: "cell-transport-module",
@@ -1146,68 +1281,6 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
-  <!-- Animated Diffusion Diagram -->
-  <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🔄 Diffusion in Action (hover to pause)</h4>
-    <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="450" height="180" viewBox="0 0 450 180">
-        <!-- Container -->
-        <rect x="20" y="30" width="410" height="120" rx="10" fill="none" stroke="currentColor" stroke-width="2"/>
-        
-        <!-- Membrane -->
-        <line x1="225" y1="30" x2="225" y2="150" stroke="#8b5cf6" stroke-width="4" stroke-dasharray="10,5"/>
-        <text x="225" y="170" fill="#8b5cf6" font-size="9" text-anchor="middle">Membrane</text>
-        
-        <!-- High concentration side (left) -->
-        <text x="120" y="25" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">HIGH concentration</text>
-        <g>
-          <!-- Stationary particles -->
-          <circle cx="50" cy="60" r="8" fill="#ef4444"/>
-          <circle cx="80" cy="80" r="8" fill="#ef4444"/>
-          <circle cx="100" cy="50" r="8" fill="#ef4444"/>
-          <circle cx="60" cy="110" r="8" fill="#ef4444"/>
-          <circle cx="130" cy="90" r="8" fill="#ef4444"/>
-          <circle cx="90" cy="130" r="8" fill="#ef4444"/>
-          <circle cx="150" cy="60" r="8" fill="#ef4444"/>
-          <circle cx="170" cy="100" r="8" fill="#ef4444"/>
-          <circle cx="40" cy="90" r="8" fill="#ef4444"/>
-          <circle cx="110" cy="120" r="8" fill="#ef4444"/>
-          <!-- Moving particles -->
-          <g class="anim-flow-right">
-            <circle cx="180" cy="70" r="8" fill="#f87171"/>
-          </g>
-          <g class="anim-flow-right" style="animation-delay: 0.5s;">
-            <circle cx="160" cy="110" r="8" fill="#f87171"/>
-          </g>
-          <g class="anim-flow-right" style="animation-delay: 1s;">
-            <circle cx="190" cy="130" r="8" fill="#f87171"/>
-          </g>
-        </g>
-        
-        <!-- Low concentration side (right) -->
-        <text x="340" y="25" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">LOW concentration</text>
-        <g>
-          <circle cx="280" cy="80" r="8" fill="#ef4444"/>
-          <circle cx="350" cy="100" r="8" fill="#ef4444"/>
-          <circle cx="400" cy="70" r="8" fill="#ef4444"/>
-        </g>
-        
-        <!-- Arrow showing net movement -->
-        <g class="anim-pulse">
-          <path d="M140,160 L310,160" stroke="#22c55e" stroke-width="4" marker-end="url(#greenArrow)"/>
-        </g>
-        <text x="225" y="178" fill="#22c55e" font-size="9" text-anchor="middle" font-weight="bold">NET MOVEMENT →</text>
-        
-        <defs>
-          <marker id="greenArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e"/>
-          </marker>
-        </defs>
-      </svg>
-    </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Particles spread from high → low concentration until evenly distributed</p>
-  </div>
-
   <div class="key-facts-block">
     <h4>⭐ Why Diffusion is Essential</h4>
     <ul>
@@ -1217,12 +1290,75 @@ export const biologyData: BiologyChapter[] = [
     </ul>
   </div>
 
+  <!-- Diffusion Diagram -->
+  <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
+    <h4>🔄 Diffusion in Action (hover to pause)</h4>
+    <div style="display: flex; justify-content: center; padding: 0.5rem;">
+      <svg width="500" height="200" viewBox="0 0 500 200">
+        <!-- Container -->
+        <rect x="25" y="35" width="450" height="130" rx="12" fill="none" stroke="currentColor" stroke-width="2"/>
+        
+        <!-- Membrane -->
+        <line x1="250" y1="35" x2="250" y2="165" stroke="#8b5cf6" stroke-width="5" stroke-dasharray="12,6"/>
+        <text x="250" y="185" fill="#8b5cf6" font-size="10" text-anchor="middle" font-weight="bold">Membrane</text>
+        
+        <!-- High concentration side (left) -->
+        <text x="135" y="25" fill="currentColor" font-size="11" text-anchor="middle" font-weight="bold">HIGH concentration</text>
+        <g>
+          <!-- Stationary particles -->
+          <circle cx="55" cy="65" r="10" fill="#ef4444"/>
+          <circle cx="90" cy="90" r="10" fill="#ef4444"/>
+          <circle cx="115" cy="55" r="10" fill="#ef4444"/>
+          <circle cx="65" cy="125" r="10" fill="#ef4444"/>
+          <circle cx="145" cy="100" r="10" fill="#ef4444"/>
+          <circle cx="100" cy="145" r="10" fill="#ef4444"/>
+          <circle cx="170" cy="65" r="10" fill="#ef4444"/>
+          <circle cx="195" cy="115" r="10" fill="#ef4444"/>
+          <circle cx="45" cy="100" r="10" fill="#ef4444"/>
+          <circle cx="125" cy="135" r="10" fill="#ef4444"/>
+          <circle cx="75" cy="70" r="10" fill="#ef4444"/>
+          <!-- Moving particles -->
+          <g class="anim-flow-right">
+            <circle cx="200" cy="75" r="10" fill="#f87171"/>
+          </g>
+          <g class="anim-flow-right" style="animation-delay: 0.6s;">
+            <circle cx="180" cy="130" r="10" fill="#f87171"/>
+          </g>
+          <g class="anim-flow-right" style="animation-delay: 1.2s;">
+            <circle cx="210" cy="150" r="10" fill="#f87171"/>
+          </g>
+        </g>
+        
+        <!-- Low concentration side (right) -->
+        <text x="375" y="25" fill="currentColor" font-size="11" text-anchor="middle" font-weight="bold">LOW concentration</text>
+        <g>
+          <circle cx="310" cy="90" r="10" fill="#ef4444"/>
+          <circle cx="390" cy="110" r="10" fill="#ef4444"/>
+          <circle cx="440" cy="75" r="10" fill="#ef4444"/>
+        </g>
+        
+        <!-- Arrow showing net movement -->
+        <g class="anim-pulse">
+          <path d="M155,175 L345,175" stroke="#22c55e" stroke-width="5" marker-end="url(#greenArrowDiff)"/>
+        </g>
+        <text x="250" y="198" fill="#22c55e" font-size="11" text-anchor="middle" font-weight="bold">NET MOVEMENT →</text>
+        
+        <defs>
+          <marker id="greenArrowDiff" markerWidth="12" markerHeight="9" refX="10" refY="4.5" orient="auto">
+            <polygon points="0 0, 12 4.5, 0 9" fill="#22c55e"/>
+          </marker>
+        </defs>
+      </svg>
+    </div>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Particles spread from high → low concentration until evenly distributed</p>
+  </div>
+
   <div class="example-block">
     <h4>🟢 Examples You Must Recall</h4>
     <ul>
-      <li><strong>Gas exchange in lungs:</strong> O₂ diffuses from alveoli → blood (higher O₂ in alveoli). CO₂ diffuses from blood → alveoli (higher CO₂ in blood).</li>
+      <li><strong>Gas exchange in lungs:</strong> O₂ diffuses from alveoli → blood (higher O₂ in alveoli). CO₂ diffuses from blood → alveoli (higher CO₂ in blood from respiration).</li>
       <li><strong>Photosynthesis in plants:</strong> CO₂ diffuses into leaf cells because photosynthesis constantly uses CO₂, keeping internal concentration low.</li>
-      <li><strong>Excretion:</strong> Urea diffuses from liver cells → blood plasma (higher concentration in liver cells).</li>
+      <li><strong>Excretion (urea):</strong> Urea diffuses from liver cells → blood plasma, then to kidneys (higher concentration in liver cells).</li>
     </ul>
   </div>
 
@@ -1238,22 +1374,22 @@ export const biologyData: BiologyChapter[] = [
       </thead>
       <tbody>
         <tr>
-          <td><strong>Higher temperature</strong></td>
+          <td><strong>🔥 Higher temperature</strong></td>
           <td>Faster diffusion</td>
           <td>Particles have more kinetic energy → collide more → spread faster</td>
         </tr>
         <tr>
-          <td><strong>Steep concentration gradient</strong></td>
+          <td><strong>↗ Steep concentration gradient</strong></td>
           <td>Faster net movement</td>
           <td>Bigger difference = stronger "driving force"</td>
         </tr>
         <tr>
-          <td><strong>Thin membrane</strong></td>
+          <td><strong>🪶 Thin membrane</strong></td>
           <td>Faster diffusion</td>
           <td>Short diffusion distance → fewer collisions → quicker</td>
         </tr>
         <tr>
-          <td><strong>Large surface area</strong></td>
+          <td><strong>📏 Large surface area</strong></td>
           <td>Faster diffusion</td>
           <td>More area = more space for particles to cross</td>
         </tr>
@@ -1322,12 +1458,12 @@ export const biologyData: BiologyChapter[] = [
   
   <div class="spec-point-block">
     <h4>📋 AQA Specification</h4>
-    <p>Explain osmosis as a special type of diffusion. Understand effects on plant and animal cells.</p>
+    <p>Describe osmosis as the diffusion of water through a partially permeable membrane. Explain effects on plant and animal cells.</p>
   </div>
 
   <div class="definition-block">
     <h4>🔵 What is Osmosis?</h4>
-    <p>Osmosis is the <strong>diffusion of water</strong> from a <strong>dilute solution</strong> to a more <strong>concentrated solution</strong> through a <strong>partially permeable membrane</strong>.</p>
+    <p>Osmosis is the <strong>diffusion of water</strong> from a <strong>dilute solution</strong> to a <strong>more concentrated solution</strong> through a <strong>partially permeable membrane</strong>.</p>
   </div>
 
   <div class="key-facts-block">
@@ -1336,86 +1472,90 @@ export const biologyData: BiologyChapter[] = [
       <li><strong>Dilute</strong> = high water concentration</li>
       <li><strong>Concentrated</strong> = low water concentration</li>
       <li>Water moves to "even out" the concentration difference</li>
-      <li>The <strong>partially permeable membrane</strong> allows water through but not larger solutes</li>
     </ul>
   </div>
 
-  <!-- Animated Osmosis Diagram -->
+  <div class="key-facts-block">
+    <h4>🧠 Why a Partially Permeable Membrane Matters</h4>
+    <p>It allows <strong>water molecules through</strong> but <strong>not larger solutes</strong>, so the gradient applies to water only.</p>
+  </div>
+
+  <!-- Osmosis Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>💧 Osmosis Through a Membrane (hover to pause)</h4>
+    <h4>💧 Osmosis Across a Membrane (hover to pause)</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="450" height="200" viewBox="0 0 450 200">
+      <svg width="500" height="240" viewBox="0 0 500 240">
         <!-- Container -->
-        <rect x="20" y="30" width="180" height="140" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
-        <rect x="250" y="30" width="180" height="140" rx="5" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+        <rect x="25" y="35" width="450" height="160" rx="12" fill="none" stroke="currentColor" stroke-width="2"/>
         
-        <!-- Membrane -->
-        <rect x="200" y="30" width="50" height="140" fill="#e9d5ff" stroke="#8b5cf6" stroke-width="2"/>
-        <!-- Pores -->
-        <ellipse cx="225" cy="60" rx="8" ry="4" fill="white"/>
-        <ellipse cx="225" cy="100" rx="8" ry="4" fill="white"/>
-        <ellipse cx="225" cy="140" rx="8" ry="4" fill="white"/>
+        <!-- Partially permeable membrane -->
+        <line x1="250" y1="35" x2="250" y2="195" stroke="#8b5cf6" stroke-width="6" stroke-dasharray="15,8"/>
+        <text x="250" y="220" fill="#8b5cf6" font-size="10" text-anchor="middle" font-weight="bold">Partially permeable membrane</text>
         
-        <!-- Labels -->
-        <text x="110" y="25" fill="#3b82f6" font-size="10" text-anchor="middle" font-weight="bold">DILUTE</text>
-        <text x="110" y="185" fill="#3b82f6" font-size="8" text-anchor="middle">(high water %)</text>
-        <text x="340" y="25" fill="#f59e0b" font-size="10" text-anchor="middle" font-weight="bold">CONCENTRATED</text>
-        <text x="340" y="185" fill="#f59e0b" font-size="8" text-anchor="middle">(low water %)</text>
-        <text x="225" y="185" fill="#8b5cf6" font-size="8" text-anchor="middle">Partially permeable membrane</text>
+        <!-- Dilute side (left) - more water molecules -->
+        <text x="135" y="25" fill="currentColor" font-size="11" text-anchor="middle" font-weight="bold">DILUTE solution</text>
+        <text x="135" y="210" fill="#3b82f6" font-size="9" text-anchor="middle">(high water concentration)</text>
         
         <!-- Water molecules (left - many) -->
-        <g class="anim-brownian">
-          <circle cx="50" cy="60" r="6" fill="#60a5fa"/>
-          <circle cx="80" cy="80" r="6" fill="#60a5fa"/>
-          <circle cx="100" cy="55" r="6" fill="#60a5fa"/>
-          <circle cx="60" cy="110" r="6" fill="#60a5fa"/>
-          <circle cx="130" cy="90" r="6" fill="#60a5fa"/>
-          <circle cx="150" cy="60" r="6" fill="#60a5fa"/>
-          <circle cx="90" cy="130" r="6" fill="#60a5fa"/>
-          <circle cx="170" cy="100" r="6" fill="#60a5fa"/>
-          <circle cx="40" cy="90" r="6" fill="#60a5fa"/>
-          <circle cx="120" cy="140" r="6" fill="#60a5fa"/>
-        </g>
-        
-        <!-- Solute particles (right - many) -->
         <g class="anim-vibrate-slow">
-          <circle cx="280" cy="70" r="10" fill="#f59e0b"/>
-          <circle cx="320" cy="100" r="10" fill="#f59e0b"/>
-          <circle cx="360" cy="60" r="10" fill="#f59e0b"/>
-          <circle cx="300" cy="140" r="10" fill="#f59e0b"/>
-          <circle cx="380" cy="120" r="10" fill="#f59e0b"/>
-          <circle cx="400" cy="80" r="10" fill="#f59e0b"/>
+          <circle cx="55" cy="60" r="8" fill="#22d3ee"/>
+          <circle cx="85" cy="85" r="8" fill="#22d3ee"/>
+          <circle cx="115" cy="55" r="8" fill="#22d3ee"/>
+          <circle cx="60" cy="115" r="8" fill="#22d3ee"/>
+          <circle cx="145" cy="95" r="8" fill="#22d3ee"/>
+          <circle cx="95" cy="140" r="8" fill="#22d3ee"/>
+          <circle cx="175" cy="65" r="8" fill="#22d3ee"/>
+          <circle cx="195" cy="120" r="8" fill="#22d3ee"/>
+          <circle cx="45" cy="160" r="8" fill="#22d3ee"/>
+          <circle cx="130" cy="165" r="8" fill="#22d3ee"/>
+          <circle cx="70" cy="80" r="8" fill="#22d3ee"/>
+          <circle cx="160" cy="145" r="8" fill="#22d3ee"/>
         </g>
+        <!-- Solute molecules (left - few) -->
+        <circle cx="100" cy="110" r="12" fill="#f59e0b"/>
+        
+        <!-- Concentrated side (right) - more solutes, less water -->
+        <text x="375" y="25" fill="currentColor" font-size="11" text-anchor="middle" font-weight="bold">CONCENTRATED solution</text>
+        <text x="375" y="210" fill="#f59e0b" font-size="9" text-anchor="middle">(low water concentration)</text>
         
         <!-- Water molecules (right - few) -->
-        <circle cx="270" cy="130" r="6" fill="#60a5fa"/>
-        <circle cx="410" cy="50" r="6" fill="#60a5fa"/>
+        <g class="anim-vibrate-slow">
+          <circle cx="310" cy="80" r="8" fill="#22d3ee"/>
+          <circle cx="380" cy="145" r="8" fill="#22d3ee"/>
+          <circle cx="440" cy="70" r="8" fill="#22d3ee"/>
+        </g>
+        <!-- Solute molecules (right - many) -->
+        <circle cx="340" cy="110" r="12" fill="#f59e0b"/>
+        <circle cx="400" cy="85" r="12" fill="#f59e0b"/>
+        <circle cx="420" cy="130" r="12" fill="#f59e0b"/>
+        <circle cx="360" cy="160" r="12" fill="#f59e0b"/>
+        <circle cx="290" cy="150" r="12" fill="#f59e0b"/>
         
-        <!-- Water moving through membrane -->
-        <g class="anim-flow-right">
-          <circle cx="210" cy="60" r="6" fill="#22d3ee"/>
+        <!-- Moving water molecules -->
+        <g class="anim-flow-right" style="animation-delay: 0.3s;">
+          <circle cx="210" cy="100" r="8" fill="#06b6d4"/>
         </g>
-        <g class="anim-flow-right" style="animation-delay: 0.6s;">
-          <circle cx="210" cy="100" r="6" fill="#22d3ee"/>
+        <g class="anim-flow-right" style="animation-delay: 0.9s;">
+          <circle cx="205" cy="140" r="8" fill="#06b6d4"/>
         </g>
-        <g class="anim-flow-right" style="animation-delay: 1.2s;">
-          <circle cx="210" cy="140" r="6" fill="#22d3ee"/>
+        <g class="anim-flow-right" style="animation-delay: 1.5s;">
+          <circle cx="215" cy="70" r="8" fill="#06b6d4"/>
         </g>
         
         <!-- Arrow -->
         <g class="anim-pulse">
-          <path d="M140,195 L310,195" stroke="#22c55e" stroke-width="3" marker-end="url(#greenArrow2)"/>
+          <path d="M155,230 L345,230" stroke="#22c55e" stroke-width="4" marker-end="url(#osmArrow)"/>
         </g>
-        <text x="225" y="205" fill="#22c55e" font-size="9" text-anchor="middle" font-weight="bold">NET WATER MOVEMENT →</text>
+        <text x="250" y="238" fill="#22c55e" font-size="10" text-anchor="middle" font-weight="bold">NET WATER MOVEMENT →</text>
         
         <defs>
-          <marker id="greenArrow2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e"/>
+          <marker id="osmArrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="#22c55e"/>
           </marker>
         </defs>
       </svg>
     </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Water moves from dilute (high water) → concentrated (low water) • Solutes cannot pass through</p>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Water moves from dilute (high water) → concentrated (low water) • Solutes cannot pass through</p>
   </div>
 
   <h3 class="subsection-subheading">Osmosis and Plant Cells</h3>
@@ -1439,64 +1579,64 @@ export const biologyData: BiologyChapter[] = [
     </div>
   </div>
 
-  <!-- Animated Plant Cell Osmosis -->
+  <!-- Plant Cell Osmosis Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🌱 Effect of Osmosis on Plant Cells (hover to pause)</h4>
+    <h4>🌱 Effect of Osmosis on Plant Cells</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="500" height="200" viewBox="0 0 500 200">
+      <svg width="550" height="220" viewBox="0 0 550 220">
         <!-- Turgid Cell -->
         <g>
-          <text x="85" y="20" fill="#22c55e" font-size="10" text-anchor="middle" font-weight="bold">TURGID</text>
-          <text x="85" y="32" fill="currentColor" font-size="8" text-anchor="middle">(in dilute solution)</text>
-          <rect x="30" y="45" width="110" height="100" rx="5" fill="none" stroke="#22c55e" stroke-width="4"/>
+          <text x="95" y="20" fill="#22c55e" font-size="12" text-anchor="middle" font-weight="bold">TURGID</text>
+          <text x="95" y="35" fill="currentColor" font-size="9" text-anchor="middle">(in dilute solution)</text>
+          <rect x="35" y="50" width="120" height="110" rx="8" fill="none" stroke="#22c55e" stroke-width="5"/>
           <g class="anim-pulse">
-            <rect x="40" y="55" width="90" height="80" rx="3" fill="#dcfce7" stroke="#86efac" stroke-width="2"/>
-            <ellipse cx="85" cy="95" rx="35" ry="30" fill="#a5b4fc" opacity="0.6"/>
+            <rect x="48" y="63" width="94" height="84" rx="5" fill="#dcfce7" stroke="#86efac" stroke-width="2"/>
+            <ellipse cx="95" cy="105" rx="40" ry="35" fill="#a5b4fc" opacity="0.7"/>
           </g>
-          <text x="85" y="160" fill="currentColor" font-size="8" text-anchor="middle">Vacuole full</text>
-          <text x="85" y="172" fill="currentColor" font-size="8" text-anchor="middle">Cell firm ✓</text>
+          <text x="95" y="175" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">Vacuole full</text>
+          <text x="95" y="190" fill="#22c55e" font-size="9" text-anchor="middle">Cell firm ✓</text>
           <!-- Water arrows in -->
           <g class="anim-flow-right">
-            <path d="M5,70 L25,80" stroke="#3b82f6" stroke-width="2" marker-end="url(#blueArr)"/>
-            <path d="M5,120 L25,110" stroke="#3b82f6" stroke-width="2" marker-end="url(#blueArr)"/>
+            <path d="M5,80 L28,90" stroke="#3b82f6" stroke-width="3" marker-end="url(#blueOsm)"/>
+            <path d="M5,130 L28,120" stroke="#3b82f6" stroke-width="3" marker-end="url(#blueOsm)"/>
           </g>
         </g>
         
         <!-- Normal Cell -->
         <g>
-          <text x="250" y="20" fill="#f59e0b" font-size="10" text-anchor="middle" font-weight="bold">NORMAL</text>
-          <text x="250" y="32" fill="currentColor" font-size="8" text-anchor="middle">(isotonic solution)</text>
-          <rect x="195" y="45" width="110" height="100" rx="5" fill="none" stroke="#f59e0b" stroke-width="4"/>
-          <rect x="205" y="55" width="90" height="80" rx="3" fill="#fef9c3" stroke="#fde047" stroke-width="2"/>
-          <ellipse cx="250" cy="95" rx="30" ry="25" fill="#a5b4fc" opacity="0.5"/>
-          <text x="250" y="160" fill="currentColor" font-size="8" text-anchor="middle">No net movement</text>
-          <text x="250" y="172" fill="currentColor" font-size="8" text-anchor="middle">Balanced</text>
+          <text x="275" y="20" fill="#f59e0b" font-size="12" text-anchor="middle" font-weight="bold">NORMAL</text>
+          <text x="275" y="35" fill="currentColor" font-size="9" text-anchor="middle">(isotonic solution)</text>
+          <rect x="215" y="50" width="120" height="110" rx="8" fill="none" stroke="#f59e0b" stroke-width="5"/>
+          <rect x="228" y="63" width="94" height="84" rx="5" fill="#fef9c3" stroke="#fde047" stroke-width="2"/>
+          <ellipse cx="275" cy="105" rx="35" ry="30" fill="#a5b4fc" opacity="0.6"/>
+          <text x="275" y="175" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">No net movement</text>
+          <text x="275" y="190" fill="#f59e0b" font-size="9" text-anchor="middle">Balanced</text>
         </g>
         
         <!-- Plasmolysed Cell -->
         <g>
-          <text x="415" y="20" fill="#ef4444" font-size="10" text-anchor="middle" font-weight="bold">PLASMOLYSED</text>
-          <text x="415" y="32" fill="currentColor" font-size="8" text-anchor="middle">(in concentrated solution)</text>
-          <rect x="360" y="45" width="110" height="100" rx="5" fill="none" stroke="#ef4444" stroke-width="4"/>
+          <text x="455" y="20" fill="#ef4444" font-size="12" text-anchor="middle" font-weight="bold">PLASMOLYSED</text>
+          <text x="455" y="35" fill="currentColor" font-size="9" text-anchor="middle">(in concentrated solution)</text>
+          <rect x="395" y="50" width="120" height="110" rx="8" fill="none" stroke="#ef4444" stroke-width="5"/>
           <g class="anim-pulse">
-            <ellipse cx="415" cy="95" rx="35" ry="30" fill="#fee2e2" stroke="#fca5a5" stroke-width="2"/>
-            <ellipse cx="415" cy="95" rx="15" ry="12" fill="#a5b4fc" opacity="0.4"/>
+            <ellipse cx="455" cy="105" rx="40" ry="35" fill="#fee2e2" stroke="#fca5a5" stroke-width="2"/>
+            <ellipse cx="455" cy="105" rx="18" ry="15" fill="#a5b4fc" opacity="0.5"/>
           </g>
-          <text x="415" y="160" fill="currentColor" font-size="8" text-anchor="middle">Cytoplasm shrinks</text>
-          <text x="415" y="172" fill="currentColor" font-size="8" text-anchor="middle">Cell wilts ✗</text>
+          <text x="455" y="175" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">Cytoplasm shrinks</text>
+          <text x="455" y="190" fill="#ef4444" font-size="9" text-anchor="middle">Cell wilts ✗</text>
           <!-- Water arrows out -->
           <g class="anim-flow-right">
-            <path d="M455,80 L480,70" stroke="#ef4444" stroke-width="2" marker-end="url(#redArr)"/>
-            <path d="M455,110 L480,120" stroke="#ef4444" stroke-width="2" marker-end="url(#redArr)"/>
+            <path d="M500,90 L530,80" stroke="#ef4444" stroke-width="3" marker-end="url(#redOsm)"/>
+            <path d="M500,120 L530,130" stroke="#ef4444" stroke-width="3" marker-end="url(#redOsm)"/>
           </g>
         </g>
         
         <defs>
-          <marker id="blueArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <polygon points="0 0, 6 3, 0 6" fill="#3b82f6"/>
+          <marker id="blueOsm" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <polygon points="0 0, 8 4, 0 8" fill="#3b82f6"/>
           </marker>
-          <marker id="redArr" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <polygon points="0 0, 6 3, 0 6" fill="#ef4444"/>
+          <marker id="redOsm" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+            <polygon points="0 0, 8 4, 0 8" fill="#ef4444"/>
           </marker>
         </defs>
       </svg>
@@ -1590,82 +1730,82 @@ export const biologyData: BiologyChapter[] = [
     </ol>
   </div>
 
-  <!-- Animated Active Transport -->
+  <!-- Active Transport Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
     <h4>⚡ Active Transport Mechanism (hover to pause)</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="450" height="220" viewBox="0 0 450 220">
+      <svg width="500" height="260" viewBox="0 0 500 260">
         <!-- Cell membrane -->
-        <rect x="20" y="90" width="410" height="40" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
-        <text x="225" y="115" fill="#92400e" font-size="9" text-anchor="middle">Cell Membrane</text>
+        <rect x="25" y="100" width="450" height="50" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+        <text x="250" y="130" fill="#92400e" font-size="10" text-anchor="middle" font-weight="bold">Cell Membrane</text>
         
         <!-- Labels -->
-        <text x="225" y="30" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">OUTSIDE CELL</text>
-        <text x="225" y="45" fill="#ef4444" font-size="9" text-anchor="middle">(LOW concentration)</text>
-        <text x="225" y="175" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">INSIDE CELL</text>
-        <text x="225" y="190" fill="#22c55e" font-size="9" text-anchor="middle">(HIGH concentration)</text>
+        <text x="250" y="30" fill="currentColor" font-size="12" text-anchor="middle" font-weight="bold">OUTSIDE CELL</text>
+        <text x="250" y="48" fill="#ef4444" font-size="10" text-anchor="middle">(LOW concentration)</text>
+        <text x="250" y="195" fill="currentColor" font-size="12" text-anchor="middle" font-weight="bold">INSIDE CELL</text>
+        <text x="250" y="213" fill="#22c55e" font-size="10" text-anchor="middle">(HIGH concentration)</text>
         
         <!-- Low concentration particles (outside) -->
-        <circle cx="60" cy="60" r="8" fill="#3b82f6"/>
-        <circle cx="380" cy="70" r="8" fill="#3b82f6"/>
+        <circle cx="65" cy="70" r="10" fill="#3b82f6"/>
+        <circle cx="420" cy="75" r="10" fill="#3b82f6"/>
         
         <!-- High concentration particles (inside) -->
         <g class="anim-vibrate-slow">
-          <circle cx="80" cy="160" r="8" fill="#3b82f6"/>
-          <circle cx="150" cy="165" r="8" fill="#3b82f6"/>
-          <circle cx="220" cy="155" r="8" fill="#3b82f6"/>
-          <circle cx="290" cy="165" r="8" fill="#3b82f6"/>
-          <circle cx="360" cy="160" r="8" fill="#3b82f6"/>
-          <circle cx="120" cy="200" r="8" fill="#3b82f6"/>
-          <circle cx="260" cy="195" r="8" fill="#3b82f6"/>
-          <circle cx="330" cy="200" r="8" fill="#3b82f6"/>
+          <circle cx="75" cy="175" r="10" fill="#3b82f6"/>
+          <circle cx="140" cy="180" r="10" fill="#3b82f6"/>
+          <circle cx="210" cy="170" r="10" fill="#3b82f6"/>
+          <circle cx="280" cy="180" r="10" fill="#3b82f6"/>
+          <circle cx="350" cy="175" r="10" fill="#3b82f6"/>
+          <circle cx="420" cy="178" r="10" fill="#3b82f6"/>
+          <circle cx="110" cy="220" r="10" fill="#3b82f6"/>
+          <circle cx="245" cy="225" r="10" fill="#3b82f6"/>
+          <circle cx="380" cy="222" r="10" fill="#3b82f6"/>
         </g>
         
-        <!-- Carrier protein 1 (Step 1 - binding) -->
+        <!-- Carrier protein 1 (binding) -->
         <g>
-          <rect x="80" y="85" width="50" height="50" rx="10" fill="#8b5cf6"/>
-          <text x="105" y="115" fill="white" font-size="8" text-anchor="middle">Carrier</text>
-          <circle cx="105" cy="75" r="8" fill="#3b82f6"/>
-          <text x="105" y="78" fill="white" font-size="7" text-anchor="middle">1</text>
+          <rect x="80" y="95" width="55" height="60" rx="12" fill="#8b5cf6"/>
+          <text x="107" y="130" fill="white" font-size="9" text-anchor="middle" font-weight="bold">Carrier</text>
+          <circle cx="107" cy="82" r="10" fill="#3b82f6"/>
         </g>
-        <text x="105" y="210" fill="currentColor" font-size="8" text-anchor="middle">1. Binds</text>
+        <text x="107" y="245" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">1. Binds</text>
         
-        <!-- Carrier protein 2 (Step 2 - ATP) -->
+        <!-- Carrier protein 2 (ATP) -->
         <g>
-          <rect x="180" y="85" width="50" height="50" rx="10" fill="#a855f7"/>
+          <rect x="195" y="95" width="55" height="60" rx="12" fill="#a855f7"/>
           <g class="anim-pulse-fast">
-            <circle cx="175" cy="110" r="12" fill="#fbbf24"/>
-            <text x="175" y="114" fill="#92400e" font-size="7" text-anchor="middle" font-weight="bold">ATP</text>
+            <circle cx="188" cy="125" r="15" fill="#fbbf24"/>
+            <text x="188" y="130" fill="#92400e" font-size="9" text-anchor="middle" font-weight="bold">ATP</text>
           </g>
-          <circle cx="205" cy="95" r="8" fill="#3b82f6"/>
+          <circle cx="222" cy="105" r="10" fill="#3b82f6"/>
         </g>
-        <text x="205" y="210" fill="currentColor" font-size="8" text-anchor="middle">2. ATP used</text>
+        <text x="222" y="245" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">2. ATP used</text>
         
-        <!-- Carrier protein 3 (Step 3 - shape change) -->
+        <!-- Carrier protein 3 (shape change) -->
         <g class="anim-stretch">
-          <rect x="280" y="80" width="50" height="60" rx="10" fill="#c084fc"/>
-          <circle cx="305" cy="145" r="8" fill="#3b82f6"/>
+          <rect x="305" y="90" width="55" height="70" rx="12" fill="#c084fc"/>
+          <circle cx="332" cy="165" r="10" fill="#3b82f6"/>
         </g>
-        <text x="305" y="210" fill="currentColor" font-size="8" text-anchor="middle">3. Changes shape</text>
+        <text x="332" y="245" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">3. Shape changes</text>
         
-        <!-- Carrier protein 4 (Step 4 - releases) -->
+        <!-- Carrier protein 4 (releases) -->
         <g>
-          <rect x="380" y="85" width="50" height="50" rx="10" fill="#8b5cf6"/>
+          <rect x="420" y="95" width="55" height="60" rx="12" fill="#8b5cf6"/>
           <g class="anim-flow-down">
-            <circle cx="405" cy="145" r="8" fill="#3b82f6"/>
+            <circle cx="447" cy="165" r="10" fill="#3b82f6"/>
           </g>
         </g>
-        <text x="405" y="210" fill="currentColor" font-size="8" text-anchor="middle">4. Releases</text>
+        <text x="447" y="245" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">4. Releases</text>
         
         <!-- Arrow showing direction -->
         <g class="anim-pulse">
-          <path d="M50,55 L50,145" stroke="#ef4444" stroke-width="3" marker-end="url(#activeArrow)"/>
+          <path d="M50,65 L50,160" stroke="#ef4444" stroke-width="4" marker-end="url(#activeArr)"/>
         </g>
-        <text x="35" y="100" fill="#ef4444" font-size="8" transform="rotate(-90 35,100)">AGAINST gradient</text>
+        <text x="35" y="115" fill="#ef4444" font-size="9" transform="rotate(-90 35,115)" text-anchor="middle">AGAINST gradient</text>
         
         <defs>
-          <marker id="activeArrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#ef4444"/>
+          <marker id="activeArr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="#ef4444"/>
           </marker>
         </defs>
       </svg>
@@ -1675,7 +1815,7 @@ export const biologyData: BiologyChapter[] = [
   <div class="info-grid">
     <div class="example-block">
       <h4>🌱 Active Transport in Plants</h4>
-      <p>Mineral ions (e.g., nitrate for amino acids, magnesium for chlorophyll) are often at <strong>lower concentration in soil</strong> → must enter root hair cells by active transport.</p>
+      <p>Mineral ions (e.g., <strong>nitrate</strong> for amino acids, <strong>magnesium</strong> for chlorophyll) are often at <strong>lower concentration in soil</strong> → must enter root hair cells by active transport.</p>
     </div>
     <div class="example-block">
       <h4>🏃 Active Transport in Animals</h4>
@@ -1739,7 +1879,7 @@ export const biologyData: BiologyChapter[] = [
   </div>
 
   <div class="key-facts-block">
-    <h4>🧠 Single-Celled Organisms</h4>
+    <h4>🦠 Single-Celled Organisms</h4>
     <ul>
       <li><strong>Very large SA:V ratio</strong></li>
       <li>All nutrients/waste diffuse directly through the membrane</li>
@@ -1750,7 +1890,7 @@ export const biologyData: BiologyChapter[] = [
   </div>
 
   <div class="key-facts-block">
-    <h4>🧠 Why Multicellular Organisms Need Special Exchange Surfaces</h4>
+    <h4>🧍 Why Multicellular Organisms Need Special Exchange Surfaces</h4>
     <p>As organisms increase in size:</p>
     <ul>
       <li><strong>Volume increases faster than surface area</strong></li>
@@ -1761,59 +1901,13 @@ export const biologyData: BiologyChapter[] = [
     <p>Therefore, large organisms evolved: <strong>lungs, gills, roots, leaves, villi, circulatory systems</strong></p>
   </div>
 
-  <!-- SA:V Ratio Diagram -->
-  <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>📊 Surface Area : Volume Ratio (hover to pause)</h4>
-    <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="450" height="180" viewBox="0 0 450 180">
-        <!-- Small cube -->
-        <g>
-          <rect x="40" y="80" width="40" height="40" fill="#22c55e" stroke="#166534" stroke-width="2" class="anim-pulse"/>
-          <text x="60" y="145" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">1 cm cube</text>
-          <text x="60" y="158" fill="#22c55e" font-size="8" text-anchor="middle">SA = 6 cm²</text>
-          <text x="60" y="170" fill="#22c55e" font-size="8" text-anchor="middle">V = 1 cm³</text>
-          <text x="60" y="65" fill="#22c55e" font-size="10" text-anchor="middle" font-weight="bold">SA:V = 6:1</text>
-        </g>
-        
-        <!-- Medium cube -->
-        <g>
-          <rect x="155" y="60" width="60" height="60" fill="#f59e0b" stroke="#b45309" stroke-width="2" class="anim-pulse" style="animation-delay: 0.3s;"/>
-          <text x="185" y="145" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">2 cm cube</text>
-          <text x="185" y="158" fill="#f59e0b" font-size="8" text-anchor="middle">SA = 24 cm²</text>
-          <text x="185" y="170" fill="#f59e0b" font-size="8" text-anchor="middle">V = 8 cm³</text>
-          <text x="185" y="45" fill="#f59e0b" font-size="10" text-anchor="middle" font-weight="bold">SA:V = 3:1</text>
-        </g>
-        
-        <!-- Large cube -->
-        <g>
-          <rect x="290" y="40" width="80" height="80" fill="#ef4444" stroke="#b91c1c" stroke-width="2" class="anim-pulse" style="animation-delay: 0.6s;"/>
-          <text x="330" y="145" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">4 cm cube</text>
-          <text x="330" y="158" fill="#ef4444" font-size="8" text-anchor="middle">SA = 96 cm²</text>
-          <text x="330" y="170" fill="#ef4444" font-size="8" text-anchor="middle">V = 64 cm³</text>
-          <text x="330" y="25" fill="#ef4444" font-size="10" text-anchor="middle" font-weight="bold">SA:V = 1.5:1</text>
-        </g>
-        
-        <!-- Arrow showing ratio decreases -->
-        <path d="M100,50 L270,50" stroke="currentColor" stroke-width="2" marker-end="url(#simpleArrow)"/>
-        <text x="185" y="42" fill="currentColor" font-size="8" text-anchor="middle">SA:V ratio DECREASES →</text>
-        
-        <defs>
-          <marker id="simpleArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-            <polygon points="0 0, 8 3, 0 6" fill="currentColor"/>
-          </marker>
-        </defs>
-      </svg>
-    </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">As size increases, SA:V ratio decreases → harder to exchange substances by diffusion alone</p>
-  </div>
-
   <div class="table-block">
-    <h4>📊 Features of an Efficient Exchange Surface</h4>
+    <h4>⭐ Features of an Efficient Exchange Surface</h4>
     <table class="data-table">
       <thead>
         <tr>
           <th>Feature</th>
-          <th>Why It Improves Exchange</th>
+          <th>Why it Improves Exchange</th>
         </tr>
       </thead>
       <tbody>
@@ -1841,125 +1935,133 @@ export const biologyData: BiologyChapter[] = [
     </table>
   </div>
 
-  <h3 class="subsection-subheading">Specific Exchange Surface Adaptations</h3>
-
   <!-- Alveoli Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🫁 Alveoli (Lungs) — Gas Exchange (hover to pause)</h4>
+    <h4>💨 Alveoli (Lungs) — Gas Exchange</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="400" height="200" viewBox="0 0 400 200">
-        <!-- Alveolus -->
-        <circle cx="200" cy="100" r="70" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/>
-        <text x="200" y="40" fill="#3b82f6" font-size="10" text-anchor="middle" font-weight="bold">ALVEOLUS</text>
-        
-        <!-- Thin wall indication -->
-        <text x="285" y="85" fill="currentColor" font-size="8">1 cell thick</text>
-        <line x1="270" y1="90" x2="260" y2="100" stroke="currentColor" stroke-width="1"/>
-        
-        <!-- Capillary -->
-        <path d="M100,80 Q130,60 150,80 Q180,110 200,100 Q220,90 250,100 Q280,115 300,80" fill="none" stroke="#ef4444" stroke-width="12" opacity="0.7"/>
-        <path d="M100,80 Q130,60 150,80 Q180,110 200,100 Q220,90 250,100 Q280,115 300,80" fill="none" stroke="#fca5a5" stroke-width="6"/>
-        <text x="100" y="60" fill="#ef4444" font-size="8">Capillary</text>
-        
-        <!-- Blood cells -->
-        <g class="anim-flow-right">
-          <ellipse cx="130" cy="80" rx="8" ry="5" fill="#ef4444"/>
-        </g>
-        <g class="anim-flow-right" style="animation-delay: 0.5s;">
-          <ellipse cx="200" cy="100" rx="8" ry="5" fill="#ef4444"/>
-        </g>
-        <g class="anim-flow-right" style="animation-delay: 1s;">
-          <ellipse cx="270" cy="90" rx="8" ry="5" fill="#ef4444"/>
-        </g>
-        
-        <!-- O2 arrows -->
+      <svg width="450" height="280" viewBox="0 0 450 280">
+        <!-- Single alveolus -->
         <g class="anim-pulse">
-          <path d="M200,60 L200,85" stroke="#22c55e" stroke-width="2" marker-end="url(#o2Arrow)"/>
-          <circle cx="200" cy="55" r="12" fill="#dcfce7" stroke="#22c55e" stroke-width="1"/>
-          <text x="200" y="59" fill="#166534" font-size="8" text-anchor="middle" font-weight="bold">O₂</text>
+          <circle cx="225" cy="140" r="100" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/>
+          <!-- Thin wall indication -->
+          <circle cx="225" cy="140" r="95" fill="none" stroke="#93c5fd" stroke-width="1" stroke-dasharray="4,2"/>
         </g>
         
-        <!-- CO2 arrows -->
-        <g class="anim-pulse" style="animation-delay: 0.5s;">
-          <path d="M230,115 L230,140" stroke="#8b5cf6" stroke-width="2" marker-end="url(#co2Arrow)"/>
-          <circle cx="230" cy="150" r="12" fill="#f3e8ff" stroke="#8b5cf6" stroke-width="1"/>
-          <text x="230" y="154" fill="#6b21a8" font-size="8" text-anchor="middle" font-weight="bold">CO₂</text>
+        <!-- Air space label -->
+        <text x="225" y="130" fill="#1d4ed8" font-size="11" text-anchor="middle" font-weight="bold">AIR</text>
+        <text x="225" y="145" fill="#1d4ed8" font-size="9" text-anchor="middle">(in alveolus)</text>
+        
+        <!-- Capillary wrapping around -->
+        <g class="anim-pulse-fast">
+          <path d="M100,100 Q90,140 100,180 Q110,210 140,220 Q180,235 225,240 Q270,235 310,220 Q340,210 350,180 Q360,140 350,100" 
+                fill="none" stroke="#ef4444" stroke-width="12" opacity="0.8"/>
         </g>
         
-        <!-- Air indicator -->
-        <text x="200" y="105" fill="currentColor" font-size="9" text-anchor="middle">Air space</text>
+        <!-- Blood cells in capillary -->
+        <g class="anim-flow-right">
+          <ellipse cx="110" cy="150" rx="8" ry="6" fill="#dc2626"/>
+          <ellipse cx="160" cy="225" rx="8" ry="6" fill="#dc2626"/>
+          <ellipse cx="290" cy="230" rx="8" ry="6" fill="#dc2626"/>
+          <ellipse cx="345" cy="140" rx="8" ry="6" fill="#dc2626"/>
+        </g>
         
-        <!-- Features list -->
-        <text x="340" y="120" fill="currentColor" font-size="8">✓ Large SA (~70 m²)</text>
-        <text x="340" y="135" fill="currentColor" font-size="8">✓ Thin walls (1 cell)</text>
-        <text x="340" y="150" fill="currentColor" font-size="8">✓ Rich blood supply</text>
-        <text x="340" y="165" fill="currentColor" font-size="8">✓ Moist lining</text>
-        <text x="340" y="180" fill="currentColor" font-size="8">✓ Ventilated</text>
+        <!-- O2 arrows (into blood) -->
+        <g class="anim-flow-right">
+          <path d="M185,110 L155,95" stroke="#22c55e" stroke-width="3" marker-end="url(#o2Arr)"/>
+          <path d="M180,170 L140,190" stroke="#22c55e" stroke-width="3" marker-end="url(#o2Arr)"/>
+        </g>
+        <circle cx="195" cy="105" r="6" fill="#22c55e"/>
+        <text x="195" y="108" fill="white" font-size="7" text-anchor="middle">O₂</text>
+        <circle cx="190" cy="165" r="6" fill="#22c55e"/>
+        
+        <!-- CO2 arrows (out of blood) -->
+        <g class="anim-flow-left">
+          <path d="M295,95 L265,110" stroke="#8b5cf6" stroke-width="3" marker-end="url(#co2Arr)"/>
+          <path d="M310,190 L270,170" stroke="#8b5cf6" stroke-width="3" marker-end="url(#co2Arr)"/>
+        </g>
+        <circle cx="305" cy="95" r="6" fill="#8b5cf6"/>
+        <text x="305" y="98" fill="white" font-size="6" text-anchor="middle">CO₂</text>
+        <circle cx="315" cy="185" r="6" fill="#8b5cf6"/>
+        
+        <!-- Labels -->
+        <text x="85" y="140" fill="#ef4444" font-size="10" font-weight="bold">Capillary</text>
+        <text x="85" y="155" fill="#ef4444" font-size="9">(blood)</text>
+        
+        <!-- Feature annotations -->
+        <text x="225" y="270" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">✓ Large SA (millions of alveoli)  ✓ 1 cell thick  ✓ Dense capillaries  ✓ Moist  ✓ Ventilated</text>
         
         <defs>
-          <marker id="o2Arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <polygon points="0 0, 6 3, 0 6" fill="#22c55e"/>
+          <marker id="o2Arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#22c55e"/>
           </marker>
-          <marker id="co2Arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <polygon points="0 0, 6 3, 0 6" fill="#8b5cf6"/>
+          <marker id="co2Arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#8b5cf6"/>
           </marker>
         </defs>
       </svg>
     </div>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">O₂ diffuses into blood • CO₂ diffuses out • Short diffusion distance + steep gradient</p>
   </div>
 
-  <!-- Villi Diagram -->
+  <!-- Small Intestine Villi Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🍴 Villi (Small Intestine) — Nutrient Absorption (hover to pause)</h4>
+    <h4>🍴 Villi (Small Intestine) — Nutrient Absorption</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="350" height="200" viewBox="0 0 350 200">
+      <svg width="450" height="250" viewBox="0 0 450 250">
         <!-- Intestine wall base -->
-        <rect x="20" y="150" width="310" height="30" fill="#fde68a" stroke="#f59e0b" stroke-width="2"/>
+        <rect x="25" y="180" width="400" height="40" fill="#fde68a" stroke="#f59e0b" stroke-width="3"/>
         
-        <!-- Villi -->
+        <!-- Villi (finger-like projections) -->
         <g class="anim-oscillate-y">
-          <path d="M60,150 Q60,70 80,50 Q100,70 100,150" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
-          <!-- Capillary network -->
-          <path d="M70,140 L70,70 Q80,60 90,70 L90,140" fill="none" stroke="#ef4444" stroke-width="4" opacity="0.6"/>
-          <!-- Lacteal -->
-          <rect x="77" y="70" width="6" height="70" fill="#86efac" rx="2"/>
+          <path d="M70,180 Q70,80 95,55 Q120,80 120,180" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+          <!-- Capillary network inside -->
+          <path d="M82,170 L82,75 Q95,60 108,75 L108,170" fill="none" stroke="#ef4444" stroke-width="6" opacity="0.7"/>
+          <!-- Lacteal (green) -->
+          <rect x="92" y="75" width="6" height="90" fill="#86efac" rx="3"/>
+          <!-- Microvilli (brush border) -->
+          <g class="anim-vibrate-slow">
+            <line x1="75" y1="55" x2="75" y2="45" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="85" y1="50" x2="85" y2="40" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="95" y1="48" x2="95" y2="38" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="105" y1="50" x2="105" y2="40" stroke="#f59e0b" stroke-width="2"/>
+            <line x1="115" y1="55" x2="115" y2="45" stroke="#f59e0b" stroke-width="2"/>
+          </g>
         </g>
         
-        <g class="anim-oscillate-y" style="animation-delay: 0.2s;">
-          <path d="M140,150 Q140,70 160,50 Q180,70 180,150" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
-          <path d="M150,140 L150,70 Q160,60 170,70 L170,140" fill="none" stroke="#ef4444" stroke-width="4" opacity="0.6"/>
-          <rect x="157" y="70" width="6" height="70" fill="#86efac" rx="2"/>
+        <g class="anim-oscillate-y" style="animation-delay: 0.25s;">
+          <path d="M175,180 Q175,80 200,55 Q225,80 225,180" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+          <path d="M187,170 L187,75 Q200,60 213,75 L213,170" fill="none" stroke="#ef4444" stroke-width="6" opacity="0.7"/>
+          <rect x="197" y="75" width="6" height="90" fill="#86efac" rx="3"/>
         </g>
         
-        <g class="anim-oscillate-y" style="animation-delay: 0.4s;">
-          <path d="M220,150 Q220,70 240,50 Q260,70 260,150" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
-          <path d="M230,140 L230,70 Q240,60 250,70 L250,140" fill="none" stroke="#ef4444" stroke-width="4" opacity="0.6"/>
-          <rect x="237" y="70" width="6" height="70" fill="#86efac" rx="2"/>
+        <g class="anim-oscillate-y" style="animation-delay: 0.5s;">
+          <path d="M280,180 Q280,80 305,55 Q330,80 330,180" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+          <path d="M292,170 L292,75 Q305,60 318,75 L318,170" fill="none" stroke="#ef4444" stroke-width="6" opacity="0.7"/>
+          <rect x="302" y="75" width="6" height="90" fill="#86efac" rx="3"/>
         </g>
         
-        <!-- Microvilli indication -->
-        <g class="anim-vibrate-slow">
-          <line x1="60" y1="50" x2="60" y2="42" stroke="#f59e0b" stroke-width="1"/>
-          <line x1="70" y1="45" x2="70" y2="37" stroke="#f59e0b" stroke-width="1"/>
-          <line x1="80" y1="43" x2="80" y2="35" stroke="#f59e0b" stroke-width="1"/>
-          <line x1="90" y1="45" x2="90" y2="37" stroke="#f59e0b" stroke-width="1"/>
-          <line x1="100" y1="50" x2="100" y2="42" stroke="#f59e0b" stroke-width="1"/>
+        <g class="anim-oscillate-y" style="animation-delay: 0.75s;">
+          <path d="M380,180 Q380,80 405,55 Q430,80 430,180" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+          <path d="M392,170 L392,75 Q405,60 418,75 L418,170" fill="none" stroke="#ef4444" stroke-width="6" opacity="0.7"/>
+          <rect x="402" y="75" width="6" height="90" fill="#86efac" rx="3"/>
         </g>
-        
-        <!-- Labels -->
-        <text x="300" y="50" fill="#f59e0b" font-size="9" font-weight="bold">Villus</text>
-        <text x="300" y="75" fill="#ef4444" font-size="8">Capillary</text>
-        <text x="300" y="95" fill="#22c55e" font-size="8">Lacteal</text>
-        <text x="80" y="30" fill="currentColor" font-size="7">Microvilli</text>
         
         <!-- Nutrient absorption arrows -->
         <g class="anim-flow-down">
-          <circle cx="50" cy="30" r="4" fill="#fbbf24"/>
-          <circle cx="130" cy="25" r="4" fill="#fbbf24"/>
+          <circle cx="55" cy="35" r="5" fill="#fbbf24"/>
+          <circle cx="160" cy="30" r="5" fill="#fbbf24"/>
+          <circle cx="265" cy="35" r="5" fill="#fbbf24"/>
+          <circle cx="365" cy="30" r="5" fill="#fbbf24"/>
         </g>
         
+        <!-- Labels -->
+        <text x="55" y="20" fill="#fbbf24" font-size="9" font-weight="bold">Nutrients</text>
+        <text x="380" y="105" fill="#ef4444" font-size="9" font-weight="bold">Capillary</text>
+        <text x="380" y="145" fill="#86efac" font-size="9" font-weight="bold">Lacteal</text>
+        <text x="95" y="28" fill="#f59e0b" font-size="8">Microvilli</text>
+        
         <!-- Features -->
-        <text x="30" y="195" fill="currentColor" font-size="8">✓ Huge surface area (villi + microvilli) ✓ 1 cell thick ✓ Dense capillary network ✓ Lacteals for fats</text>
+        <text x="225" y="240" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">✓ Huge SA (villi + microvilli)  ✓ 1 cell thick  ✓ Dense capillaries  ✓ Lacteals for fats</text>
       </svg>
     </div>
   </div>
@@ -2054,7 +2156,7 @@ export const biologyData: BiologyChapter[] = [
         ]
       },
       // ========================================
-      // MODULE 3: CELL DIVISION (Existing content renamed)
+      // MODULE 3: CELL DIVISION
       // ========================================
       {
         id: "cell-division-module",
@@ -2068,7 +2170,7 @@ export const biologyData: BiologyChapter[] = [
             study_group: 1,
             content_html: `
 <div class="subsection">
-  <h3 class="subsection-heading">Chromosomes — Carriers of Genetic Information</h3>
+  <h3 class="subsection-heading">Chromosomes & The Cell Cycle</h3>
   
   <div class="spec-point-block">
     <h4>📋 AQA Specification</h4>
@@ -2076,434 +2178,271 @@ export const biologyData: BiologyChapter[] = [
   </div>
 
   <div class="definition-block">
-    <h4>🔵 What are Chromosomes?</h4>
+    <h4>🧬 What are Chromosomes?</h4>
     <ul>
-      <li>Chromosomes are long, coiled <strong>DNA molecules</strong> that carry genes.</li>
-      <li>In eukaryotic cells, chromosomes are located inside the <strong>nucleus</strong>.</li>
-      <li>DNA is wrapped around <strong>proteins</strong> to keep it compact and organised.</li>
+      <li>The nucleus of a cell contains <strong>chromosomes</strong>, which are long coiled molecules of <strong>DNA</strong>.</li>
+      <li>DNA carries <strong>genes</strong>, each controlling the production of a specific protein.</li>
+      <li>Human body cells contain <strong>46 chromosomes</strong>, arranged in <strong>23 pairs</strong>.</li>
+      <li>Each chromosome pair consists of: one from <strong>mother</strong>, one from <strong>father</strong>.</li>
     </ul>
   </div>
 
   <div class="key-facts-block">
-    <h4>🧠 Key Facts</h4>
-    <ul>
-      <li>Before a cell divides, its DNA must be copied.</li>
-      <li>This produces the classic <strong>X-shaped chromosome</strong>, made of two identical chromatids.</li>
-      <li>The chromatids are joined at a point called the <strong>centromere</strong>.</li>
-    </ul>
+    <h4>🧠 Why Chromosomes are Paired</h4>
+    <p>Chromosome pairing ensures that organisms inherit correct sets of genes for development and survival.</p>
   </div>
 
-  <!-- Animated Chromosome Structure Diagram -->
+  <!-- Chromosome Structure Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
     <h4>🧬 Chromosome Structure (hover to pause)</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="280" height="200" viewBox="0 0 280 200">
-        <!-- Background glow -->
+      <svg width="320" height="240" viewBox="0 0 320 240">
         <defs>
-          <radialGradient id="chromGlow" cx="50%" cy="50%" r="50%">
+          <radialGradient id="chromGlow2" cx="50%" cy="50%" r="50%">
             <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.3"/>
             <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0"/>
           </radialGradient>
-          <linearGradient id="dnaGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient id="dnaGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" style="stop-color:#3b82f6"/>
             <stop offset="50%" style="stop-color:#8b5cf6"/>
             <stop offset="100%" style="stop-color:#ec4899"/>
           </linearGradient>
         </defs>
         
-        <circle cx="140" cy="100" r="80" fill="url(#chromGlow)"/>
+        <circle cx="160" cy="120" r="90" fill="url(#chromGlow2)"/>
         
         <!-- Sister Chromatid 1 (left arm) -->
         <g class="anim-pulse">
-          <path d="M100,30 Q80,50 85,100 Q80,150 100,170" 
-                fill="none" stroke="url(#dnaGradient)" stroke-width="12" stroke-linecap="round"/>
+          <path d="M115,35 Q90,60 95,120 Q90,180 115,205" 
+                fill="none" stroke="url(#dnaGrad2)" stroke-width="15" stroke-linecap="round"/>
         </g>
         
         <!-- Sister Chromatid 2 (right arm) -->
         <g class="anim-pulse" style="animation-delay: 0.3s;">
-          <path d="M180,30 Q200,50 195,100 Q200,150 180,170" 
-                fill="none" stroke="url(#dnaGradient)" stroke-width="12" stroke-linecap="round"/>
+          <path d="M205,35 Q230,60 225,120 Q230,180 205,205" 
+                fill="none" stroke="url(#dnaGrad2)" stroke-width="15" stroke-linecap="round"/>
         </g>
         
-        <!-- Centromere - pulsing connection point -->
+        <!-- Centromere -->
         <g class="anim-pulse-fast">
-          <ellipse cx="140" cy="100" rx="20" ry="8" fill="#f59e0b" opacity="0.8"/>
-          <ellipse cx="140" cy="100" rx="12" ry="5" fill="#fbbf24"/>
-        </g>
-        
-        <!-- DNA coil indicators -->
-        <g class="anim-rotate-cw-slow" style="transform-origin: 92px 60px;">
-          <circle cx="92" cy="55" r="3" fill="#60a5fa"/>
-          <circle cx="88" cy="65" r="3" fill="#c084fc"/>
-        </g>
-        <g class="anim-rotate-ccw" style="transform-origin: 188px 60px;">
-          <circle cx="188" cy="55" r="3" fill="#60a5fa"/>
-          <circle cx="192" cy="65" r="3" fill="#c084fc"/>
+          <ellipse cx="160" cy="120" rx="25" ry="10" fill="#f59e0b" opacity="0.9"/>
+          <ellipse cx="160" cy="120" rx="15" ry="6" fill="#fbbf24"/>
         </g>
         
         <!-- Labels -->
-        <text x="55" y="100" fill="currentColor" font-size="9" text-anchor="middle">Sister</text>
-        <text x="55" y="112" fill="currentColor" font-size="9" text-anchor="middle">Chromatid</text>
-        <text x="225" y="100" fill="currentColor" font-size="9" text-anchor="middle">Sister</text>
-        <text x="225" y="112" fill="currentColor" font-size="9" text-anchor="middle">Chromatid</text>
-        <text x="140" y="125" fill="#f59e0b" font-size="10" text-anchor="middle" font-weight="bold">Centromere</text>
-        <text x="140" y="190" fill="currentColor" font-size="10" text-anchor="middle">X-shaped chromosome after DNA replication</text>
+        <text x="55" y="120" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Sister</text>
+        <text x="55" y="135" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Chromatid</text>
+        <text x="265" y="120" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Sister</text>
+        <text x="265" y="135" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Chromatid</text>
+        <text x="160" y="150" fill="#f59e0b" font-size="11" text-anchor="middle" font-weight="bold">Centromere</text>
+        <text x="160" y="230" fill="currentColor" font-size="10" text-anchor="middle">X-shaped chromosome after DNA replication</text>
       </svg>
     </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Two identical chromatids joined at the centromere • DNA coiled around proteins</p>
-  </div>
-</div>
-
-<div class="subsection">
-  <h3 class="subsection-heading">Chromosome Pairs (Diploid Cells)</h3>
-  
-  <div class="key-facts-block">
-    <h4>🧠 Key Points</h4>
-    <ul>
-      <li>Chromosomes come in pairs — one from mother, one from father.</li>
-      <li>Humans have <strong>46 chromosomes</strong>, arranged as 23 pairs.</li>
-      <li>Different species have different numbers: horses have 64, dogs have 78.</li>
-    </ul>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Two identical chromatids joined at the centromere • DNA coiled around proteins</p>
   </div>
 
-  <!-- Animated Chromosome Pairs Diagram -->
-  <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>👥 Homologous Chromosome Pairs (hover to pause)</h4>
-    <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="320" height="180" viewBox="0 0 320 180">
-        <!-- Pair 1 - from mother (pink) and father (blue) -->
-        <g>
-          <text x="80" y="20" fill="currentColor" font-size="10" text-anchor="middle">Pair 1</text>
-          <!-- Mother's chromosome -->
-          <g class="anim-oscillate-y">
-            <rect x="55" y="30" width="15" height="80" rx="7" fill="#ec4899" opacity="0.8"/>
-            <rect x="58" y="35" width="9" height="70" rx="4" fill="#f472b6"/>
-          </g>
-          <!-- Father's chromosome -->
-          <g class="anim-oscillate-y" style="animation-delay: 0.2s;">
-            <rect x="90" y="30" width="15" height="80" rx="7" fill="#3b82f6" opacity="0.8"/>
-            <rect x="93" y="35" width="9" height="70" rx="4" fill="#60a5fa"/>
-          </g>
-          <text x="62" y="125" fill="#ec4899" font-size="8">♀</text>
-          <text x="97" y="125" fill="#3b82f6" font-size="8">♂</text>
-        </g>
-        
-        <!-- Pair 2 -->
-        <g>
-          <text x="160" y="20" fill="currentColor" font-size="10" text-anchor="middle">Pair 2</text>
-          <g class="anim-oscillate-y" style="animation-delay: 0.1s;">
-            <rect x="135" y="35" width="15" height="70" rx="7" fill="#ec4899" opacity="0.8"/>
-            <rect x="138" y="40" width="9" height="60" rx="4" fill="#f472b6"/>
-          </g>
-          <g class="anim-oscillate-y" style="animation-delay: 0.3s;">
-            <rect x="170" y="35" width="15" height="70" rx="7" fill="#3b82f6" opacity="0.8"/>
-            <rect x="173" y="40" width="9" height="60" rx="4" fill="#60a5fa"/>
-          </g>
-          <text x="142" y="120" fill="#ec4899" font-size="8">♀</text>
-          <text x="177" y="120" fill="#3b82f6" font-size="8">♂</text>
-        </g>
-        
-        <!-- Pair 3 -->
-        <g>
-          <text x="240" y="20" fill="currentColor" font-size="10" text-anchor="middle">Pair 3</text>
-          <g class="anim-oscillate-y" style="animation-delay: 0.15s;">
-            <rect x="215" y="40" width="15" height="60" rx="7" fill="#ec4899" opacity="0.8"/>
-            <rect x="218" y="45" width="9" height="50" rx="4" fill="#f472b6"/>
-          </g>
-          <g class="anim-oscillate-y" style="animation-delay: 0.35s;">
-            <rect x="250" y="40" width="15" height="60" rx="7" fill="#3b82f6" opacity="0.8"/>
-            <rect x="253" y="45" width="9" height="50" rx="4" fill="#60a5fa"/>
-          </g>
-          <text x="222" y="115" fill="#ec4899" font-size="8">♀</text>
-          <text x="257" y="115" fill="#3b82f6" font-size="8">♂</text>
-        </g>
-        
-        <!-- Legend -->
-        <rect x="100" y="145" width="12" height="12" rx="3" fill="#ec4899"/>
-        <text x="117" y="155" fill="currentColor" font-size="9">= From Mother</text>
-        <rect x="195" y="145" width="12" height="12" rx="3" fill="#3b82f6"/>
-        <text x="212" y="155" fill="currentColor" font-size="9">= From Father</text>
-      </svg>
-    </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Each pair contains one chromosome from each parent • Humans have 23 pairs (46 total)</p>
-  </div>
-
-  <div class="example-block">
-    <h4>🟢 Why Pairs Matter</h4>
-    <p>This ensures that organisms inherit characteristics from <strong>both parents</strong>, and during cell division each new cell receives a full, identical set of DNA.</p>
-  </div>
-</div>
-
-<div class="subsection">
-  <h3 class="subsection-heading">Chromosomes Before & During Cell Division</h3>
-  
-  <div class="key-facts-block">
-    <h4>🧠 Key Points</h4>
-    <ul>
-      <li>Most of the time, chromosomes are <strong>uncoiled</strong> and not visible.</li>
-      <li>When the cell prepares to divide, DNA replicates forming <strong>identical sister chromatids</strong>.</li>
-      <li>Chromosomes then <strong>condense</strong> into short, visible structures.</li>
-      <li>Chromatids separate so each new cell receives identical genetic information.</li>
-    </ul>
-  </div>
-
-  <!-- Animated DNA Replication Diagram -->
-  <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🔄 DNA Replication Process (hover to pause)</h4>
-    <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="360" height="140" viewBox="0 0 360 140">
-        <!-- Stage 1: Uncoiled DNA -->
-        <g>
-          <text x="60" y="15" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">1. Uncoiled</text>
-          <!-- DNA double helix simplified -->
-          <g class="anim-wave">
-            <path d="M30,40 Q45,35 60,40 Q75,45 90,40" fill="none" stroke="#3b82f6" stroke-width="3"/>
-            <path d="M30,50 Q45,55 60,50 Q75,45 90,50" fill="none" stroke="#ef4444" stroke-width="3"/>
-          </g>
-          <!-- Rungs -->
-          <line x1="40" y1="42" x2="40" y2="48" stroke="#10b981" stroke-width="2"/>
-          <line x1="60" y1="40" x2="60" y2="50" stroke="#10b981" stroke-width="2"/>
-          <line x1="80" y1="42" x2="80" y2="48" stroke="#10b981" stroke-width="2"/>
-          <text x="60" y="75" fill="currentColor" font-size="8" text-anchor="middle">DNA strand</text>
-        </g>
-        
-        <!-- Arrow -->
-        <path d="M105,45 L125,45" stroke="currentColor" stroke-width="2" marker-end="url(#arrowhead2)"/>
-        
-        <!-- Stage 2: Replicating -->
-        <g>
-          <text x="180" y="15" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">2. Replicating</text>
-          <!-- Opening zipper effect -->
-          <g class="anim-stretch">
-            <path d="M150,35 Q160,40 170,35" fill="none" stroke="#3b82f6" stroke-width="3"/>
-            <path d="M150,55 Q160,50 170,55" fill="none" stroke="#ef4444" stroke-width="3"/>
-          </g>
-          <!-- New strands being built -->
-          <g class="anim-fade-in-out">
-            <path d="M170,35 Q185,30 200,35" fill="none" stroke="#3b82f6" stroke-width="3"/>
-            <path d="M170,42 Q185,47 200,42" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="4,2"/>
-            <path d="M170,48 Q185,43 200,48" fill="none" stroke="#a855f7" stroke-width="3" stroke-dasharray="4,2"/>
-            <path d="M170,55 Q185,60 200,55" fill="none" stroke="#ef4444" stroke-width="3"/>
-          </g>
-          <text x="180" y="75" fill="currentColor" font-size="8" text-anchor="middle">Copying</text>
-        </g>
-        
-        <!-- Arrow -->
-        <path d="M220,45 L240,45" stroke="currentColor" stroke-width="2"/>
-        <polygon points="238,42 245,45 238,48" fill="currentColor"/>
-        
-        <!-- Stage 3: Two identical copies -->
-        <g>
-          <text x="300" y="15" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">3. Two Copies</text>
-          <!-- X-shaped chromosome -->
-          <g class="anim-pulse">
-            <path d="M280,25 Q270,45 275,55 Q280,60 285,55 Q290,45 280,25" fill="#8b5cf6" opacity="0.7"/>
-            <path d="M320,25 Q330,45 325,55 Q320,60 315,55 Q310,45 320,25" fill="#8b5cf6" opacity="0.7"/>
-            <ellipse cx="300" cy="55" rx="8" ry="4" fill="#f59e0b"/>
-            <path d="M280,85 Q270,65 275,55" fill="none" stroke="#8b5cf6" stroke-width="8" stroke-linecap="round"/>
-            <path d="M320,85 Q330,65 325,55" fill="none" stroke="#8b5cf6" stroke-width="8" stroke-linecap="round"/>
-          </g>
-          <text x="300" y="105" fill="currentColor" font-size="8" text-anchor="middle">X-shaped</text>
-          <text x="300" y="115" fill="currentColor" font-size="8" text-anchor="middle">chromosome</text>
-        </g>
-        
-        <!-- Arrowhead definition -->
-        <defs>
-          <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="currentColor"/>
-          </marker>
-        </defs>
-      </svg>
-    </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">DNA unzips → Each strand is copied → Forms X-shaped chromosome with two identical chromatids</p>
-  </div>
-
-  <div class="exam-tip-block">
-    <h4>🧠 Exam Tip</h4>
-    <p>Remember: DNA replication happens <strong>before</strong> cell division. This ensures each daughter cell gets an identical copy of genetic information.</p>
-  </div>
-</div>
-            `,
-            canonical_keywords: [
-              "chromosome", "DNA", "gene", "nucleus", "protein", "chromatid", "centromere",
-              "diploid", "pairs", "mother", "father", "46 chromosomes", "23 pairs",
-              "replication", "division", "sister chromatids", "identical"
-            ],
-            practice_items: [
-              {
-                id: "bio-chrom-p1",
-                prompt_template: "Describe the structure of a chromosome and explain why it has an X-shape before cell division.",
-                marks: 4,
-                type: "short-answer",
-                difficulty: "medium",
-                randomise: true,
-                expected_keywords: ["DNA", "coiled", "chromatid", "centromere", "replication", "identical", "proteins"]
-              },
-              {
-                id: "bio-chrom-p2",
-                prompt_template: "Explain why human cells contain chromosomes in pairs and state how many chromosomes are found in a human body cell.",
-                marks: 3,
-                type: "short-answer",
-                difficulty: "easy",
-                randomise: true,
-                expected_keywords: ["46", "23 pairs", "mother", "father", "inherit", "both parents"]
-              },
-              {
-                id: "bio-chrom-p3",
-                prompt_template: "Describe what happens to chromosomes before a cell divides.",
-                marks: 3,
-                type: "short-answer",
-                difficulty: "medium",
-                randomise: true,
-                expected_keywords: ["DNA", "replicates", "copies", "chromatids", "identical", "condense"]
-              }
-            ]
-          },
-          {
-            id: "4-1-2-2-cell-cycle-mitosis",
-            title: "4.1.2.2 — The Cell Cycle & Mitosis",
-            type: "content",
-            study_group: 1,
-            content_html: `
-<div class="subsection">
-  <h3 class="subsection-heading">The Cell Cycle</h3>
-  
-  <div class="spec-point-block">
-    <h4>📋 AQA Specification</h4>
-    <p>Stages of the cell cycle, what happens in each stage, importance of mitosis, and how to interpret cell images.</p>
-  </div>
+  <h3 class="subsection-subheading">The Cell Cycle</h3>
 
   <div class="definition-block">
-    <h4>🔵 What is the Cell Cycle?</h4>
-    <p>The cell cycle is the <strong>continuous series of events</strong> that cells go through as they grow and divide. It ensures accurate duplication and distribution of genetic information.</p>
-  </div>
-
-  <!-- Animated Cell Cycle Diagram -->
-  <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
-    <h4>🔄 The Cell Cycle (hover to pause)</h4>
-    <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="300" height="280" viewBox="0 0 300 280">
-        <!-- Circular track -->
-        <circle cx="150" cy="130" r="90" fill="none" stroke="currentColor" stroke-width="2" opacity="0.2"/>
-        
-        <!-- Growth Phase Arc (largest) -->
-        <path d="M150,40 A90,90 0 0,1 233,175" fill="none" stroke="#10b981" stroke-width="20" stroke-linecap="round" opacity="0.8"/>
-        <text x="210" y="80" fill="#10b981" font-size="10" font-weight="bold">Growth</text>
-        <text x="210" y="92" fill="#10b981" font-size="8">Phase</text>
-        
-        <!-- DNA Synthesis Arc -->
-        <path d="M233,175 A90,90 0 0,1 67,175" fill="none" stroke="#3b82f6" stroke-width="20" stroke-linecap="round" opacity="0.8"/>
-        <text x="150" y="235" fill="#3b82f6" font-size="10" font-weight="bold" text-anchor="middle">DNA Synthesis</text>
-        <text x="150" y="247" fill="#3b82f6" font-size="8" text-anchor="middle">(Replication)</text>
-        
-        <!-- Mitosis Arc (smallest) -->
-        <g class="anim-pulse">
-          <path d="M67,175 A90,90 0 0,1 150,40" fill="none" stroke="#ef4444" stroke-width="20" stroke-linecap="round" opacity="0.8"/>
-        </g>
-        <text x="60" y="95" fill="#ef4444" font-size="10" font-weight="bold">Mitosis</text>
-        
-        <!-- Center label -->
-        <circle cx="150" cy="130" r="40" fill="hsl(var(--card))" stroke="currentColor" stroke-width="1"/>
-        <text x="150" y="125" fill="currentColor" font-size="11" text-anchor="middle" font-weight="bold">Cell</text>
-        <text x="150" y="140" fill="currentColor" font-size="11" text-anchor="middle" font-weight="bold">Cycle</text>
-        
-        <!-- Animated arrow showing cycle direction -->
-        <g class="anim-rotate-cw-slow" style="transform-origin: 150px 130px;">
-          <circle cx="150" cy="40" r="8" fill="#f59e0b"/>
-          <polygon points="150,30 145,40 155,40" fill="#f59e0b"/>
-        </g>
-      </svg>
-    </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Most time is spent in Growth phase • DNA copied during Synthesis • Division during Mitosis</p>
+    <h4>🔁 What is the Cell Cycle?</h4>
+    <p>The cell cycle produces <strong>two genetically identical daughter cells</strong>.</p>
   </div>
 
   <div class="key-facts-block">
     <h4>🧠 Three Main Stages</h4>
+    <ol>
+      <li><strong>Growth & DNA Replication</strong> — The cell grows, produces more organelles, and chromosomes are replicated (forming two identical chromatids joined together).</li>
+      <li><strong>Mitosis (nuclear division)</strong> — Chromosomes become visible as X-shaped structures. The nucleus divides, separating chromatids into two sets.</li>
+      <li><strong>Cytokinesis</strong> — The cell membrane pinches inward. The cytoplasm divides. Two genetically identical daughter cells form.</li>
+    </ol>
+  </div>
+
+  <!-- Cell Cycle Diagram -->
+  <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
+    <h4>🔄 The Cell Cycle (hover to pause)</h4>
+    <div style="display: flex; justify-content: center; padding: 0.5rem;">
+      <svg width="340" height="300" viewBox="0 0 340 300">
+        <!-- Growth phase (largest segment) -->
+        <g class="anim-pulse" style="animation-delay: 0.2s;">
+          <path d="M170,40 A110,110 0 0,1 273,190" fill="none" stroke="#22c55e" stroke-width="28" stroke-linecap="round" opacity="0.85"/>
+        </g>
+        <text x="255" y="100" fill="#22c55e" font-size="11" font-weight="bold">Growth</text>
+        <text x="255" y="115" fill="#22c55e" font-size="9">(Interphase)</text>
+        
+        <!-- DNA Synthesis -->
+        <g class="anim-pulse" style="animation-delay: 0.5s;">
+          <path d="M273,190 A110,110 0 0,1 170,260" fill="none" stroke="#3b82f6" stroke-width="28" stroke-linecap="round" opacity="0.85"/>
+        </g>
+        <text x="250" y="235" fill="#3b82f6" font-size="11" font-weight="bold">DNA</text>
+        <text x="250" y="250" fill="#3b82f6" font-size="9">Synthesis</text>
+        
+        <!-- Mitosis (smallest segment) -->
+        <g class="anim-pulse" style="animation-delay: 0.8s;">
+          <path d="M170,260 A110,110 0 0,1 67,190" fill="none" stroke="#ef4444" stroke-width="28" stroke-linecap="round" opacity="0.85"/>
+        </g>
+        <text x="70" y="235" fill="#ef4444" font-size="11" font-weight="bold">Mitosis</text>
+        
+        <!-- Gap back to growth -->
+        <g class="anim-pulse">
+          <path d="M67,190 A110,110 0 0,1 170,40" fill="none" stroke="#f59e0b" stroke-width="28" stroke-linecap="round" opacity="0.85"/>
+        </g>
+        <text x="55" y="100" fill="#f59e0b" font-size="11" font-weight="bold">Gap</text>
+        
+        <!-- Center label -->
+        <circle cx="170" cy="150" r="50" fill="hsl(var(--card))" stroke="currentColor" stroke-width="2"/>
+        <text x="170" y="145" fill="currentColor" font-size="13" text-anchor="middle" font-weight="bold">Cell</text>
+        <text x="170" y="162" fill="currentColor" font-size="13" text-anchor="middle" font-weight="bold">Cycle</text>
+        
+        <!-- Animated arrow showing cycle direction -->
+        <g class="anim-rotate-cw-slow" style="transform-origin: 170px 150px;">
+          <circle cx="170" cy="40" r="10" fill="#8b5cf6"/>
+          <polygon points="170,28 165,42 175,42" fill="#8b5cf6"/>
+        </g>
+      </svg>
+    </div>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Most time is spent in Growth phase • DNA copied during Synthesis • Division during Mitosis</p>
+  </div>
+
+  <div class="key-facts-block">
+    <h4>⭐ Why the Cell Cycle is Vital</h4>
     <ul>
-      <li><strong>1. Growth Phase (Interphase)</strong> — Cell grows, organelles duplicate, normal cell activities</li>
-      <li><strong>2. DNA Synthesis</strong> — DNA is replicated (copied)</li>
-      <li><strong>3. Mitosis</strong> — Nucleus divides, followed by cell division (cytokinesis)</li>
+      <li>Allows <strong>growth</strong> of the organism</li>
+      <li><strong>Replaces</strong> damaged or dead cells</li>
+      <li>Essential for <strong>embryonic development</strong></li>
+      <li>Enables <strong>asexual reproduction</strong> in certain organisms</li>
     </ul>
   </div>
-</div>
 
+  <div class="exam-tip-block">
+    <h4>🧠 Exam Tip</h4>
+    <p>Cells need accurate DNA copying and division to prevent genetic disorders or malfunction.</p>
+  </div>
+</div>
+            `,
+            canonical_keywords: [
+              "chromosome", "DNA", "gene", "nucleus", "chromatid", "centromere",
+              "cell cycle", "interphase", "growth", "DNA replication", "mitosis", "cytokinesis"
+            ],
+            practice_items: [
+              {
+                id: "bio-chrom-p1",
+                prompt_template: "Describe the structure of a chromosome after DNA replication.",
+                marks: 3,
+                type: "short-answer",
+                difficulty: "easy",
+                randomise: true,
+                expected_keywords: ["chromatid", "identical", "centromere", "X-shape", "DNA"]
+              },
+              {
+                id: "bio-chrom-p2",
+                prompt_template: "Explain why human body cells have chromosomes arranged in pairs.",
+                marks: 3,
+                type: "short-answer",
+                difficulty: "medium",
+                randomise: true,
+                expected_keywords: ["mother", "father", "inherit", "genes", "23 pairs", "46"]
+              }
+            ]
+          },
+          {
+            id: "4-1-2-2-mitosis",
+            title: "4.1.2.2 — Mitosis",
+            type: "content",
+            study_group: 1,
+            content_html: `
 <div class="subsection">
   <h3 class="subsection-heading">Mitosis — Nuclear Division</h3>
   
-  <div class="definition-block">
-    <h4>🔵 What is Mitosis?</h4>
-    <p>Mitosis is the process where a cell divides to produce <strong>two genetically identical daughter cells</strong>. It is used for growth, repair, and asexual reproduction.</p>
+  <div class="spec-point-block">
+    <h4>📋 AQA Specification</h4>
+    <p>Understand the stages of mitosis and its importance for growth, repair, and asexual reproduction.</p>
   </div>
 
-  <!-- Animated Mitosis Stages -->
+  <div class="definition-block">
+    <h4>🔵 What is Mitosis?</h4>
+    <p>Mitosis is a type of cell division that produces <strong>two genetically identical daughter cells</strong>.</p>
+    <p>This ensures each new cell contains the <strong>same number and type of chromosomes</strong> as the parent cell.</p>
+  </div>
+
+  <div class="method-step">
+    <h5>🧩 Stages of Mitosis</h5>
+    <ol>
+      <li><strong>Chromosomes condense</strong> — DNA coils tightly and becomes visible as X-shaped structures.</li>
+      <li><strong>Chromosomes line up in the centre</strong> — Chromosomes arrange across the middle of the cell. Spindle fibres attach to chromatids.</li>
+      <li><strong>Chromatids separate</strong> — Spindle fibres pull chromatids apart toward opposite poles. Ensures each side gets an identical set.</li>
+      <li><strong>New nuclei form</strong> — Nuclear membranes reform around each set of chromosomes.</li>
+      <li><strong>Cell divides (cytokinesis)</strong> — The cytoplasm splits. Two identical daughter cells form.</li>
+    </ol>
+  </div>
+
+  <!-- Mitosis Stages Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
     <h4>🔬 Stages of Mitosis (hover to pause)</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="500" height="200" viewBox="0 0 500 200">
+      <svg width="550" height="220" viewBox="0 0 550 220">
         <!-- Parent Cell -->
         <g>
-          <text x="60" y="25" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">Parent Cell</text>
-          <circle cx="60" cy="100" r="45" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+          <text x="65" y="25" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Parent Cell</text>
+          <circle cx="65" cy="105" r="50" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/>
           <g class="anim-pulse">
-            <!-- X-chromosomes -->
-            <text x="45" y="95" fill="#8b5cf6" font-size="24">✕</text>
-            <text x="60" y="115" fill="#8b5cf6" font-size="24">✕</text>
+            <text x="45" y="95" fill="#8b5cf6" font-size="28" font-weight="bold">✕</text>
+            <text x="65" y="120" fill="#8b5cf6" font-size="28" font-weight="bold">✕</text>
           </g>
-          <text x="60" y="160" fill="currentColor" font-size="8" text-anchor="middle">46 chromosomes</text>
+          <text x="65" y="175" fill="currentColor" font-size="9" text-anchor="middle">46 chromosomes</text>
         </g>
         
         <!-- Arrow -->
-        <path d="M115,100 L135,100" stroke="currentColor" stroke-width="2" marker-end="url(#mitArrow)"/>
+        <path d="M125,105 L150,105" stroke="currentColor" stroke-width="3" marker-end="url(#mitArr2)"/>
         
         <!-- Chromosomes line up -->
         <g>
-          <text x="180" y="25" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">Line Up</text>
-          <circle cx="180" cy="100" r="45" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+          <text x="200" y="25" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Line Up</text>
+          <circle cx="200" cy="105" r="50" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/>
           <g class="anim-oscillate-y">
-            <line x1="180" y1="65" x2="180" y2="135" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>
-            <text x="165" y="95" fill="#8b5cf6" font-size="20">✕</text>
-            <text x="175" y="115" fill="#8b5cf6" font-size="20">✕</text>
+            <line x1="200" y1="65" x2="200" y2="145" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="180" y="95" fill="#8b5cf6" font-size="22" font-weight="bold">✕</text>
+            <text x="195" y="120" fill="#8b5cf6" font-size="22" font-weight="bold">✕</text>
           </g>
-          <text x="180" y="160" fill="currentColor" font-size="8" text-anchor="middle">Middle of cell</text>
+          <text x="200" y="175" fill="currentColor" font-size="9" text-anchor="middle">Middle of cell</text>
         </g>
         
         <!-- Arrow -->
-        <path d="M235,100 L255,100" stroke="currentColor" stroke-width="2" marker-end="url(#mitArrow)"/>
+        <path d="M260,105 L285,105" stroke="currentColor" stroke-width="3" marker-end="url(#mitArr2)"/>
         
         <!-- Chromatids separate -->
         <g>
-          <text x="300" y="25" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">Separate</text>
-          <ellipse cx="300" cy="100" rx="55" ry="45" fill="#dbeafe" stroke="#3b82f6" stroke-width="2"/>
+          <text x="340" y="25" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Separate</text>
+          <ellipse cx="340" cy="105" rx="60" ry="50" fill="#dbeafe" stroke="#3b82f6" stroke-width="3"/>
           <g class="anim-stretch">
-            <text x="265" y="105" fill="#8b5cf6" font-size="16">|</text>
-            <text x="275" y="115" fill="#8b5cf6" font-size="16">|</text>
-            <text x="315" y="105" fill="#8b5cf6" font-size="16">|</text>
-            <text x="325" y="115" fill="#8b5cf6" font-size="16">|</text>
+            <text x="295" y="100" fill="#8b5cf6" font-size="18">|</text>
+            <text x="305" y="115" fill="#8b5cf6" font-size="18">|</text>
+            <text x="365" y="100" fill="#8b5cf6" font-size="18">|</text>
+            <text x="375" y="115" fill="#8b5cf6" font-size="18">|</text>
           </g>
-          <text x="300" y="160" fill="currentColor" font-size="8" text-anchor="middle">Pulled apart</text>
+          <text x="340" y="175" fill="currentColor" font-size="9" text-anchor="middle">Pulled apart</text>
         </g>
         
         <!-- Arrow -->
-        <path d="M365,100 L385,100" stroke="currentColor" stroke-width="2" marker-end="url(#mitArrow)"/>
+        <path d="M410,105 L435,105" stroke="currentColor" stroke-width="3" marker-end="url(#mitArr2)"/>
         
         <!-- Two Daughter Cells -->
         <g>
-          <text x="445" y="25" fill="currentColor" font-size="9" text-anchor="middle" font-weight="bold">Two Cells</text>
+          <text x="490" y="25" fill="currentColor" font-size="10" text-anchor="middle" font-weight="bold">Two Cells</text>
           <g class="anim-pulse">
-            <circle cx="425" cy="85" r="30" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
-            <text x="415" y="90" fill="#8b5cf6" font-size="14">✕✕</text>
+            <circle cx="470" cy="85" r="35" fill="#dcfce7" stroke="#22c55e" stroke-width="3"/>
+            <text x="455" y="90" fill="#8b5cf6" font-size="16" font-weight="bold">✕✕</text>
           </g>
           <g class="anim-pulse" style="animation-delay: 0.3s;">
-            <circle cx="465" cy="115" r="30" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
-            <text x="455" y="120" fill="#8b5cf6" font-size="14">✕✕</text>
+            <circle cx="510" cy="125" r="35" fill="#dcfce7" stroke="#22c55e" stroke-width="3"/>
+            <text x="495" y="130" fill="#8b5cf6" font-size="16" font-weight="bold">✕✕</text>
           </g>
-          <text x="445" y="160" fill="currentColor" font-size="8" text-anchor="middle">46 chromosomes each</text>
-          <text x="445" y="172" fill="#22c55e" font-size="8" text-anchor="middle" font-weight="bold">IDENTICAL!</text>
+          <text x="490" y="180" fill="currentColor" font-size="9" text-anchor="middle">46 chromosomes each</text>
+          <text x="490" y="195" fill="#22c55e" font-size="10" text-anchor="middle" font-weight="bold">IDENTICAL!</text>
         </g>
         
         <defs>
-          <marker id="mitArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-            <polygon points="0 0, 8 3, 0 6" fill="currentColor"/>
+          <marker id="mitArr2" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto">
+            <polygon points="0 0, 10 4, 0 8" fill="currentColor"/>
           </marker>
         </defs>
       </svg>
@@ -2524,8 +2463,19 @@ export const biologyData: BiologyChapter[] = [
     <h4>🟢 Why Mitosis is Important</h4>
     <ul>
       <li><strong>Growth</strong> — More cells needed as an organism develops</li>
-      <li><strong>Repair</strong> — Replace damaged or worn-out cells</li>
+      <li><strong>Repair</strong> — Replace damaged or worn-out cells (skin, blood cells, digestive lining)</li>
       <li><strong>Asexual reproduction</strong> — Produce offspring identical to parent (e.g., bacteria, strawberry runners)</li>
+    </ul>
+  </div>
+
+  <div class="key-facts-block">
+    <h4>🔍 Where Mitosis Occurs</h4>
+    <ul>
+      <li>In <strong>bone marrow</strong> → producing blood cells</li>
+      <li>In <strong>skin</strong> → continuously generating new protective cells</li>
+      <li>In <strong>digestive system lining</strong> → replacing cells damaged by enzymes</li>
+      <li>In <strong>plant root & shoot tips</strong> → rapid growth</li>
+      <li>During <strong>embryo development</strong> → rapid and repeated mitosis</li>
     </ul>
   </div>
 
@@ -2536,9 +2486,9 @@ export const biologyData: BiologyChapter[] = [
 </div>
             `,
             canonical_keywords: [
-              "cell cycle", "mitosis", "interphase", "DNA replication", "growth",
-              "daughter cells", "identical", "diploid", "chromosomes",
-              "repair", "asexual reproduction", "cytokinesis"
+              "mitosis", "daughter cells", "identical", "diploid", "chromosomes",
+              "growth", "repair", "asexual reproduction", "cytokinesis",
+              "chromatids", "spindle", "separate"
             ],
             practice_items: [
               {
@@ -2577,7 +2527,7 @@ export const biologyData: BiologyChapter[] = [
             study_group: 2,
             content_html: `
 <div class="subsection">
-  <h3 class="subsection-heading">Stem Cells</h3>
+  <h3 class="subsection-heading">Human Stem Cells — Types, Uses, Risks, Ethics</h3>
   
   <div class="spec-point-block">
     <h4>📋 AQA Specification</h4>
@@ -2586,65 +2536,66 @@ export const biologyData: BiologyChapter[] = [
 
   <div class="definition-block">
     <h4>🔵 What are Stem Cells?</h4>
-    <p>Stem cells are <strong>undifferentiated cells</strong> that can divide to produce more stem cells, or can <strong>differentiate</strong> into specialised cell types.</p>
+    <p>A stem cell is an <strong>undifferentiated cell</strong> that can divide to produce many more stem cells and can <strong>differentiate</strong> into other types of specialised cells.</p>
+    <p>They are essential for growth, repair, and medical treatment.</p>
   </div>
 
-  <!-- Animated Stem Cell Differentiation -->
+  <!-- Stem Cell Differentiation Diagram -->
   <div class="key-idea-block anim-pause-hover" style="padding: 1rem; margin: 1rem 0;">
     <h4>🧬 Stem Cell Differentiation (hover to pause)</h4>
     <div style="display: flex; justify-content: center; padding: 0.5rem;">
-      <svg width="400" height="220" viewBox="0 0 400 220">
+      <svg width="450" height="260" viewBox="0 0 450 260">
         <!-- Stem cell -->
         <g class="anim-pulse">
-          <circle cx="200" cy="50" r="35" fill="#c084fc" stroke="#7c3aed" stroke-width="3"/>
-          <text x="200" y="45" fill="white" font-size="9" text-anchor="middle" font-weight="bold">STEM</text>
-          <text x="200" y="58" fill="white" font-size="9" text-anchor="middle" font-weight="bold">CELL</text>
+          <circle cx="225" cy="55" r="42" fill="#c084fc" stroke="#7c3aed" stroke-width="4"/>
+          <text x="225" y="50" fill="white" font-size="11" text-anchor="middle" font-weight="bold">STEM</text>
+          <text x="225" y="65" fill="white" font-size="11" text-anchor="middle" font-weight="bold">CELL</text>
         </g>
-        <text x="200" y="20" fill="currentColor" font-size="10" text-anchor="middle">Undifferentiated</text>
+        <text x="225" y="20" fill="currentColor" font-size="11" text-anchor="middle" font-weight="bold">Undifferentiated</text>
         
         <!-- Arrows branching out -->
         <g class="anim-draw">
-          <path d="M170,80 Q100,120 70,160" fill="none" stroke="currentColor" stroke-width="2"/>
-          <path d="M200,85 L200,160" fill="none" stroke="currentColor" stroke-width="2"/>
-          <path d="M230,80 Q300,120 330,160" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M185,95 Q100,140 75,185" fill="none" stroke="currentColor" stroke-width="3"/>
+          <path d="M225,100 L225,185" fill="none" stroke="currentColor" stroke-width="3"/>
+          <path d="M265,95 Q350,140 375,185" fill="none" stroke="currentColor" stroke-width="3"/>
         </g>
         
         <!-- Nerve cell -->
         <g class="anim-pulse" style="animation-delay: 0.2s;">
-          <ellipse cx="70" cy="180" rx="30" ry="20" fill="#3b82f6"/>
-          <line x1="40" y1="180" x2="15" y2="165" stroke="#3b82f6" stroke-width="2"/>
-          <line x1="40" y1="180" x2="15" y2="195" stroke="#3b82f6" stroke-width="2"/>
-          <line x1="100" y1="180" x2="135" y2="180" stroke="#3b82f6" stroke-width="3"/>
+          <ellipse cx="75" cy="210" rx="35" ry="22" fill="#3b82f6"/>
+          <line x1="40" y1="210" x2="15" y2="192" stroke="#3b82f6" stroke-width="3"/>
+          <line x1="40" y1="210" x2="15" y2="228" stroke="#3b82f6" stroke-width="3"/>
+          <line x1="110" y1="210" x2="150" y2="210" stroke="#3b82f6" stroke-width="4"/>
         </g>
-        <text x="70" y="215" fill="#3b82f6" font-size="9" text-anchor="middle">Nerve cell</text>
+        <text x="75" y="250" fill="#3b82f6" font-size="10" text-anchor="middle" font-weight="bold">Nerve cell</text>
         
         <!-- Muscle cell -->
         <g class="anim-pulse" style="animation-delay: 0.4s;">
-          <rect x="170" y="165" width="60" height="30" rx="5" fill="#ef4444"/>
-          <line x1="180" y1="175" x2="180" y2="185" stroke="#fca5a5" stroke-width="2"/>
-          <line x1="190" y1="175" x2="190" y2="185" stroke="#fca5a5" stroke-width="2"/>
-          <line x1="200" y1="175" x2="200" y2="185" stroke="#fca5a5" stroke-width="2"/>
-          <line x1="210" y1="175" x2="210" y2="185" stroke="#fca5a5" stroke-width="2"/>
-          <line x1="220" y1="175" x2="220" y2="185" stroke="#fca5a5" stroke-width="2"/>
+          <rect x="190" y="195" width="70" height="35" rx="6" fill="#ef4444"/>
+          <line x1="202" y1="205" x2="202" y2="220" stroke="#fca5a5" stroke-width="2"/>
+          <line x1="215" y1="205" x2="215" y2="220" stroke="#fca5a5" stroke-width="2"/>
+          <line x1="228" y1="205" x2="228" y2="220" stroke="#fca5a5" stroke-width="2"/>
+          <line x1="241" y1="205" x2="241" y2="220" stroke="#fca5a5" stroke-width="2"/>
+          <line x1="254" y1="205" x2="254" y2="220" stroke="#fca5a5" stroke-width="2"/>
         </g>
-        <text x="200" y="215" fill="#ef4444" font-size="9" text-anchor="middle">Muscle cell</text>
+        <text x="225" y="250" fill="#ef4444" font-size="10" text-anchor="middle" font-weight="bold">Muscle cell</text>
         
-        <!-- Blood cell -->
+        <!-- Red blood cell -->
         <g class="anim-pulse" style="animation-delay: 0.6s;">
-          <circle cx="330" cy="180" r="20" fill="#f87171"/>
-          <ellipse cx="330" cy="180" rx="12" ry="6" fill="#fecaca"/>
+          <ellipse cx="375" cy="210" rx="28" ry="28" fill="#f87171"/>
+          <ellipse cx="375" cy="210" rx="18" ry="10" fill="#fecaca"/>
         </g>
-        <text x="330" y="215" fill="#f87171" font-size="9" text-anchor="middle">Red blood cell</text>
+        <text x="375" y="250" fill="#f87171" font-size="10" text-anchor="middle" font-weight="bold">Red blood cell</text>
         
         <!-- Label -->
-        <text x="200" y="135" fill="currentColor" font-size="9" text-anchor="middle" font-style="italic">Differentiation</text>
+        <text x="225" y="155" fill="currentColor" font-size="10" text-anchor="middle" font-style="italic">Differentiation</text>
       </svg>
     </div>
-    <p style="text-align: center; font-size: 0.8rem; color: var(--muted-foreground);">Stem cells can become many different types of specialised cells</p>
+    <p style="text-align: center; font-size: 0.85rem; color: var(--muted-foreground);">Stem cells can become many different types of specialised cells</p>
   </div>
 
   <div class="table-block">
-    <h4>📊 Types of Stem Cells</h4>
+    <h4>📊 Types of Human Stem Cells</h4>
     <table class="data-table">
       <thead>
         <tr>
@@ -2657,38 +2608,42 @@ export const biologyData: BiologyChapter[] = [
         <tr>
           <td><strong>Embryonic</strong></td>
           <td>Early embryo (blastocyst)</td>
-          <td>Can become ANY cell type (totipotent/pluripotent)</td>
+          <td>Can differentiate into <strong>almost any</strong> cell type (totipotent/pluripotent). Easily grown in the lab.</td>
         </tr>
         <tr>
           <td><strong>Adult</strong></td>
-          <td>Bone marrow, skin, etc.</td>
-          <td>Limited — can only become certain cell types (multipotent)</td>
+          <td>Bone marrow, brain, liver, skin</td>
+          <td><strong>Limited</strong> in the types they can form (multipotent). Mainly form blood cells and immune cells.</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="key-facts-block">
-    <h4>🧠 Key Differences</h4>
+  <div class="example-block">
+    <h4>🩺 Medical Conditions Treated with Stem Cells</h4>
+    <p>Stem cells may treat or potentially treat:</p>
     <ul>
-      <li><strong>Embryonic stem cells</strong> can differentiate into <strong>any</strong> cell type</li>
-      <li><strong>Adult stem cells</strong> are more <strong>limited</strong> in what they can become</li>
-      <li>In animals, most cells lose the ability to differentiate at an early stage</li>
+      <li><strong>Leukaemia / blood cancers</strong> — bone marrow transplants</li>
+      <li><strong>Type 1 diabetes</strong> — replacing insulin-producing cells</li>
+      <li><strong>Spinal cord injuries</strong> — replacing damaged nerve tissue</li>
+      <li><strong>Burns</strong> — skin grafts grown from stem cells</li>
+      <li><strong>Heart damage</strong> — regenerating cardiac muscle</li>
+      <li><strong>Macular degeneration</strong> — replacing retina cells</li>
     </ul>
   </div>
-</div>
 
-<div class="subsection">
-  <h3 class="subsection-heading">Stem Cells in Medicine</h3>
-  
-  <div class="example-block">
-    <h4>🟢 Medical Uses of Stem Cells</h4>
-    <ul>
-      <li><strong>Treating blood disorders</strong> — Bone marrow transplants use adult stem cells</li>
-      <li><strong>Diabetes</strong> — Potential to create insulin-producing cells</li>
-      <li><strong>Spinal cord injuries</strong> — Regenerate damaged nerve tissue</li>
-      <li><strong>Heart disease</strong> — Repair damaged heart muscle</li>
-    </ul>
+  <div class="key-facts-block">
+    <h4>🧬 Therapeutic Cloning</h4>
+    <p>A technique to create stem cells <strong>genetically identical</strong> to a patient.</p>
+    <p><strong>Steps:</strong></p>
+    <ol>
+      <li>Remove nucleus from donor egg cell</li>
+      <li>Insert nucleus from the patient's somatic cell</li>
+      <li>Egg develops into an early embryo</li>
+      <li>Stem cells taken from embryo</li>
+      <li>Transplanted into patient</li>
+    </ol>
+    <p><strong>Advantages:</strong> No donor rejection • Can treat conditions requiring personalised cells</p>
   </div>
 
   <div class="info-grid">
@@ -2712,16 +2667,57 @@ export const biologyData: BiologyChapter[] = [
     </div>
   </div>
 
+  <div class="warning-block">
+    <h4>⚠️ Risks & Issues with Stem Cell Treatments</h4>
+    <ul>
+      <li>Cells may divide uncontrollably → <strong>tumours</strong></li>
+      <li>Immune system may still <strong>reject</strong> if not perfectly matched</li>
+      <li>Procedures are <strong>expensive</strong> and experimental</li>
+      <li>Potential for <strong>infection</strong> during stem cell manipulation</li>
+    </ul>
+  </div>
+
   <div class="exam-tip-block">
     <h4>🧠 Exam Tip</h4>
     <p>In 6-mark questions about stem cells, always discuss <strong>both</strong> scientific benefits AND ethical concerns for a balanced answer.</p>
+  </div>
+</div>
+
+<div class="subsection">
+  <h3 class="subsection-heading">Plant Stem Cells — Meristems & Uses</h3>
+
+  <div class="definition-block">
+    <h4>🌿 Plant Stem Cells (Meristems)</h4>
+    <ul>
+      <li>Found in <strong>root tips</strong>, <strong>shoot tips</strong>, and <strong>buds</strong></li>
+      <li>Meristem cells can differentiate into <strong>any plant cell type</strong> throughout life</li>
+      <li>Enable <strong>continuous growth</strong> and regeneration even in mature plants</li>
+    </ul>
+  </div>
+
+  <div class="example-block">
+    <h4>🌱 Uses of Plant Stem Cells</h4>
+    <ul>
+      <li><strong>Cloning plants genetically</strong> — Produces identical copies (clones). Useful for preserving desirable characteristics.</li>
+      <li><strong>Saving endangered species</strong> — Rare plants can be cloned many times for conservation.</li>
+      <li><strong>Crop production</strong> — Allows farmers to grow disease-resistant, high-yield, or drought-resistant strains quickly. Very efficient — thousands of clones from a single parent plant.</li>
+      <li><strong>Producing disease-free plants</strong> — Meristem tissue often remains virus-free, so cloned plants are healthier.</li>
+    </ul>
+  </div>
+
+  <div class="key-facts-block">
+    <h4>🧠 Key Difference: Animal vs Plant Stem Cells</h4>
+    <ul>
+      <li>In animals, most cells lose the ability to differentiate at an early stage</li>
+      <li>In plants, meristem cells remain capable of differentiating throughout the plant's life</li>
+    </ul>
   </div>
 </div>
             `,
             canonical_keywords: [
               "stem cell", "differentiation", "undifferentiated", "specialised",
               "embryonic", "adult", "bone marrow", "totipotent", "pluripotent",
-              "ethics", "therapeutic", "treatment", "disease"
+              "ethics", "therapeutic", "treatment", "disease", "meristem", "plant"
             ],
             practice_items: [
               {
