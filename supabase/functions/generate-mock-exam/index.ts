@@ -464,35 +464,46 @@ function calculateQuestionDistribution(totalMarks: number): Record<number, numbe
   const distribution: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 };
   let remaining = totalMarks;
 
-  // Always include at least one 6-mark question for higher totals
-  if (totalMarks >= 30 && remaining >= 6) {
+  // Create a varied distribution based on total marks
+  // Aim for a realistic exam distribution: ~15% 1-mark, ~25% 2-mark, ~25% 3-mark, ~20% 4-mark, ~10% 5-mark, ~5% 6-mark
+
+  // For higher totals (40+), include one 6-mark extended question
+  if (totalMarks >= 40 && remaining >= 6) {
     distribution[6] = 1;
     remaining -= 6;
   }
 
-  // Add some 4-5 mark questions
-  while (remaining >= 5 && distribution[5] < 2) {
-    distribution[5] = (distribution[5] || 0) + 1;
+  // Add 5-mark questions (typically 1-2)
+  const fiveMarkCount = Math.min(Math.floor(totalMarks / 40) + 1, 2);
+  while (remaining >= 5 && distribution[5] < fiveMarkCount) {
+    distribution[5]++;
     remaining -= 5;
   }
-  while (remaining >= 4 && distribution[4] < 2) {
-    distribution[4] = (distribution[4] || 0) + 1;
+
+  // Add 4-mark questions (typically 2-3)
+  const fourMarkCount = Math.min(Math.floor(totalMarks / 20) + 1, 4);
+  while (remaining >= 4 && distribution[4] < fourMarkCount) {
+    distribution[4]++;
     remaining -= 4;
   }
 
-  // Fill with 2-3 mark questions
-  while (remaining >= 3 && distribution[3] < 4) {
-    distribution[3] = (distribution[3] || 0) + 1;
+  // Add 3-mark questions (good mix)
+  const threeMarkCount = Math.min(Math.floor(totalMarks / 12) + 2, 6);
+  while (remaining >= 3 && distribution[3] < threeMarkCount) {
+    distribution[3]++;
     remaining -= 3;
   }
-  while (remaining >= 2 && distribution[2] < 4) {
-    distribution[2] = (distribution[2] || 0) + 1;
+
+  // Add 2-mark questions
+  const twoMarkCount = Math.min(Math.floor(totalMarks / 10) + 2, 6);
+  while (remaining >= 2 && distribution[2] < twoMarkCount) {
+    distribution[2]++;
     remaining -= 2;
   }
 
-  // Use 1-mark questions for the remainder
+  // Fill remainder with 1-mark questions
   while (remaining >= 1) {
-    distribution[1] = (distribution[1] || 0) + 1;
+    distribution[1]++;
     remaining -= 1;
   }
 
