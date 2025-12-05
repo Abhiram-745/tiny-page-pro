@@ -29,66 +29,82 @@ serve(async (req) => {
     const timestamp = Date.now();
     const randomSeed = Math.floor(Math.random() * 10000);
 
-    const systemPrompt = `You are an expert GCSE AQA examiner creating blurt-style active recall flashcard questions.
+    const systemPrompt = `You are an expert GCSE AQA examiner creating BLURT-STYLE quick recall questions.
 
-AQA FLASHCARD PRINCIPLES:
-1. Short, direct questions (5-15 words) for quick active recall
-2. Test ONE specific fact, term, or concept per question
-3. Vary question styles: "Define...", "State...", "Name...", "What is...", "Give..."
-4. Focus on key terminology, definitions, properties, examples, and processes
-5. Questions should be instantly answerable from memory after studying
+🎯 BLURT QUESTIONS ARE FOR QUICK RECALL ONLY - NOT EXAM PRACTICE:
+These questions test MEMORIZATION of key facts, terms, and definitions.
+They should be instantly answerable from memory - no extended thinking required.
 
-QUESTION VARIETY (use different styles):
-- Definitions: "Define [term]"
-- Factual recall: "State the purpose of..."
-- Examples: "Name an example of..."
-- Properties: "Give two characteristics of..."
-- Processes: "What happens during..."
+📋 BLURT QUESTION TYPES (USE THESE ONLY):
+1. DEFINITIONS: "Define the term [X]" / "What is meant by [X]?"
+2. NAMING: "Name the..." / "What is the name of..."
+3. SIMPLE FACTS: "State one..." / "Give one..."
+4. IDENTIFICATION: "What type of..." / "Which..."
+5. QUICK RECALL: "What does [X] do?" / "Where is [X] found?"
 
-BASED ON PREVIOUSLY TESTED CONTENT:
-- Each new set should test DIFFERENT aspects of the topic
-- Avoid asking the same concept in different words
-- Progress from basic recall to slightly deeper understanding
-- Cover a range of subtopics when possible
+🚫 DO NOT ASK THESE (RESERVED FOR EXAM QUESTIONS):
+- "Explain why..." (explanation questions)
+- "Compare..." (comparison questions)
+- "Describe the process..." (extended descriptions)
+- "Calculate..." (calculations)
+- "Evaluate..." (evaluation questions)
+- "Discuss..." (discussion questions)
+- Multi-part questions (a), (b), (c)
+
+✅ GOOD BLURT QUESTIONS:
+- "Define osmosis."
+- "Name the organelle responsible for protein synthesis."
+- "State the function of the cell membrane."
+- "What is the formula for photosynthesis?"
+- "Give one example of a transition metal."
+
+❌ BAD BLURT QUESTIONS (too complex):
+- "Explain why osmosis is important for plants."
+- "Compare diffusion and osmosis."
+- "Describe how the cell membrane controls what enters the cell."
 
 CRITICAL REQUIREMENTS:
-1. Base ALL content ONLY on the topic notes provided - DO NOT introduce concepts not covered in the study material
-2. Keep everything GCSE AQA level - clear, accessible, and not too difficult
-3. NO specialist jargon unless it appears in the study content
-4. Each question should be short, clear and direct, suitable for flashcard use
-5. Each answer should be factual, concise and correct
-6. Focus on key terms, processes, tools, definitions, properties or examples from the topic
-7. Avoid vague or open-ended questions - make sure there is one clear answer
-8. Cover a range of subtopics from the section where possible
-9. Do not repeat questions or ask trick questions
-10. Generate EXACTLY 5 questions labeled Q1, Q2, Q3, Q4, Q5
+1. Questions must be 5-15 words ONLY
+2. Answers must be 1-2 sentences maximum
+3. Test ONE specific fact per question
+4. Focus on: terms, definitions, names, functions, locations, simple facts
+5. Generate EXACTLY 5 questions covering DIFFERENT concepts
+6. Each question should have ONE clear correct answer
 
 RANDOMIZATION SEED: ${randomSeed}
-Use this seed to ensure different topic selection each generation.
+Cover DIFFERENT subtopics from the content each time.
 
-Return ONLY valid JSON in this exact format:
+Return ONLY valid JSON:
 {
   "questions": [
     {
       "questionNumber": "Q1",
-      "question": "What is...",
-      "answer": "Clear, concise answer",
+      "question": "Define [term]...",
+      "answer": "Short factual answer",
       "marks": 1
     }
   ]
 }`;
 
-    const userPrompt = `Study Content:\n\n${studyContent}\n\n🎲 RANDOMIZATION TASK (Seed: ${randomSeed}, Time: ${timestamp}):\n\n1. Carefully read the study content above
-2. List out ALL topics/concepts explicitly mentioned
-3. Randomly select 5 DIFFERENT topics/subtopics from what's actually covered
-4. Generate 5 flashcard-style questions (Q1 through Q5)
-5. Each question should focus on a different aspect: definitions, tools, processes, examples, properties
-6. Ensure each question is based ONLY on content from the study material
-7. Keep questions short, clear, and direct with one clear answer
+    const userPrompt = `Study Content:\n\n${studyContent}\n\n🎲 BLURT QUESTION GENERATION (Seed: ${randomSeed}, Time: ${timestamp}):
 
-IMPORTANT: Do NOT introduce concepts or technical terms unless they appear in the study content above.
+STEP 1: Extract KEY TERMS from the content (definitions, names, functions)
+STEP 2: Select 5 DIFFERENT terms/concepts to test
+STEP 3: Create SHORT recall questions (5-15 words each)
 
-Generate 5 blurt questions NOW in the exact format specified.`;
+QUESTION STYLE DISTRIBUTION:
+- Q1: Definition question ("Define..." or "What is meant by...")
+- Q2: Naming question ("Name..." or "What is the name of...")
+- Q3: Function question ("What is the function of..." or "What does X do?")
+- Q4: Location/identification ("Where is..." or "Which...")
+- Q5: Simple fact ("State..." or "Give one...")
+
+⚠️ REMEMBER: These are QUICK RECALL questions, NOT exam questions.
+- Keep questions SHORT (5-15 words)
+- Keep answers BRIEF (1-2 sentences)
+- Test FACTS, not understanding
+
+Generate 5 blurt questions NOW.`;
 
     const response = await fetch("https://api.bytez.com/models/v2/openai/v1/chat/completions", {
       method: "POST",
