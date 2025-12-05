@@ -154,6 +154,7 @@ export type Database = {
           key_points_covered: string[] | null
           key_points_missed: string[] | null
           marked_at: string
+          marking_breakdown: Json | null
           max_marks: number
           model_answer: string | null
           question_id: string
@@ -168,6 +169,7 @@ export type Database = {
           key_points_covered?: string[] | null
           key_points_missed?: string[] | null
           marked_at?: string
+          marking_breakdown?: Json | null
           max_marks: number
           model_answer?: string | null
           question_id: string
@@ -182,6 +184,7 @@ export type Database = {
           key_points_covered?: string[] | null
           key_points_missed?: string[] | null
           marked_at?: string
+          marking_breakdown?: Json | null
           max_marks?: number
           model_answer?: string | null
           question_id?: string

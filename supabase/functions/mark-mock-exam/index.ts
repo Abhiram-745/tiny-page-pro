@@ -85,7 +85,7 @@ serve(async (req) => {
         continue;
       }
 
-      const prompt = `You are a strict but fair exam marker. Mark this student's answer.
+const prompt = `You are a strict but fair GCSE exam marker. Mark this student's answer carefully.
 
 QUESTION (${question.marks} marks):
 ${question.question_text}
@@ -96,19 +96,32 @@ ${question.markscheme || (question.expected_key_points as string[])?.join('\n') 
 STUDENT'S ANSWER:
 ${hasImage ? "[Student submitted a handwritten/drawn answer - assume it partially addresses the question]" : studentAnswer}
 
-Mark the answer and return JSON:
+Mark the answer and return JSON with this EXACT structure:
 {
   "score": <number from 0 to ${question.marks}>,
   "feedback": "<brief overall feedback>",
-  "model_answer": "<ideal answer for ${question.marks} marks>",
+  "model_answer": "<ideal answer for ${question.marks} marks with mark allocations shown as [1] after each point>",
   "key_points_covered": ["<points the student got right>"],
   "key_points_missed": ["<points the student missed or got wrong>"],
   "what_done_well": "<specific praise for good elements>",
-  "areas_to_improve": "<constructive feedback on what to add/fix>"
+  "areas_to_improve": "<constructive feedback on what to add/fix>",
+  "marking_breakdown": [
+    {
+      "markPoint": "<the marking point being assessed>",
+      "studentText": "<exact quote from student's answer that earned this mark, or null if not found>",
+      "awarded": <true if mark was awarded, false if not>,
+      "marks": <number of marks for this point>,
+      "explanation": "<brief explanation of why mark was/wasn't awarded>",
+      "improvedSentence": "<if not awarded, suggest what the student should have written, or null>"
+    }
+  ]
 }
 
-Be fair but rigorous. Award partial marks for partial understanding.
-Return ONLY valid JSON.`;
+IMPORTANT:
+- Create one marking_breakdown entry for each mark available (${question.marks} total marks)
+- studentText should be the EXACT text from the student's answer that matches the mark point
+- Be fair but rigorous. Award partial marks for partial understanding.
+- Return ONLY valid JSON, no markdown.`;
 
       try {
         // Use the correct Bytez API endpoint format
@@ -154,7 +167,8 @@ Return ONLY valid JSON.`;
           key_points_covered: marking.key_points_covered || [],
           key_points_missed: marking.key_points_missed || [],
           what_done_well: marking.what_done_well || null,
-          areas_to_improve: marking.areas_to_improve || null
+          areas_to_improve: marking.areas_to_improve || null,
+          marking_breakdown: marking.marking_breakdown || null
         });
 
       } catch (markError) {
