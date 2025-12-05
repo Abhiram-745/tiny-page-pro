@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
 import SectionContent from "@/components/SectionContent";
-import PracticeExamQuestions from "@/components/PracticeExamQuestions";
+import MockExamSetup from "@/components/MockExamSetup";
 import ColorLegend from "@/components/ColorLegend";
 
 const PhysicsTopicView = () => {
@@ -293,22 +293,9 @@ const PhysicsTopicView = () => {
           </>
         )}
 
-        {/* Practice Exam Questions */}
-        <PracticeExamQuestions 
-          sectionContent={
-            hasModules
-              ? topic.modules!.flatMap(mod => mod.subsections.map(sub => {
-                  const parser = new DOMParser();
-                  const doc = parser.parseFromString(sub.content_html, 'text/html');
-                  return doc.body.textContent || '';
-                })).join('\n\n')
-              : topic.subsections.map(sub => {
-                  const parser = new DOMParser();
-                  const doc = parser.parseFromString(sub.content_html, 'text/html');
-                  return doc.body.textContent || '';
-                }).join('\n\n')
-          }
-          sectionTitle={topic.title}
+        {/* Mock Exams */}
+        <MockExamSetup 
+          topicTitle={topic.title}
           subsections={
             hasModules
               ? topic.modules!.flatMap(mod => mod.subsections.map(sub => {
@@ -328,6 +315,7 @@ const PhysicsTopicView = () => {
                   };
                 })
           }
+          subject="physics"
         />
       </div>
     </div>

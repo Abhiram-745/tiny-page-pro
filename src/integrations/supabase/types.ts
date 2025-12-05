@@ -50,6 +50,212 @@ export type Database = {
         }
         Relationships: []
       }
+      mock_exam_answers: {
+        Row: {
+          answer_image_url: string | null
+          answer_text: string | null
+          exam_id: string
+          id: string
+          question_id: string
+          submitted_at: string
+        }
+        Insert: {
+          answer_image_url?: string | null
+          answer_text?: string | null
+          exam_id: string
+          id?: string
+          question_id: string
+          submitted_at?: string
+        }
+        Update: {
+          answer_image_url?: string | null
+          answer_text?: string | null
+          exam_id?: string
+          id?: string
+          question_id?: string
+          submitted_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_exam_answers_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "mock_exams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mock_exam_answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "mock_exam_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mock_exam_questions: {
+        Row: {
+          created_at: string
+          diagram_svg: string | null
+          exam_id: string
+          expected_key_points: string[] | null
+          id: string
+          marks: number
+          markscheme: string | null
+          page_number: number
+          question_number: number
+          question_text: string
+          table_html: string | null
+          topic: string
+        }
+        Insert: {
+          created_at?: string
+          diagram_svg?: string | null
+          exam_id: string
+          expected_key_points?: string[] | null
+          id?: string
+          marks: number
+          markscheme?: string | null
+          page_number?: number
+          question_number: number
+          question_text: string
+          table_html?: string | null
+          topic: string
+        }
+        Update: {
+          created_at?: string
+          diagram_svg?: string | null
+          exam_id?: string
+          expected_key_points?: string[] | null
+          id?: string
+          marks?: number
+          markscheme?: string | null
+          page_number?: number
+          question_number?: number
+          question_text?: string
+          table_html?: string | null
+          topic?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_exam_questions_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "mock_exams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mock_exam_results: {
+        Row: {
+          areas_to_improve: string | null
+          exam_id: string
+          feedback: string | null
+          id: string
+          key_points_covered: string[] | null
+          key_points_missed: string[] | null
+          marked_at: string
+          max_marks: number
+          model_answer: string | null
+          question_id: string
+          score: number
+          what_done_well: string | null
+        }
+        Insert: {
+          areas_to_improve?: string | null
+          exam_id: string
+          feedback?: string | null
+          id?: string
+          key_points_covered?: string[] | null
+          key_points_missed?: string[] | null
+          marked_at?: string
+          max_marks: number
+          model_answer?: string | null
+          question_id: string
+          score: number
+          what_done_well?: string | null
+        }
+        Update: {
+          areas_to_improve?: string | null
+          exam_id?: string
+          feedback?: string | null
+          id?: string
+          key_points_covered?: string[] | null
+          key_points_missed?: string[] | null
+          marked_at?: string
+          max_marks?: number
+          model_answer?: string | null
+          question_id?: string
+          score?: number
+          what_done_well?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_exam_results_exam_id_fkey"
+            columns: ["exam_id"]
+            isOneToOne: false
+            referencedRelation: "mock_exams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mock_exam_results_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "mock_exam_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mock_exams: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          id: string
+          marking_progress: number | null
+          selected_topics: string[]
+          started_at: string
+          status: string
+          subject: string
+          submission_method: string
+          time_limit_minutes: number
+          topic_title: string
+          total_marks: number
+          total_score: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          marking_progress?: number | null
+          selected_topics: string[]
+          started_at?: string
+          status?: string
+          subject: string
+          submission_method: string
+          time_limit_minutes: number
+          topic_title: string
+          total_marks: number
+          total_score?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          marking_progress?: number | null
+          selected_topics?: string[]
+          started_at?: string
+          status?: string
+          subject?: string
+          submission_method?: string
+          time_limit_minutes?: number
+          topic_title?: string
+          total_marks?: number
+          total_score?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       practice_sessions: {
         Row: {
           created_at: string
