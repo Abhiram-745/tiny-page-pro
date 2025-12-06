@@ -30,12 +30,15 @@ serve(async (req) => {
       );
     }
 
-    console.log("[generate-question-diagram] Generating diagram for question:", subject, topic);
+    console.log("[generate-question-diagram] ALWAYS generating diagram for:", subject, topic);
+    console.log("[generate-question-diagram] Question text:", questionText.substring(0, 150));
 
-    // ALWAYS generate a diagram for every question
+    // Generate the diagram - ALWAYS create one for every question
+    const systemPrompt = `You are an expert GCSE exam diagram creator. You MUST create an SVG diagram for EVERY question.
 
-    // Generate the diagram
-    const systemPrompt = `You are an expert GCSE exam diagram creator. Create accurate, educational SVG diagrams that match the quality and style of official AQA/Edexcel/OCR exam papers.
+IMPORTANT: Always create a diagram. If the question is text-based, create a relevant diagram that helps visualize the concept.
+
+Create accurate, educational SVG diagrams that match the quality and style of official AQA/Edexcel/OCR exam papers.
 
 SVG REQUIREMENTS:
 - Use viewBox="0 0 500 350" for consistent sizing
@@ -86,22 +89,20 @@ GEOGRAPHY - Be geographically accurate:
 - Population pyramids: Correct age/gender conventions
 ` : ''}
 
-Return ONLY valid JSON: { "svg": "<svg>...</svg>" }
-If you cannot create an accurate diagram, return: { "svg": null }`;
+You MUST return an SVG diagram. Return ONLY valid JSON: { "svg": "<svg viewBox='0 0 500 350'>...</svg>" }`;
 
-    const userPrompt = `Create an accurate, exam-quality SVG diagram for this GCSE ${subject || 'science'} question:
+    const userPrompt = `You MUST create an SVG diagram for this GCSE ${subject || 'science'} question. This is mandatory - every exam question needs a diagram.
 
-"${questionText}"
-
+Question: "${questionText}"
 Topic: ${topic || 'general'}
 
-The diagram should:
-1. Directly support understanding/answering the question
-2. Be accurate and educational
-3. Include all necessary labels
-4. Match the style of official exam paper diagrams
+Create an accurate, exam-quality SVG diagram that:
+1. Directly supports understanding/answering the question
+2. Uses viewBox="0 0 500 350"
+3. Uses currentColor for text
+4. Includes clear labels
 
-Return ONLY the JSON with the SVG code.`;
+Return ONLY this JSON format: { "svg": "<svg viewBox='0 0 500 350' xmlns='http://www.w3.org/2000/svg'>...</svg>" }`;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 45000);
@@ -127,6 +128,9 @@ Return ONLY the JSON with the SVG code.`;
       clearTimeout(timeoutId);
 
       const text = await resp.text();
+      console.log("[generate-question-diagram] API response status:", resp.status);
+      console.log("[generate-question-diagram] API response preview:", text.substring(0, 500));
+      
       if (!resp.ok) {
         console.error("[generate-question-diagram] API error:", resp.status, text);
         return new Response(
@@ -139,9 +143,9 @@ Return ONLY the JSON with the SVG code.`;
       const content = data.choices?.[0]?.message?.content;
 
       if (!content) {
-        console.log("[generate-question-diagram] No content in response");
+        console.log("[generate-question-diagram] No content in response, full data:", JSON.stringify(data).substring(0, 500));
         return new Response(
-          JSON.stringify({ svg: null }),
+          JSON.stringify({ svg: null, error: "No content in API response" }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
