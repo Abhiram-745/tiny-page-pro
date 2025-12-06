@@ -276,9 +276,10 @@ serve(async (req) => {
 
     console.log("Exam record created successfully:", exam.id);
 
-    // Step 2: Calculate question distribution for target marks
-    const distribution = calculateQuestionDistribution(totalMarks);
-    console.log("Question distribution:", distribution);
+    // Step 2: Calculate TOTAL question distribution for ALL marks (not per-page)
+    // This ensures we always hit exactly totalMarks
+    const overallDistribution = calculateQuestionDistribution(totalMarks);
+    console.log("Overall question distribution:", overallDistribution);
 
     let questionNumber = 1;
     const allQuestions: any[] = [];
@@ -288,16 +289,44 @@ serve(async (req) => {
     const shouldIncludeDiagrams = diagramSubjects.includes(subject.toLowerCase());
     const diagramInstructions = shouldIncludeDiagrams ? getDiagramInstructions(subject.toLowerCase()) : '';
 
+    // Flatten distribution into array of mark values to distribute across topics
+    const questionMarks: number[] = [];
+    for (const [marksStr, count] of Object.entries(overallDistribution)) {
+      const marks = parseInt(marksStr);
+      for (let i = 0; i < (count as number); i++) {
+        questionMarks.push(marks);
+      }
+    }
+    
+    // Shuffle to mix mark values
+    questionMarks.sort(() => Math.random() - 0.5);
+    
+    console.log(`Total questions to generate: ${questionMarks.length}, Total marks: ${questionMarks.reduce((a, b) => a + b, 0)}`);
+
+    // Distribute questions across topics/pages
+    const questionsPerTopic: number[][] = topics.map(() => [] as number[]);
+    questionMarks.forEach((marks, index) => {
+      const topicIndex = index % topics.length;
+      questionsPerTopic[topicIndex].push(marks);
+    });
+
     // Step 3: Generate questions for each topic (page)
     for (let pageNumber = 0; pageNumber < topics.length; pageNumber++) {
       const topic = topics[pageNumber];
-      const pageMarks = Math.floor(totalMarks / topics.length);
-      const pageDistribution = calculateQuestionDistribution(pageMarks);
+      const pageQuestionMarks = questionsPerTopic[pageNumber];
+      
+      if (pageQuestionMarks.length === 0) continue;
 
-      console.log(`Generating questions for topic: ${topic.title}, page: ${pageNumber + 1}`);
+      console.log(`Generating questions for topic: ${topic.title}, page: ${pageNumber + 1}, marks: ${pageQuestionMarks}`);
+
+      // Group by mark value for batch generation
+      const markGroups: Record<number, number> = {};
+      for (const m of pageQuestionMarks) {
+        markGroups[m] = (markGroups[m] || 0) + 1;
+      }
 
       // Generate questions for each mark value
-      for (const [marksStr, count] of Object.entries(pageDistribution)) {
+      for (const [marksStr, count] of Object.entries(markGroups)) {
         const marks = parseInt(marksStr);
         if (count === 0) continue;
 
@@ -423,6 +452,10 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
         }
       }
     }
+
+    // Verify total marks equals requested
+    const actualTotalMarks = allQuestions.reduce((sum, q) => sum + q.marks, 0);
+    console.log(`Generated ${allQuestions.length} questions, total marks: ${actualTotalMarks} (requested: ${totalMarks})`)
 
     console.log(`Generated ${allQuestions.length} questions total`);
 

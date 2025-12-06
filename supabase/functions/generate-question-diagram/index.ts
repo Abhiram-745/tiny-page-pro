@@ -26,24 +26,55 @@ function extractSvg(content: string): string | null {
   return null;
 }
 
+function getSubjectDiagramGuidance(subject: string): string {
+  const guides: Record<string, string> = {
+    'biology': `Create accurate biological diagrams:
+- For cells: show cell membrane as outer boundary, nucleus with clear nucleolus, cytoplasm, organelles like mitochondria, ribosomes
+- For plant cells: include cell wall (thick outer line), large central vacuole, chloroplasts (green ovals)
+- For prokaryotic cells: show cell wall, cell membrane, circular DNA (plasmid), ribosomes, flagellum if mentioned
+- For organ systems: show proper proportions and connections
+- Always label ALL key structures with leader lines pointing to exact locations
+- Use proper scientific terminology`,
+    'chemistry': `Create accurate chemistry diagrams:
+- For apparatus: show beakers, flasks, bunsen burners, clamps with proper proportions
+- For atomic structure: electron shells as concentric circles, protons/neutrons in nucleus
+- For energy profiles: proper axis labels (Energy on Y, Reaction Progress on X), activation energy hump, ΔH arrow
+- For electrolysis: show electrodes, electrolyte, ion movement with arrows`,
+    'physics': `Create accurate physics diagrams:
+- For circuits: use proper symbols (cell, resistor, ammeter, voltmeter, lamp)
+- For forces: show arrows with proper lengths indicating magnitude, label each force
+- For waves: show wavelength, amplitude, frequency clearly
+- For energy: Sankey diagrams with proper proportions`,
+    'economics': `Create accurate economics diagrams:
+- Supply/demand: proper axis labels (Price on Y, Quantity on X), curves crossing at equilibrium
+- Shifts: show original and new positions with arrows indicating direction
+- Market diagrams: shade areas for consumer/producer surplus`
+  };
+  return guides[subject?.toLowerCase()] || '';
+}
+
 async function generateSvg(key: string, questionText: string, subject: string, topic: string): Promise<string | null> {
-  const prompt = `Create an SVG diagram for this GCSE ${subject || 'science'} exam question.
+  const subjectGuidance = getSubjectDiagramGuidance(subject);
+  
+  const prompt = `You are an expert GCSE exam diagram creator. Create a HIGHLY ACCURATE and COMPLETE SVG diagram for this exam question.
 
-Question: "${questionText}"
-Topic: ${topic || 'general'}
+QUESTION: "${questionText}"
+SUBJECT: ${subject || 'science'}
+TOPIC: ${topic || 'general'}
 
-IMPORTANT INSTRUCTIONS:
-1. Output ONLY the SVG code - no markdown, no explanation, no code blocks
-2. Start directly with <svg and end with </svg>
-3. Use viewBox="0 0 500 350"
-4. Use "currentColor" for text fill
-5. Use these colors: #2563eb (blue), #dc2626 (red), #16a34a (green), #d97706 (orange)
-6. Add clear labels
+${subjectGuidance}
 
-Example format of your response:
-<svg viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
-  <!-- your diagram here -->
-</svg>`;
+CRITICAL SVG REQUIREMENTS:
+1. Start with <svg viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
+2. Use "currentColor" for ALL text fills (for dark mode compatibility)
+3. Use these colors for elements: #2563eb (blue), #dc2626 (red), #16a34a (green), #d97706 (orange), #8b5cf6 (purple)
+4. Include CLEAR LABELS for every important structure with leader lines
+5. Make sure ALL labels are FULLY VISIBLE within the viewBox - no text should be cut off
+6. Position labels with enough margin from edges (at least 30px from any edge)
+7. Use font-size 12-14px for labels
+8. End with </svg>
+
+OUTPUT: Return ONLY the raw SVG code. No markdown, no backticks, no explanation. Start directly with <svg`;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 50000);
