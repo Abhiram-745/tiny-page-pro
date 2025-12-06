@@ -13,6 +13,10 @@ import { ChevronDown } from "lucide-react";
 import SectionContent from "@/components/SectionContent";
 import MockExamSetup from "@/components/MockExamSetup";
 import ColorLegend from "@/components/ColorLegend";
+import { AITutorToggle } from "@/components/AITutorToggle";
+import { AITutorChat } from "@/components/AITutorChat";
+import { AnnotatableContent } from "@/components/AnnotatableContent";
+import { cn } from "@/lib/utils";
 
 const PhysicsTopicView = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +24,8 @@ const PhysicsTopicView = () => {
   const [topic, setTopic] = useState<TopicSection | null>(null);
   const [openSections, setOpenSections] = useState<string[]>([]);
   const [openModules, setOpenModules] = useState<string[]>([]);
+  const [isAITutorEnabled, setIsAITutorEnabled] = useState(false);
+  const [selectedText, setSelectedText] = useState("");
 
   useEffect(() => {
     const foundTopic = physicsData.find((t) => t.id === id);
@@ -58,6 +64,32 @@ const PhysicsTopicView = () => {
     } else {
       navigate(`/physics/blur-practice/${id}/${subsectionId}`);
     }
+  };
+
+  const handleAskAI = (text: string) => {
+    setSelectedText(text);
+  };
+
+  // Get all study content for AI tutor
+  const getAllStudyContent = () => {
+    if (!topic) return "";
+    
+    const hasModules = topic.modules && topic.modules.length > 0;
+    if (hasModules) {
+      return topic.modules!.flatMap(mod => 
+        mod.subsections.map(sub => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(sub.content_html, 'text/html');
+          return doc.body.textContent || '';
+        })
+      ).join("\n\n");
+    }
+    
+    return topic.subsections.map(sub => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(sub.content_html, 'text/html');
+      return doc.body.textContent || '';
+    }).join("\n\n");
   };
 
   if (!topic) {
@@ -113,210 +145,270 @@ const PhysicsTopicView = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-secondary/5">
-      <div className="container mx-auto px-4 py-8">
-        <Button variant="ghost" onClick={() => navigate("/physics/sections")} className="mb-6">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Topics
-        </Button>
-
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">{topic.title}</h1>
-          <p className="text-muted-foreground">
-            {hasModules 
-              ? `${topic.modules!.length} module${topic.modules!.length !== 1 ? 's' : ''} • ${totalSubsections} subsection${totalSubsections !== 1 ? 's' : ''} available`
-              : `${topic.subsections.length} subsection${topic.subsections.length !== 1 ? 's' : ''} available`
-            }
-          </p>
-        </div>
-
-        <ColorLegend />
-
-        {/* Modules Section */}
-        {hasModules && topic.modules!.map((module) => (
-          <div key={module.id} className="mb-8">
-            <Collapsible
-              open={openModules.includes(module.id)}
-              onOpenChange={() => toggleModule(module.id)}
-            >
-              <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
-                <CollapsibleTrigger className="w-full">
-                  <CardHeader className="hover:bg-primary/5 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <BookOpen className="h-6 w-6 text-primary" />
-                        <div className="text-left">
-                          <CardTitle className="text-xl">{module.title}</CardTitle>
-                          <CardDescription>
-                            {module.subsections.length} subsection{module.subsections.length !== 1 ? 's' : ''} available
-                          </CardDescription>
-                        </div>
-                      </div>
-                      <ChevronDown
-                        className={`h-6 w-6 transition-transform ${
-                          openModules.includes(module.id) ? "transform rotate-180" : ""
-                        }`}
-                      />
-                    </div>
-                  </CardHeader>
-                </CollapsibleTrigger>
-                <CollapsibleContent>
-                  <CardContent className="pt-0">
-                    {/* Practice Subsections Grid */}
-                    <div className="mb-8">
-                      <h3 className="text-lg font-semibold mb-4">Practice Subsections</h3>
-                      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {module.subsections.map((subsection) => (
-                          <Card key={subsection.id} className="hover:shadow-lg transition-all">
-                            <CardHeader className="pb-2">
-                              <CardTitle className="text-base">{subsection.title}</CardTitle>
-                              <CardDescription>
-                                {subsection.practice_items.length} practice question{subsection.practice_items.length !== 1 ? 's' : ''}
-                              </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                              <Button
-                                className="w-full"
-                                size="sm"
-                                onClick={() => startSubsectionPractice(subsection.id, module.id)}
-                              >
-                                <PlayCircle className="h-4 w-4 mr-2" />
-                                Start Practice
-                              </Button>
-                            </CardContent>
-                          </Card>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Full Study Notes */}
-                    <div>
-                      <h3 className="text-lg font-semibold mb-4">Full Study Notes</h3>
-                      <div className="space-y-3">
-                        {module.subsections.map((subsection) => (
-                          <Collapsible
-                            key={subsection.id}
-                            open={openSections.includes(subsection.id)}
-                            onOpenChange={() => toggleSection(subsection.id)}
-                          >
-                            <Card>
-                              <CollapsibleTrigger className="w-full">
-                                <CardHeader className="py-3 hover:bg-muted/50 transition-colors">
-                                  <div className="flex items-center justify-between">
-                                    <CardTitle className="text-left text-base">{subsection.title}</CardTitle>
-                                    <ChevronDown
-                                      className={`h-5 w-5 transition-transform ${
-                                        openSections.includes(subsection.id) ? "transform rotate-180" : ""
-                                      }`}
-                                    />
-                                  </div>
-                                </CardHeader>
-                              </CollapsibleTrigger>
-                              <CollapsibleContent>
-                                <CardContent className="pt-0">
-                                  <SectionContent html={subsection.content_html} />
-                                </CardContent>
-                              </CollapsibleContent>
-                            </Card>
-                          </Collapsible>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </CollapsibleContent>
-              </Card>
-            </Collapsible>
+      <div className={cn(
+        "flex transition-all duration-300",
+        isAITutorEnabled ? "flex-row" : "flex-col"
+      )}>
+        {/* AI Chat Panel - Left side when enabled */}
+        {isAITutorEnabled && (
+          <div className="w-[320px] h-screen sticky top-0 flex-shrink-0 border-r">
+            <AITutorChat 
+              studyContent={getAllStudyContent()} 
+              selectedText={selectedText}
+              onClearSelection={() => setSelectedText("")}
+            />
           </div>
-        ))}
-
-        {/* Non-module subsections (for topics without modules) */}
-        {!hasModules && topic.subsections.length > 0 && (
-          <>
-            {/* Practice Subsections Grid */}
-            <div className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">Practice Subsections</h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {topic.subsections.map((subsection) => (
-                  <Card key={subsection.id} className="hover:shadow-lg transition-all">
-                    <CardHeader>
-                      <CardTitle className="text-lg">{subsection.title}</CardTitle>
-                      <CardDescription>
-                        {subsection.practice_items.length} practice question{subsection.practice_items.length !== 1 ? 's' : ''}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <Button
-                        className="w-full"
-                        onClick={() => startSubsectionPractice(subsection.id)}
-                      >
-                        <PlayCircle className="h-4 w-4 mr-2" />
-                        Start Practice
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Full Study Notes */}
-            <div className="mb-12">
-              <h2 className="text-2xl font-bold mb-4">Full Study Notes</h2>
-              <div className="space-y-4">
-                {topic.subsections.map((subsection) => (
-                  <Collapsible
-                    key={subsection.id}
-                    open={openSections.includes(subsection.id)}
-                    onOpenChange={() => toggleSection(subsection.id)}
-                  >
-                    <Card>
-                      <CollapsibleTrigger className="w-full">
-                        <CardHeader className="hover:bg-muted/50 transition-colors">
-                          <div className="flex items-center justify-between">
-                            <CardTitle className="text-left">{subsection.title}</CardTitle>
-                            <ChevronDown
-                              className={`h-5 w-5 transition-transform ${
-                                openSections.includes(subsection.id) ? "transform rotate-180" : ""
-                              }`}
-                            />
-                          </div>
-                        </CardHeader>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <CardContent className="pt-0">
-                          <SectionContent html={subsection.content_html} />
-                        </CardContent>
-                      </CollapsibleContent>
-                    </Card>
-                  </Collapsible>
-                ))}
-              </div>
-            </div>
-          </>
         )}
 
-        {/* Mock Exams */}
-        <MockExamSetup 
-          topicTitle={topic.title}
-          subsections={
-            hasModules
-              ? topic.modules!.flatMap(mod => mod.subsections.map(sub => {
-                  const parser = new DOMParser();
-                  const doc = parser.parseFromString(sub.content_html, 'text/html');
-                  return {
-                    title: sub.title,
-                    content: doc.body.textContent || ''
-                  };
-                }))
-              : topic.subsections.map(sub => {
-                  const parser = new DOMParser();
-                  const doc = parser.parseFromString(sub.content_html, 'text/html');
-                  return {
-                    title: sub.title,
-                    content: doc.body.textContent || ''
-                  };
-                })
-          }
-          subject="physics"
-        />
+        {/* Main Content */}
+        <div className={cn(
+          "flex-1 min-h-screen",
+          isAITutorEnabled ? "pr-16" : ""
+        )}>
+          <div className="container mx-auto px-4 py-8">
+            {/* AI Tutor Toggle */}
+            <div className="mb-6">
+              <AITutorToggle 
+                isEnabled={isAITutorEnabled} 
+                onToggle={setIsAITutorEnabled} 
+              />
+            </div>
+
+            <Button variant="ghost" onClick={() => navigate("/physics/sections")} className="mb-6">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Topics
+            </Button>
+
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold mb-2">{topic.title}</h1>
+              <p className="text-muted-foreground">
+                {hasModules 
+                  ? `${topic.modules!.length} module${topic.modules!.length !== 1 ? 's' : ''} • ${totalSubsections} subsection${totalSubsections !== 1 ? 's' : ''} available`
+                  : `${topic.subsections.length} subsection${topic.subsections.length !== 1 ? 's' : ''} available`
+                }
+              </p>
+            </div>
+
+            <ColorLegend />
+
+            {/* Modules Section */}
+            {hasModules && topic.modules!.map((module) => (
+              <div key={module.id} className="mb-8">
+                <Collapsible
+                  open={openModules.includes(module.id)}
+                  onOpenChange={() => toggleModule(module.id)}
+                >
+                  <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-secondary/5">
+                    <CollapsibleTrigger className="w-full">
+                      <CardHeader className="hover:bg-primary/5 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <BookOpen className="h-6 w-6 text-primary" />
+                            <div className="text-left">
+                              <CardTitle className="text-xl">{module.title}</CardTitle>
+                              <CardDescription>
+                                {module.subsections.length} subsection{module.subsections.length !== 1 ? 's' : ''} available
+                              </CardDescription>
+                            </div>
+                          </div>
+                          <ChevronDown
+                            className={`h-6 w-6 transition-transform ${
+                              openModules.includes(module.id) ? "transform rotate-180" : ""
+                            }`}
+                          />
+                        </div>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <CardContent className="pt-0">
+                        {/* Practice Subsections Grid */}
+                        <div className="mb-8">
+                          <h3 className="text-lg font-semibold mb-4">Practice Subsections</h3>
+                          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {module.subsections.map((subsection) => (
+                              <Card key={subsection.id} className="hover:shadow-lg transition-all">
+                                <CardHeader className="pb-2">
+                                  <CardTitle className="text-base">{subsection.title}</CardTitle>
+                                  <CardDescription>
+                                    {subsection.practice_items.length} practice question{subsection.practice_items.length !== 1 ? 's' : ''}
+                                  </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                  <Button
+                                    className="w-full"
+                                    size="sm"
+                                    onClick={() => startSubsectionPractice(subsection.id, module.id)}
+                                  >
+                                    <PlayCircle className="h-4 w-4 mr-2" />
+                                    Start Practice
+                                  </Button>
+                                </CardContent>
+                              </Card>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Full Study Notes */}
+                        <div>
+                          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                            Full Study Notes
+                            {isAITutorEnabled && (
+                              <span className="text-xs bg-violet-500/10 text-violet-600 px-2 py-1 rounded-full">
+                                Highlight text to ask AI
+                              </span>
+                            )}
+                          </h3>
+                          <div className="space-y-3">
+                            {module.subsections.map((subsection) => (
+                              <Collapsible
+                                key={subsection.id}
+                                open={openSections.includes(subsection.id)}
+                                onOpenChange={() => toggleSection(subsection.id)}
+                              >
+                                <Card>
+                                  <CollapsibleTrigger className="w-full">
+                                    <CardHeader className="py-3 hover:bg-muted/50 transition-colors">
+                                      <div className="flex items-center justify-between">
+                                        <CardTitle className="text-left text-base">{subsection.title}</CardTitle>
+                                        <ChevronDown
+                                          className={`h-5 w-5 transition-transform ${
+                                            openSections.includes(subsection.id) ? "transform rotate-180" : ""
+                                          }`}
+                                        />
+                                      </div>
+                                    </CardHeader>
+                                  </CollapsibleTrigger>
+                                  <CollapsibleContent>
+                                    <CardContent className="pt-0">
+                                      {isAITutorEnabled ? (
+                                        <AnnotatableContent 
+                                          html={subsection.content_html} 
+                                          onAskAI={handleAskAI}
+                                          isEnabled={isAITutorEnabled}
+                                        />
+                                      ) : (
+                                        <SectionContent html={subsection.content_html} />
+                                      )}
+                                    </CardContent>
+                                  </CollapsibleContent>
+                                </Card>
+                              </Collapsible>
+                            ))}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
+              </div>
+            ))}
+
+            {/* Non-module subsections (for topics without modules) */}
+            {!hasModules && topic.subsections.length > 0 && (
+              <>
+                {/* Practice Subsections Grid */}
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold mb-4">Practice Subsections</h2>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {topic.subsections.map((subsection) => (
+                      <Card key={subsection.id} className="hover:shadow-lg transition-all">
+                        <CardHeader>
+                          <CardTitle className="text-lg">{subsection.title}</CardTitle>
+                          <CardDescription>
+                            {subsection.practice_items.length} practice question{subsection.practice_items.length !== 1 ? 's' : ''}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <Button
+                            className="w-full"
+                            onClick={() => startSubsectionPractice(subsection.id)}
+                          >
+                            <PlayCircle className="h-4 w-4 mr-2" />
+                            Start Practice
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Full Study Notes */}
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+                    Full Study Notes
+                    {isAITutorEnabled && (
+                      <span className="text-xs bg-violet-500/10 text-violet-600 px-2 py-1 rounded-full">
+                        Highlight text to ask AI
+                      </span>
+                    )}
+                  </h2>
+                  <div className="space-y-4">
+                    {topic.subsections.map((subsection) => (
+                      <Collapsible
+                        key={subsection.id}
+                        open={openSections.includes(subsection.id)}
+                        onOpenChange={() => toggleSection(subsection.id)}
+                      >
+                        <Card>
+                          <CollapsibleTrigger className="w-full">
+                            <CardHeader className="hover:bg-muted/50 transition-colors">
+                              <div className="flex items-center justify-between">
+                                <CardTitle className="text-left">{subsection.title}</CardTitle>
+                                <ChevronDown
+                                  className={`h-5 w-5 transition-transform ${
+                                    openSections.includes(subsection.id) ? "transform rotate-180" : ""
+                                  }`}
+                                />
+                              </div>
+                            </CardHeader>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <CardContent className="pt-0">
+                              {isAITutorEnabled ? (
+                                <AnnotatableContent 
+                                  html={subsection.content_html} 
+                                  onAskAI={handleAskAI}
+                                  isEnabled={isAITutorEnabled}
+                                />
+                              ) : (
+                                <SectionContent html={subsection.content_html} />
+                              )}
+                            </CardContent>
+                          </CollapsibleContent>
+                        </Card>
+                      </Collapsible>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Mock Exams */}
+            <MockExamSetup 
+              topicTitle={topic.title}
+              subsections={
+                hasModules
+                  ? topic.modules!.flatMap(mod => mod.subsections.map(sub => {
+                      const parser = new DOMParser();
+                      const doc = parser.parseFromString(sub.content_html, 'text/html');
+                      return {
+                        title: sub.title,
+                        content: doc.body.textContent || ''
+                      };
+                    }))
+                  : topic.subsections.map(sub => {
+                      const parser = new DOMParser();
+                      const doc = parser.parseFromString(sub.content_html, 'text/html');
+                      return {
+                        title: sub.title,
+                        content: doc.body.textContent || ''
+                      };
+                    })
+              }
+              subject="physics"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
