@@ -91,18 +91,20 @@ GEOGRAPHY - Be geographically accurate:
 
 You MUST return an SVG diagram. Return ONLY valid JSON: { "svg": "<svg viewBox='0 0 500 350'>...</svg>" }`;
 
-    const userPrompt = `You MUST create an SVG diagram for this GCSE ${subject || 'science'} question. This is mandatory - every exam question needs a diagram.
+    const userPrompt = `Create an SVG diagram for this GCSE ${subject || 'science'} question.
 
 Question: "${questionText}"
 Topic: ${topic || 'general'}
 
-Create an accurate, exam-quality SVG diagram that:
-1. Directly supports understanding/answering the question
-2. Uses viewBox="0 0 500 350"
-3. Uses currentColor for text
-4. Includes clear labels
+Requirements:
+1. Create a diagram that helps visualize or understand the question
+2. Use viewBox="0 0 500 350"
+3. Use currentColor for all text elements
+4. Include clear, accurate labels
+5. For ${subject || 'science'}: create appropriate scientific diagrams (cell structures, apparatus, graphs, etc.)
 
-Return ONLY this JSON format: { "svg": "<svg viewBox='0 0 500 350' xmlns='http://www.w3.org/2000/svg'>...</svg>" }`;
+IMPORTANT: Return ONLY valid JSON with no markdown or explanation:
+{"svg": "<svg viewBox='0 0 500 350' xmlns='http://www.w3.org/2000/svg'>...your diagram here...</svg>"}`;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 45000);
