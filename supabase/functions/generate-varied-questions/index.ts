@@ -529,12 +529,53 @@ Return ONLY this JSON:
         question: text, 
         marks, 
         expectedKeyPoints: Array.isArray(q?.expectedKeyPoints) ? q.expectedKeyPoints : [],
-        markscheme: q?.markscheme || ""
+        markscheme: q?.markscheme || "",
+        diagramSvg: null // Will be populated below
       });
       if (out.length >= numQuestions) break;
     }
     
     console.log(`[generate-varied-questions] Final result: ${out.length}/${numQuestions} valid questions for difficulty: ${difficulty}`);
+
+    // Generate diagrams for questions that would benefit from them
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    
+    if (out.length && supabaseUrl && supabaseKey) {
+      console.log(`[generate-varied-questions] Generating diagrams for ${out.length} questions`);
+      
+      const diagramPromises = out.map(async (q, idx) => {
+        try {
+          const diagramResp = await fetch(`${supabaseUrl}/functions/v1/generate-question-diagram`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${supabaseKey}`,
+            },
+            body: JSON.stringify({
+              questionText: q.question,
+              subject: subject || 'chemistry',
+              topic: kws.slice(0, 3).join(', '),
+              marks: q.marks
+            }),
+          });
+          
+          if (diagramResp.ok) {
+            const diagramData = await diagramResp.json();
+            if (diagramData.svg) {
+              out[idx].diagramSvg = diagramData.svg;
+              console.log(`[generate-varied-questions] ✓ Diagram generated for Q${idx + 1}`);
+            } else {
+              console.log(`[generate-varied-questions] - No diagram needed for Q${idx + 1}`);
+            }
+          }
+        } catch (diagramError) {
+          console.log(`[generate-varied-questions] Diagram generation failed for Q${idx + 1}:`, diagramError);
+        }
+      });
+      
+      await Promise.all(diagramPromises);
+    }
 
     if (!out.length) {
       return new Response(JSON.stringify(fallback), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
