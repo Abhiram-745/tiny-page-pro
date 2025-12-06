@@ -13,6 +13,9 @@ interface TopicPerformance {
   percentage: number;
   attempts: number;
   missedKeyPoints: string[];
+  coveredKeyPoints: string[];
+  strengths: string[];
+  weaknesses: string[];
 }
 
 serve(async (req) => {
@@ -52,6 +55,8 @@ serve(async (req) => {
           score,
           max_marks,
           key_points_missed,
+          key_points_covered,
+          what_done_well,
           areas_to_improve
         )
       `)
@@ -75,7 +80,10 @@ serve(async (req) => {
         maxScore: 0,
         percentage: 0,
         attempts: 0,
-        missedKeyPoints: []
+        missedKeyPoints: [],
+        coveredKeyPoints: [],
+        strengths: [],
+        weaknesses: []
       };
     });
 
@@ -89,6 +97,9 @@ serve(async (req) => {
           topicPerformance[title].attempts += 1;
           if (session.key_ideas_missed) {
             topicPerformance[title].missedKeyPoints.push(...session.key_ideas_missed);
+          }
+          if (session.key_ideas_covered) {
+            topicPerformance[title].coveredKeyPoints.push(...session.key_ideas_covered);
           }
         }
       }
@@ -108,6 +119,15 @@ serve(async (req) => {
                 if (result.key_points_missed) {
                   topicPerformance[topicTitle].missedKeyPoints.push(...result.key_points_missed);
                 }
+                if (result.key_points_covered) {
+                  topicPerformance[topicTitle].coveredKeyPoints.push(...result.key_points_covered);
+                }
+                if (result.what_done_well) {
+                  topicPerformance[topicTitle].strengths.push(result.what_done_well);
+                }
+                if (result.areas_to_improve) {
+                  topicPerformance[topicTitle].weaknesses.push(result.areas_to_improve);
+                }
               }
             }
           }
@@ -115,7 +135,7 @@ serve(async (req) => {
       }
     }
 
-    // Calculate percentages
+    // Calculate percentages and generate analysis
     for (const key of Object.keys(topicPerformance)) {
       const tp = topicPerformance[key];
       if (tp.maxScore > 0) {
@@ -123,8 +143,28 @@ serve(async (req) => {
       } else {
         tp.percentage = -1; // No data
       }
-      // Deduplicate missed key points
+      
+      // Deduplicate and limit lists
       tp.missedKeyPoints = [...new Set(tp.missedKeyPoints)].slice(0, 5);
+      tp.coveredKeyPoints = [...new Set(tp.coveredKeyPoints)].slice(0, 5);
+      
+      // Generate strengths from covered key points if not already present
+      if (tp.strengths.length === 0 && tp.coveredKeyPoints.length > 0) {
+        tp.strengths = tp.coveredKeyPoints.slice(0, 3).map(point => 
+          `Good understanding of: ${point}`
+        );
+      }
+      
+      // Generate weaknesses from missed key points if not already present
+      if (tp.weaknesses.length === 0 && tp.missedKeyPoints.length > 0) {
+        tp.weaknesses = tp.missedKeyPoints.slice(0, 3).map(point => 
+          `Needs practice on: ${point}`
+        );
+      }
+      
+      // Deduplicate strengths and weaknesses
+      tp.strengths = [...new Set(tp.strengths)].slice(0, 3);
+      tp.weaknesses = [...new Set(tp.weaknesses)].slice(0, 3);
     }
 
     // Categorize topics
