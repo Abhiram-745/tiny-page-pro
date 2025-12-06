@@ -6,22 +6,44 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+function extractSvg(content: string): string | null {
+  // First try to find SVG directly
+  let svgMatch = content.match(/<svg[\s\S]*?<\/svg>/i);
+  if (svgMatch) {
+    return svgMatch[0];
+  }
+  
+  // Try to extract from markdown code blocks (```svg or ```xml or ```)
+  const codeBlockMatch = content.match(/```(?:svg|xml)?\s*([\s\S]*?)```/i);
+  if (codeBlockMatch) {
+    const innerContent = codeBlockMatch[1];
+    svgMatch = innerContent.match(/<svg[\s\S]*?<\/svg>/i);
+    if (svgMatch) {
+      return svgMatch[0];
+    }
+  }
+  
+  return null;
+}
+
 async function generateSvg(key: string, questionText: string, subject: string, topic: string): Promise<string | null> {
-  const prompt = `Create SVG code for a diagram to accompany this GCSE ${subject || 'science'} exam question:
+  const prompt = `Create an SVG diagram for this GCSE ${subject || 'science'} exam question.
 
-"${questionText}"
-
+Question: "${questionText}"
 Topic: ${topic || 'general'}
 
-Requirements:
-- Return ONLY the raw SVG code, nothing else
-- Use viewBox="0 0 500 350"
-- Use "currentColor" for all text
-- Use colors: #2563eb (blue), #dc2626 (red), #16a34a (green), #d97706 (orange)
-- Include clear labels
-- Make it exam-quality and educational
+IMPORTANT INSTRUCTIONS:
+1. Output ONLY the SVG code - no markdown, no explanation, no code blocks
+2. Start directly with <svg and end with </svg>
+3. Use viewBox="0 0 500 350"
+4. Use "currentColor" for text fill
+5. Use these colors: #2563eb (blue), #dc2626 (red), #16a34a (green), #d97706 (orange)
+6. Add clear labels
 
-Return ONLY the SVG code starting with <svg and ending with </svg>. No markdown, no explanation, no JSON wrapper.`;
+Example format of your response:
+<svg viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- your diagram here -->
+</svg>`;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 50000);
@@ -63,12 +85,13 @@ Return ONLY the SVG code starting with <svg and ending with </svg>. No markdown,
     }
 
     console.log("[generate-question-diagram] Response length:", content.length);
+    console.log("[generate-question-diagram] Response preview:", content.substring(0, 200));
 
-    // Extract SVG from response
-    const svgMatch = content.match(/<svg[\s\S]*<\/svg>/);
-    if (svgMatch) {
-      console.log("[generate-question-diagram] Found SVG");
-      return svgMatch[0];
+    // Extract SVG from response (handles markdown code blocks too)
+    const svg = extractSvg(content);
+    if (svg) {
+      console.log("[generate-question-diagram] Found SVG, length:", svg.length);
+      return svg;
     }
 
     console.log("[generate-question-diagram] No SVG found in response");
