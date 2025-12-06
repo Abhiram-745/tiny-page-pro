@@ -711,7 +711,7 @@ const BlurPractice = () => {
     return contentText;
   };
 
-  // Build study content ONLY from the current pair (not cumulative)
+  // Build study content ONLY from the current pair (not cumulative) - returns plain text for AI
   const buildPairContent = (): string => {
     const contentText = currentPairSubsections.map(sub => {
       const parser = new DOMParser();
@@ -726,6 +726,11 @@ const BlurPractice = () => {
     });
 
     return contentText;
+  };
+
+  // Build study content HTML for display in Study Notes sheet (preserves SVG diagrams and formatting)
+  const buildPairHtml = (): string => {
+    return currentPairSubsections.map(sub => sub.html).join('');
   };
 
   const generateNewQuestion = async (typeOverride?: "blurt" | "exam") => {
@@ -1758,7 +1763,7 @@ const BlurPractice = () => {
                           <SheetTitle>Study Notes</SheetTitle>
                         </SheetHeader>
                         <ScrollArea className="h-[calc(100vh-100px)] mt-4">
-                          <SectionContent html={buildPairContent()} />
+                          <SectionContent html={buildPairHtml()} />
                         </ScrollArea>
                       </SheetContent>
                     </Sheet>
