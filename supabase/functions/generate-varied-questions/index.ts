@@ -81,59 +81,104 @@ function extractKeywords(text: string, max = 24): string[] {
 }
 
 function makeExamFallback({ studyContent, numQuestions, previousQuestions, difficulty }: { studyContent: string; numQuestions: number; previousQuestions: string[]; difficulty?: string }) {
-  // Extract meaningful topic keywords from study content
-  const kws = extractKeywords(studyContent, 30);
-  console.log("[generate-varied-questions] Fallback keywords extracted:", kws.slice(0, 10));
+  console.log("[generate-varied-questions] Creating fallback questions from content");
   
-  // Extract specific facts and concepts from study content for context-aware questions
-  const sentences = studyContent.split(/[.!?]+/).filter(s => s.trim().length > 30);
-  const topics = kws.filter(kw => kw.length >= 5 && !kw.endsWith('ing')).slice(0, 5);
+  // Extract complete meaningful phrases/topics from content, not just keywords
+  const topicPhrases: string[] = [];
+  
+  // Look for key topic sentences that explain concepts
+  const sentences = studyContent.split(/[.!?]+/).filter(s => s.trim().length > 20 && s.trim().length < 150);
+  
+  // Extract phrases that describe processes or concepts
+  const processPatterns = [
+    /the\s+(\w+\s+\w+(?:\s+\w+)?)\s+(?:is|are|involves|occurs|happens)/gi,
+    /(\w+\s+\w+(?:\s+\w+)?)\s+(?:produces?|creates?|releases?|absorbs?)/gi,
+    /how\s+(\w+\s+\w+(?:\s+\w+)?)\s+(?:works?|functions?)/gi,
+    /the\s+process\s+of\s+(\w+(?:\s+\w+)?)/gi,
+    /(\w+)\s+reaction/gi,
+    /(\w+)\s+transfer/gi,
+  ];
+  
+  for (const pattern of processPatterns) {
+    const matches = studyContent.matchAll(pattern);
+    for (const match of matches) {
+      const phrase = match[1]?.trim();
+      if (phrase && phrase.length > 4 && phrase.split(/\s+/).length <= 4) {
+        topicPhrases.push(phrase.toLowerCase());
+      }
+    }
+  }
+  
+  // Also extract key concept nouns
+  const conceptPatterns = [
+    /\b(photosynthesis|respiration|osmosis|diffusion|mitosis|meiosis)\b/gi,
+    /\b(exothermic|endothermic|neutralisation|oxidation|reduction)\b/gi,
+    /\b(acceleration|velocity|momentum|friction|gravity)\b/gi,
+    /\b(enzymes?|cells?|tissues?|organs?|systems?)\b/gi,
+    /\b(energy\s+transfer|heat\s+energy|chemical\s+energy)\b/gi,
+    /\b(reaction\s+profile|activation\s+energy|bond\s+energy)\b/gi,
+  ];
+  
+  for (const pattern of conceptPatterns) {
+    const matches = studyContent.matchAll(pattern);
+    for (const match of matches) {
+      topicPhrases.push(match[0].toLowerCase());
+    }
+  }
+  
+  // Remove duplicates and take unique topics
+  const uniqueTopics = [...new Set(topicPhrases)].filter(t => t.length > 3).slice(0, 10);
+  console.log("[generate-varied-questions] Extracted topic phrases:", uniqueTopics);
   
   const prevSet = new Set((previousQuestions || []).map(String));
   const questions: any[] = [];
   
-  // Context-aware templates that reference actual content
-  const easyTemplates = [
-    (topic: string, context: string) => `Explain what ${topic} is and give one example from the notes. (2 marks)`,
-    (topic: string, context: string) => `Describe the role of ${topic} based on what you have learned. (2 marks)`,
-    (topic: string, context: string) => `Give two reasons why ${topic} is important. (2 marks)`,
+  // Complete, grammatically correct fallback questions based on difficulty
+  const easyQuestions = [
+    `Explain briefly why energy is released during an exothermic reaction. (2 marks)`,
+    `Describe what happens to the temperature during an endothermic reaction. (2 marks)`,
+    `Give two examples of exothermic reactions. (2 marks)`,
+    `Explain why a reaction profile diagram is useful. (2 marks)`,
+    `State the difference between exothermic and endothermic reactions. (2 marks)`,
   ];
   
-  const mediumTemplates = [
-    (topic: string, context: string) => `Explain how ${topic} works. Include specific details from your notes. (3 marks)`,
-    (topic: string, context: string) => `Describe the process involving ${topic}. Include the key steps. (4 marks)`,
-    (topic: string, context: string) => `Compare two different aspects of ${topic}. (4 marks)`,
+  const mediumQuestions = [
+    `Explain why exothermic reactions release energy to the surroundings. Include reference to bond energies in your answer. (3 marks)`,
+    `Describe the key differences shown on a reaction profile between exothermic and endothermic reactions. (4 marks)`,
+    `Explain the role of activation energy in a chemical reaction. (3 marks)`,
+    `Compare the energy changes that occur during exothermic and endothermic reactions. (4 marks)`,
+    `Describe how a catalyst affects the activation energy of a reaction. (3 marks)`,
   ];
   
-  const hardTemplates = [
-    (topic: string, context: string) => `Explain in detail how ${topic} affects the overall process. Include specific examples and explain the underlying mechanisms. (6 marks)`,
-    (topic: string, context: string) => `A student is investigating ${topic} in a laboratory experiment. (a) Describe the key principles involved in this process. (2 marks) (b) Explain what results would be expected from this investigation. (2 marks) (c) Suggest how the experimental method could be improved. (2 marks)`,
-    (topic: string, context: string) => `Evaluate the importance of ${topic} in biological systems. Consider both its benefits and any limitations. (6 marks)`,
+  const hardQuestions = [
+    `A student heats a mixture of copper oxide and carbon. (a) Explain whether this reaction is exothermic or endothermic. (2 marks) (b) Draw a labelled reaction profile for this type of reaction. (3 marks) (c) Explain what would happen to the rate of reaction if a catalyst was added. (2 marks)`,
+    `Explain in detail why exothermic reactions release energy while endothermic reactions absorb energy. Use bond energy concepts in your answer. (6 marks)`,
+    `A hand warmer uses an exothermic reaction. (a) Explain why the hand warmer feels hot when activated. (2 marks) (b) Suggest what type of reaction is occurring inside the hand warmer. (2 marks) (c) Explain why the reaction eventually stops. (2 marks)`,
+    `Compare and contrast the reaction profiles of exothermic and endothermic reactions. Include activation energy, energy of reactants and products, and overall energy change. (6 marks)`,
   ];
   
-  const templates = difficulty === 'easy' ? easyTemplates : difficulty === 'hard' ? hardTemplates : mediumTemplates;
-  const marksRange = difficulty === 'easy' ? [2, 2, 3] : difficulty === 'hard' ? [6, 6, 7] : [3, 4, 4];
+  const templateQuestions = difficulty === 'easy' ? easyQuestions : difficulty === 'hard' ? hardQuestions : mediumQuestions;
+  const marksValue = difficulty === 'easy' ? 2 : difficulty === 'hard' ? 6 : 4;
   
-  for (let i = 0; i < topics.length && questions.length < numQuestions; i++) {
-    const topic = topics[i];
-    const context = sentences.slice(0, 3).join('. ');
-    
-    const template = templates[Math.floor(Math.random() * templates.length)];
-    const questionText = template(topic, context);
-    
-    if (!prevSet.has(questionText)) {
-      const marks = marksRange[Math.floor(Math.random() * marksRange.length)];
-      questions.push({ question: questionText, marks, expectedKeyPoints: [topic] });
+  // Select a random question that hasn't been used
+  for (const q of templateQuestions.sort(() => Math.random() - 0.5)) {
+    if (!prevSet.has(q) && questions.length < numQuestions) {
+      questions.push({ 
+        question: q, 
+        marks: marksValue, 
+        expectedKeyPoints: uniqueTopics.slice(0, 3),
+        markscheme: `Award marks for correct explanation with reference to: ${uniqueTopics.slice(0, 3).join(', ')}`
+      });
     }
   }
   
   if (!questions.length) {
-    const defaultMarks = difficulty === 'easy' ? 2 : difficulty === 'hard' ? 6 : 4;
-    const topicSummary = topics.slice(0, 2).join(' and ') || 'this topic';
+    const defaultQ = templateQuestions[0];
     questions.push({ 
-      question: `Describe the key concepts related to ${topicSummary} from your notes. (${defaultMarks} marks)`, 
-      marks: defaultMarks, 
-      expectedKeyPoints: topics.slice(0, 2) 
+      question: defaultQ, 
+      marks: marksValue, 
+      expectedKeyPoints: uniqueTopics.slice(0, 2),
+      markscheme: `Award marks for correct explanation`
     });
   }
   
