@@ -19,15 +19,26 @@ import {
   AlertCircle, 
   Lightbulb,
   HelpCircle,
-  Sparkles
+  Sparkles,
+  ThumbsUp,
+  ThumbsDown,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface TopicPerformance {
   topic: string;
   percentage: number;
   attempts: number;
   missedKeyPoints: string[];
+  strengths?: string[];
+  weaknesses?: string[];
 }
 
 interface PriorityAnalysis {
@@ -60,6 +71,7 @@ const MockExamPriorityList = ({
   const [analysis, setAnalysis] = useState<PriorityAnalysis | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const [expandedTopics, setExpandedTopics] = useState<string[]>([]);
 
   useEffect(() => {
     if (open) {
@@ -106,6 +118,14 @@ const MockExamPriorityList = ({
     );
   };
 
+  const toggleExpanded = (topic: string) => {
+    setExpandedTopics(prev =>
+      prev.includes(topic)
+        ? prev.filter(t => t !== topic)
+        : [...prev, topic]
+    );
+  };
+
   const handleConfirm = () => {
     onConfirm(selectedTopics);
     onOpenChange(false);
@@ -119,51 +139,123 @@ const MockExamPriorityList = ({
       noData: 'text-muted-foreground bg-muted/30 border-muted'
     };
 
+    const isExpanded = expandedTopics.includes(tp.topic);
+    const hasDetails = (tp.strengths && tp.strengths.length > 0) || 
+                       (tp.weaknesses && tp.weaknesses.length > 0) ||
+                       (tp.missedKeyPoints && tp.missedKeyPoints.length > 0);
+
     return (
-      <div 
+      <Collapsible 
         key={tp.topic}
-        className={`flex items-start gap-3 p-3 rounded-lg border transition-all ${colors[category]} ${
-          selectedTopics.includes(tp.topic) ? 'ring-2 ring-primary/50' : ''
-        }`}
+        open={isExpanded}
+        onOpenChange={() => toggleExpanded(tp.topic)}
       >
-        <Checkbox
-          checked={selectedTopics.includes(tp.topic)}
-          onCheckedChange={() => toggleTopic(tp.topic)}
-          className="mt-0.5"
-        />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-sm truncate">{tp.topic}</span>
-            {category === 'focus' && (
-              <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
-                <Sparkles className="h-2.5 w-2.5 mr-0.5" />
-                AI Recommended
-              </Badge>
-            )}
-            {category === 'noData' && (
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                <HelpCircle className="h-2.5 w-2.5 mr-0.5" />
-                No data yet
-              </Badge>
+        <div 
+          className={`rounded-lg border transition-all ${colors[category]} ${
+            selectedTopics.includes(tp.topic) ? 'ring-2 ring-primary/50' : ''
+          }`}
+        >
+          <div className="flex items-start gap-3 p-3">
+            <Checkbox
+              checked={selectedTopics.includes(tp.topic)}
+              onCheckedChange={() => toggleTopic(tp.topic)}
+              className="mt-0.5"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-medium text-sm truncate">{tp.topic}</span>
+                {category === 'focus' && (
+                  <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
+                    <Sparkles className="h-2.5 w-2.5 mr-0.5" />
+                    AI Recommended
+                  </Badge>
+                )}
+                {category === 'noData' && (
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                    <HelpCircle className="h-2.5 w-2.5 mr-0.5" />
+                    No data yet
+                  </Badge>
+                )}
+              </div>
+              {tp.percentage >= 0 && (
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="text-xs opacity-80">
+                    Avg: {tp.percentage}%
+                  </span>
+                  <span className="text-xs opacity-60">
+                    ({tp.attempts} attempt{tp.attempts !== 1 ? 's' : ''})
+                  </span>
+                </div>
+              )}
+            </div>
+            {hasDetails && tp.percentage >= 0 && (
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                  {isExpanded ? (
+                    <ChevronUp className="h-4 w-4" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4" />
+                  )}
+                </Button>
+              </CollapsibleTrigger>
             )}
           </div>
-          {tp.percentage >= 0 && (
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-xs opacity-80">
-                Avg: {tp.percentage}%
-              </span>
-              <span className="text-xs opacity-60">
-                ({tp.attempts} attempt{tp.attempts !== 1 ? 's' : ''})
-              </span>
-            </div>
-          )}
-          {tp.missedKeyPoints.length > 0 && (
-            <p className="text-[11px] opacity-70 mt-1 line-clamp-1">
-              Often missed: {tp.missedKeyPoints.slice(0, 2).join(', ')}
-            </p>
-          )}
+          
+          <CollapsibleContent>
+            {tp.percentage >= 0 && (
+              <div className="px-3 pb-3 pt-0 space-y-3 border-t border-inherit mx-3 mt-1">
+                {/* Strengths */}
+                {tp.strengths && tp.strengths.length > 0 && (
+                  <div className="mt-3">
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <ThumbsUp className="h-3.5 w-3.5 text-green-500" />
+                      <span className="text-xs font-medium text-green-600 dark:text-green-400">Strengths</span>
+                    </div>
+                    <ul className="space-y-1">
+                      {tp.strengths.slice(0, 3).map((strength, i) => (
+                        <li key={i} className="text-[11px] text-muted-foreground flex gap-1.5">
+                          <span className="text-green-500">✓</span>
+                          {strength}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Weaknesses */}
+                {tp.weaknesses && tp.weaknesses.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <ThumbsDown className="h-3.5 w-3.5 text-red-500" />
+                      <span className="text-xs font-medium text-red-600 dark:text-red-400">Areas to Improve</span>
+                    </div>
+                    <ul className="space-y-1">
+                      {tp.weaknesses.slice(0, 3).map((weakness, i) => (
+                        <li key={i} className="text-[11px] text-muted-foreground flex gap-1.5">
+                          <span className="text-red-500">✗</span>
+                          {weakness}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {/* Missed Key Points (fallback) */}
+                {(!tp.strengths || tp.strengths.length === 0) && 
+                 (!tp.weaknesses || tp.weaknesses.length === 0) && 
+                 tp.missedKeyPoints.length > 0 && (
+                  <div className="mt-2">
+                    <span className="text-[11px] font-medium text-muted-foreground">Often missed:</span>
+                    <p className="text-[11px] opacity-70 mt-0.5">
+                      {tp.missedKeyPoints.slice(0, 3).join(', ')}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </CollapsibleContent>
         </div>
-      </div>
+      </Collapsible>
     );
   };
 

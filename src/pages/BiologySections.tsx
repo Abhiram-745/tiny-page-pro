@@ -10,7 +10,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import SectionContent from "@/components/SectionContent";
-import PracticeExamQuestions from "@/components/PracticeExamQuestions";
+import MockExamSetup from "@/components/MockExamSetup";
 import ColorLegend from "@/components/ColorLegend";
 
 const BiologySections = () => {
@@ -292,22 +292,9 @@ const BiologySections = () => {
           </>
         )}
 
-        {/* Practice Exam Questions */}
-        <PracticeExamQuestions 
-          sectionContent={
-            hasModules
-              ? chapter.modules!.flatMap(mod => mod.subsections.map(sub => {
-                  const parser = new DOMParser();
-                  const doc = parser.parseFromString(sub.content_html, 'text/html');
-                  return doc.body.textContent || '';
-                })).join('\n\n')
-              : chapter.subsections.map(sub => {
-                  const parser = new DOMParser();
-                  const doc = parser.parseFromString(sub.content_html, 'text/html');
-                  return doc.body.textContent || '';
-                }).join('\n\n')
-          }
-          sectionTitle={chapter.title}
+        {/* Mock Exam Setup */}
+        <MockExamSetup
+          topicTitle={chapter.title}
           subsections={
             hasModules
               ? chapter.modules!.flatMap(mod => mod.subsections.map(sub => {

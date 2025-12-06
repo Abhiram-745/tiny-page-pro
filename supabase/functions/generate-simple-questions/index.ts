@@ -142,6 +142,35 @@ ${subjectContext.forbidden}
 - Do NOT use scientific notation in economics questions
 - EVERY question must be 100% relevant to ${subjectContext.board}
 
+📊 SVG DIAGRAM REQUIREMENTS:
+When a question would benefit from a diagram (graphs, charts, scientific diagrams, reaction profiles, etc.), you MUST include an SVG diagram in the question.
+Include the SVG directly in the question text using proper SVG markup.
+
+SVG DIAGRAM GUIDELINES:
+- Use viewBox for responsive scaling (e.g., viewBox="0 0 400 300")
+- Use "currentColor" for text to work in light/dark themes
+- Include proper labels and annotations
+- Make diagrams clear, educational, and visually appealing
+- Common diagrams to include:
+  * Biology: Cell diagrams, organ systems, food webs, graphs of experimental data
+  * Chemistry: Reaction profiles, atomic structure, bonding diagrams, apparatus diagrams
+  * Physics: Circuit diagrams, force diagrams, graphs (velocity-time, distance-time)
+  * Economics: Supply/demand curves, market diagrams, economic flow charts
+  * Geography: Cross-sections, river features, population pyramids
+
+EXAMPLE SVG IN QUESTION:
+"The diagram below shows a reaction profile for an exothermic reaction.
+
+<svg width='400' height='250' viewBox='0 0 400 250'>
+  <path d='M 50 180 Q 120 180 150 80 Q 180 20 200 60 Q 220 100 250 180 L 350 180' fill='none' stroke='#3b82f6' stroke-width='3'/>
+  <text x='30' y='185' fill='currentColor' font-size='12'>Reactants</text>
+  <text x='300' y='185' fill='currentColor' font-size='12'>Products</text>
+  <text x='175' y='40' fill='currentColor' font-size='11'>Activation Energy</text>
+  <line x1='50' y1='180' x2='350' y2='180' stroke='currentColor' stroke-dasharray='4'/>
+</svg>
+
+Using the diagram, explain why this reaction releases energy. [4 marks]"
+
 📚 COMMAND WORDS (use correctly for mark allocation):
 - **State/Name/Give** (1 mark) - Single word/phrase, factual recall
 - **Describe** (2-3 marks) - Give account of process/phenomenon
@@ -159,6 +188,7 @@ ${subjectContext.examples}
 ✓ Use EXACT command words for mark allocation
 ✓ Every fact/term MUST appear in the study content
 ✓ Generate questions appropriate for ${subjectContext.board}
+✓ INCLUDE SVG DIAGRAMS where they would enhance understanding
 ✗ DO NOT introduce topics not covered in the study content
 ✗ DO NOT cross subject boundaries
 ✗ DO NOT invent data or scenarios not in notes
