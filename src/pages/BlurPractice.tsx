@@ -64,6 +64,7 @@ type GeneratedQuestion = {
   question: string;
   marks: number;
   expectedKeyPoints: string[];
+  diagramSvg?: string | null;
 };
 
 type KnowledgeGap = {
@@ -150,6 +151,13 @@ const BlurPractice = () => {
   const [progressSaved, setProgressSaved] = useState(false);
   const [isSavingProgress, setIsSavingProgress] = useState(false);
   const [notesWidth, setNotesWidth] = useState(100); // percentage width for notes
+  
+  // Notes lock system: 10s timer + lock for 2 questions
+  const [notesLocked, setNotesLocked] = useState(false);
+  const [notesLockCounter, setNotesLockCounter] = useState(0); // questions remaining until unlock
+  const [notesTimerActive, setNotesTimerActive] = useState(false);
+  const [notesTimeRemaining, setNotesTimeRemaining] = useState(10);
+  const [notesSheetOpen, setNotesSheetOpen] = useState(false);
 
   // Save progress to database
   const saveProgressToDatabase = useCallback(async (pairIndex: number) => {
@@ -586,6 +594,54 @@ const BlurPractice = () => {
     }
   }, [timerEnabled, showQuestionFeedback, showStudyContent, showFinalResults]);
 
+  // Notes timer effect - countdown when notes are open
+  useEffect(() => {
+    if (notesTimerActive && notesTimeRemaining > 0) {
+      const interval = setInterval(() => {
+        setNotesTimeRemaining((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else if (notesTimerActive && notesTimeRemaining <= 0) {
+      // Timer finished - lock notes for 2 questions
+      setNotesTimerActive(false);
+      setNotesSheetOpen(false);
+      setNotesLocked(true);
+      setNotesLockCounter(2);
+      toast({
+        title: "Notes locked",
+        description: "Answer 2 questions to unlock notes again",
+      });
+    }
+  }, [notesTimerActive, notesTimeRemaining]);
+
+  // Decrement lock counter when a new question is generated
+  useEffect(() => {
+    if (notesLockCounter > 0 && currentGeneratedQuestion) {
+      // This effect runs when a new question is set
+    }
+  }, [currentGeneratedQuestion]);
+
+  // Handle starting the notes timer
+  const handleStartNotesTimer = () => {
+    setNotesTimerActive(true);
+    setNotesTimeRemaining(10);
+  };
+
+  // Decrement lock counter when submitting an answer
+  const decrementNotesLock = () => {
+    if (notesLockCounter > 0) {
+      const newCount = notesLockCounter - 1;
+      setNotesLockCounter(newCount);
+      if (newCount === 0) {
+        setNotesLocked(false);
+        toast({
+          title: "Notes unlocked",
+          description: "You can view notes again",
+        });
+      }
+    }
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -937,6 +993,9 @@ const BlurPractice = () => {
       if (timerInterval) {
         clearInterval(timerInterval);
       }
+
+      // Decrement notes lock counter if locked
+      decrementNotesLock();
 
       // Navigate to Results page with feedback data
       console.log("Navigating to Results with currentPairIndex:", currentPairIndex);
@@ -1726,6 +1785,15 @@ const BlurPractice = () => {
                     );
                   })}
                 </div>
+                {/* Display diagram if available */}
+                {currentGeneratedQuestion.diagramSvg && (
+                  <div className="mt-4 p-4 bg-muted/30 rounded-lg border animate-fade-in">
+                    <div 
+                      className="w-full flex justify-center"
+                      dangerouslySetInnerHTML={{ __html: currentGeneratedQuestion.diagramSvg }}
+                    />
+                  </div>
+                )}
               </div>
             </CardHeader>
             <CardContent>
@@ -1747,20 +1815,52 @@ const BlurPractice = () => {
                       <Send className="mr-2 h-4 w-4" />
                       Submit Answer
                     </Button>
-                    <Sheet>
+                    <Sheet open={notesSheetOpen} onOpenChange={(open) => {
+                      if (notesLocked && open) {
+                        toast({
+                          title: "Notes locked",
+                          description: `Answer ${notesLockCounter} more question${notesLockCounter > 1 ? 's' : ''} to unlock`,
+                          variant: "destructive"
+                        });
+                        return;
+                      }
+                      setNotesSheetOpen(open);
+                      if (!open) {
+                        setNotesTimerActive(false);
+                        setNotesTimeRemaining(10);
+                      }
+                    }}>
                       <SheetTrigger asChild>
                         <Button 
                           variant="outline" 
                           size="lg"
-                          className="btn-press"
+                          className={`btn-press ${notesLocked ? 'opacity-50' : ''}`}
+                          disabled={notesLocked}
                         >
                           <Eye className="mr-2 h-4 w-4" />
-                          View Notes
+                          {notesLocked ? `Locked (${notesLockCounter})` : 'View Notes'}
                         </Button>
                       </SheetTrigger>
-                      <SheetContent side="right" className="w-[400px] sm:w-[540px]">
-                        <SheetHeader>
+                      <SheetContent side="right" className="w-[90vw] sm:w-[700px] max-w-[90vw]">
+                        <SheetHeader className="flex flex-row items-center justify-between pr-8">
                           <SheetTitle>Study Notes</SheetTitle>
+                          <div className="flex items-center gap-2">
+                            {notesTimerActive ? (
+                              <Badge variant="destructive" className="text-lg px-3 py-1">
+                                <Timer className="mr-1 h-4 w-4" />
+                                {notesTimeRemaining}s
+                              </Badge>
+                            ) : (
+                              <Button 
+                                size="sm" 
+                                onClick={handleStartNotesTimer}
+                                variant="outline"
+                              >
+                                <Timer className="mr-2 h-4 w-4" />
+                                Start 10s Timer
+                              </Button>
+                            )}
+                          </div>
                         </SheetHeader>
                         <ScrollArea className="h-[calc(100vh-100px)] mt-4">
                           <SectionContent html={buildPairHtml()} />
