@@ -21,17 +21,18 @@ serve(async (req) => {
       );
     }
 
-    const key = Deno.env.get("BYTEZ_API_KEY_FLASH");
-    if (!key) {
-      console.error("[generate-question-diagram] BYTEZ_API_KEY_FLASH not configured");
+    // Use Lovable AI instead of Bytez
+    const lovableKey = Deno.env.get("LOVABLE_API_KEY");
+    if (!lovableKey) {
+      console.error("[generate-question-diagram] LOVABLE_API_KEY not configured");
       return new Response(
         JSON.stringify({ svg: null, error: "API key not configured" }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    console.log("[generate-question-diagram] ALWAYS generating diagram for:", subject, topic);
-    console.log("[generate-question-diagram] Question text:", questionText.substring(0, 150));
+    console.log("[generate-question-diagram] Generating diagram for:", subject, topic);
+    console.log("[generate-question-diagram] Question:", questionText.substring(0, 100));
 
     // Generate the diagram - ALWAYS create one for every question
     const systemPrompt = `You are an expert GCSE exam diagram creator. You MUST create an SVG diagram for EVERY question.
@@ -107,13 +108,14 @@ IMPORTANT: Return ONLY valid JSON with no markdown or explanation:
 {"svg": "<svg viewBox='0 0 500 350' xmlns='http://www.w3.org/2000/svg'>...your diagram here...</svg>"}`;
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 45000);
+    const timeoutId = setTimeout(() => controller.abort(), 50000);
 
     try {
-      const resp = await fetch("https://api.bytez.com/models/v2/openai/v1/chat/completions", {
+      // Use Lovable AI gateway
+      const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
         headers: { 
-          Authorization: `Bearer ${key}`, 
+          Authorization: `Bearer ${lovableKey}`, 
           "Content-Type": "application/json" 
         },
         body: JSON.stringify({
@@ -122,7 +124,6 @@ IMPORTANT: Return ONLY valid JSON with no markdown or explanation:
             { role: "system", content: systemPrompt },
             { role: "user", content: userPrompt }
           ],
-          max_completion_tokens: 4000,
         }),
         signal: controller.signal,
       });
