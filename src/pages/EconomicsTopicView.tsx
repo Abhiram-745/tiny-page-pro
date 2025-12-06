@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,11 +7,16 @@ import { ArrowLeft, BookOpen, HelpCircle, ChevronLeft, ChevronRight } from "luci
 import { getEconomicsChapterById, getEconomicsModuleById, getEconomicsSubsectionById } from "@/data/economicsData";
 import SectionContent from "@/components/SectionContent";
 import MockExamSetup from "@/components/MockExamSetup";
-import { AIChatbot } from "../components/AIChatbot";
+import { AITutorToggle } from "@/components/AITutorToggle";
+import { AITutorChat } from "@/components/AITutorChat";
+import { AnnotatableContent } from "@/components/AnnotatableContent";
+import { cn } from "@/lib/utils";
 
 const EconomicsTopicView = () => {
   const navigate = useNavigate();
   const { chapterId, moduleId, subsectionId } = useParams();
+  const [isAITutorEnabled, setIsAITutorEnabled] = useState(false);
+  const [selectedText, setSelectedText] = useState("");
 
   const chapter = getEconomicsChapterById(chapterId || "");
   const module = getEconomicsModuleById(chapterId || "", moduleId || "");
@@ -38,90 +44,136 @@ const EconomicsTopicView = () => {
   // Prepare content for practice questions
   const practiceContent = subsection.content;
 
+  const handleAskAI = (text: string) => {
+    setSelectedText(text);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-emerald-500/5 to-teal-500/5">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(`/economics/sections/${chapterId}`)}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to {chapter.title}
-          </Button>
-        </div>
-
-        <div className="mb-6">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-            <span>{chapter.title}</span>
-            <span>•</span>
-            <span>{module.title}</span>
+      <div className={cn(
+        "flex transition-all duration-300",
+        isAITutorEnabled ? "flex-row" : "flex-col"
+      )}>
+        {/* AI Chat Panel - Left side when enabled */}
+        {isAITutorEnabled && (
+          <div className="w-[320px] h-screen sticky top-0 flex-shrink-0 border-r">
+            <AITutorChat 
+              studyContent={practiceContent} 
+              selectedText={selectedText}
+              onClearSelection={() => setSelectedText("")}
+            />
           </div>
-          <h1 className="text-2xl font-bold">{subsection.title}</h1>
-        </div>
+        )}
 
-        <Tabs defaultValue="learn" className="space-y-6">
-          <TabsList className="bg-emerald-500/10">
-            <TabsTrigger value="learn" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
-              <BookOpen className="h-4 w-4 mr-2" />
-              Learn
-            </TabsTrigger>
-            <TabsTrigger value="practice" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
-              <HelpCircle className="h-4 w-4 mr-2" />
-              Practice
-            </TabsTrigger>
-          </TabsList>
+        {/* Main Content */}
+        <div className={cn(
+          "flex-1 min-h-screen",
+          isAITutorEnabled ? "pr-16" : ""
+        )}>
+          <div className="container mx-auto px-4 py-8">
+            {/* AI Tutor Toggle */}
+            <div className="mb-6">
+              <AITutorToggle 
+                isEnabled={isAITutorEnabled} 
+                onToggle={setIsAITutorEnabled} 
+              />
+            </div>
 
-          <TabsContent value="learn" className="space-y-6">
-            <Card>
-              <CardContent className="pt-6">
-                <SectionContent html={subsection.content} />
-              </CardContent>
-            </Card>
-
-            {/* Navigation between subsections */}
-            <div className="flex justify-between items-center pt-4">
+            <div className="flex items-center justify-between mb-6">
               <Button
-                variant="outline"
-                onClick={() => {
-                  if (prevSubsection) {
-                    navigate(`/economics/topic/${chapterId}/${moduleId}/${prevSubsection.id}`);
-                  }
-                }}
-                disabled={!prevSubsection}
+                variant="ghost"
+                onClick={() => navigate(`/economics/sections/${chapterId}`)}
               >
-                <ChevronLeft className="h-4 w-4 mr-2" />
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  if (nextSubsection) {
-                    navigate(`/economics/topic/${chapterId}/${moduleId}/${nextSubsection.id}`);
-                  }
-                }}
-                disabled={!nextSubsection}
-              >
-                Next
-                <ChevronRight className="h-4 w-4 ml-2" />
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to {chapter.title}
               </Button>
             </div>
-          </TabsContent>
 
-          <TabsContent value="practice">
-            <MockExamSetup
-              topicTitle={subsection.title}
-              subsections={[{
-                title: subsection.title,
-                content: practiceContent
-              }]}
-              subject="economics"
-            />
-          </TabsContent>
-        </Tabs>
+            <div className="mb-6">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                <span>{chapter.title}</span>
+                <span>•</span>
+                <span>{module.title}</span>
+              </div>
+              <h1 className="text-2xl font-bold">{subsection.title}</h1>
+            </div>
 
-        {/* AI Chatbot */}
-        <AIChatbot studyContent={practiceContent} />
+            <Tabs defaultValue="learn" className="space-y-6">
+              <TabsList className="bg-emerald-500/10">
+                <TabsTrigger value="learn" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Learn
+                </TabsTrigger>
+                <TabsTrigger value="practice" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+                  <HelpCircle className="h-4 w-4 mr-2" />
+                  Practice
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="learn" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    {isAITutorEnabled && (
+                      <span className="text-xs bg-violet-500/10 text-violet-600 px-2 py-1 rounded-full w-fit">
+                        Highlight text to ask AI
+                      </span>
+                    )}
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    {isAITutorEnabled ? (
+                      <AnnotatableContent 
+                        html={subsection.content} 
+                        onAskAI={handleAskAI}
+                        isEnabled={isAITutorEnabled}
+                      />
+                    ) : (
+                      <SectionContent html={subsection.content} />
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Navigation between subsections */}
+                <div className="flex justify-between items-center pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      if (prevSubsection) {
+                        navigate(`/economics/topic/${chapterId}/${moduleId}/${prevSubsection.id}`);
+                      }
+                    }}
+                    disabled={!prevSubsection}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-2" />
+                    Previous
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      if (nextSubsection) {
+                        navigate(`/economics/topic/${chapterId}/${moduleId}/${nextSubsection.id}`);
+                      }
+                    }}
+                    disabled={!nextSubsection}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </div>
+              </TabsContent>
+
+              <TabsContent value="practice">
+                <MockExamSetup
+                  topicTitle={subsection.title}
+                  subsections={[{
+                    title: subsection.title,
+                    content: practiceContent
+                  }]}
+                  subject="economics"
+                />
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
       </div>
     </div>
   );

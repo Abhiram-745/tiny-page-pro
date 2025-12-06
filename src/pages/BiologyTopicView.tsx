@@ -8,6 +8,10 @@ import SectionContent from "@/components/SectionContent";
 import MockExamSetup from "@/components/MockExamSetup";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { AITutorToggle } from "@/components/AITutorToggle";
+import { AITutorChat } from "@/components/AITutorChat";
+import { AnnotatableContent } from "@/components/AnnotatableContent";
+import { cn } from "@/lib/utils";
 
 const BiologyTopicView = () => {
   const navigate = useNavigate();
@@ -15,6 +19,8 @@ const BiologyTopicView = () => {
   const { toast } = useToast();
   const [isStarred, setIsStarred] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [isAITutorEnabled, setIsAITutorEnabled] = useState(false);
+  const [selectedText, setSelectedText] = useState("");
 
   // Find the chapter and topic
   const chapter = biologyData.find(t => t.id === chapterId);
@@ -90,92 +96,143 @@ const BiologyTopicView = () => {
     navigate(`/blur-practice?subject=biology&topic=${chapterId}&subsection=${topicId}`);
   };
 
+  const studyContentText = topic.content_html 
+    ? new DOMParser().parseFromString(topic.content_html, 'text/html').body.textContent || '' 
+    : '';
+
+  const handleAskAI = (text: string) => {
+    setSelectedText(text);
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Header */}
-        <div className="flex items-center justify-between gap-4 mb-6">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => navigate(`/biology/${chapterId}`)}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">{topic.title}</h1>
-              <p className="text-muted-foreground">{chapter.title}</p>
-            </div>
+      <div className={cn(
+        "flex transition-all duration-300",
+        isAITutorEnabled ? "flex-row" : "flex-col"
+      )}>
+        {/* AI Chat Panel - Left side when enabled */}
+        {isAITutorEnabled && (
+          <div className="w-[320px] h-screen sticky top-0 flex-shrink-0 border-r">
+            <AITutorChat 
+              studyContent={studyContentText} 
+              selectedText={selectedText}
+              onClearSelection={() => setSelectedText("")}
+            />
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleStar}
-            className={isStarred ? "text-yellow-500" : "text-muted-foreground"}
-          >
-            <Star className={`h-5 w-5 ${isStarred ? "fill-current" : ""}`} />
-          </Button>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3 mb-8">
-          <Button onClick={handleStartPractice} className="bg-emerald-600 hover:bg-emerald-700">
-            <GraduationCap className="h-4 w-4 mr-2" />
-            Practice Questions
-          </Button>
-        </div>
-
-        {/* Content */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-emerald-600" />
-              Study Notes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SectionContent html={topic.content_html} />
-          </CardContent>
-        </Card>
-
-        {/* Practice Items Preview */}
-        {topic.practice_items.length > 0 && (
-          <Card className="mt-6">
-            <CardHeader>
-              <CardTitle className="text-lg">Practice Questions ({topic.practice_items.length})</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {topic.practice_items.slice(0, 3).map((item, index) => (
-                  <div key={item.id} className="p-3 bg-muted/50 rounded-lg">
-                    <p className="text-sm font-medium">{index + 1}. {item.prompt_template}</p>
-                    <div className="flex gap-2 mt-2">
-                      <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-1 rounded">
-                        {item.marks} marks
-                      </span>
-                      <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">
-                        {item.difficulty}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {topic.practice_items.length > 3 && (
-                <p className="text-sm text-muted-foreground mt-3">
-                  + {topic.practice_items.length - 3} more questions
-                </p>
-              )}
-            </CardContent>
-          </Card>
         )}
 
-        {/* Mock Exams */}
-        <MockExamSetup
-          topicTitle={topic.title}
-          subsections={[{
-            title: topic.title,
-            content: topic.content_html ? new DOMParser().parseFromString(topic.content_html, 'text/html').body.textContent || '' : ''
-          }]}
-          subject="biology"
-        />
+        {/* Main Content - Right side */}
+        <div className={cn(
+          "flex-1 min-h-screen",
+          isAITutorEnabled ? "pr-16" : ""
+        )}>
+          <div className="container mx-auto px-4 py-8 max-w-4xl">
+            {/* AI Tutor Toggle */}
+            <div className="mb-6">
+              <AITutorToggle 
+                isEnabled={isAITutorEnabled} 
+                onToggle={setIsAITutorEnabled} 
+              />
+            </div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" onClick={() => navigate(`/biology/${chapterId}`)}>
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+                <div>
+                  <h1 className="text-2xl font-bold text-foreground">{topic.title}</h1>
+                  <p className="text-muted-foreground">{chapter.title}</p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleStar}
+                className={isStarred ? "text-yellow-500" : "text-muted-foreground"}
+              >
+                <Star className={`h-5 w-5 ${isStarred ? "fill-current" : ""}`} />
+              </Button>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 mb-8">
+              <Button onClick={handleStartPractice} className="bg-emerald-600 hover:bg-emerald-700">
+                <GraduationCap className="h-4 w-4 mr-2" />
+                Practice Questions
+              </Button>
+            </div>
+
+            {/* Content */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-emerald-600" />
+                  Study Notes
+                  {isAITutorEnabled && (
+                    <span className="text-xs bg-violet-500/10 text-violet-600 px-2 py-1 rounded-full ml-2">
+                      Highlight text to ask AI
+                    </span>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {isAITutorEnabled ? (
+                  <AnnotatableContent 
+                    html={topic.content_html} 
+                    onAskAI={handleAskAI}
+                    isEnabled={isAITutorEnabled}
+                  />
+                ) : (
+                  <SectionContent html={topic.content_html} />
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Practice Items Preview */}
+            {topic.practice_items.length > 0 && (
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle className="text-lg">Practice Questions ({topic.practice_items.length})</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {topic.practice_items.slice(0, 3).map((item, index) => (
+                      <div key={item.id} className="p-3 bg-muted/50 rounded-lg">
+                        <p className="text-sm font-medium">{index + 1}. {item.prompt_template}</p>
+                        <div className="flex gap-2 mt-2">
+                          <span className="text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-2 py-1 rounded">
+                            {item.marks} marks
+                          </span>
+                          <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded">
+                            {item.difficulty}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {topic.practice_items.length > 3 && (
+                    <p className="text-sm text-muted-foreground mt-3">
+                      + {topic.practice_items.length - 3} more questions
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Mock Exams */}
+            <MockExamSetup
+              topicTitle={topic.title}
+              subsections={[{
+                title: topic.title,
+                content: studyContentText
+              }]}
+              subject="biology"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
