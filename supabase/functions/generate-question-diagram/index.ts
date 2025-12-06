@@ -21,10 +21,9 @@ serve(async (req) => {
       );
     }
 
-    // Use Lovable AI instead of Bytez
-    const lovableKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!lovableKey) {
-      console.error("[generate-question-diagram] LOVABLE_API_KEY not configured");
+    const key = Deno.env.get("BYTEZ_API_KEY_FLASH");
+    if (!key) {
+      console.error("[generate-question-diagram] BYTEZ_API_KEY_FLASH not configured");
       return new Response(
         JSON.stringify({ svg: null, error: "API key not configured" }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -111,19 +110,20 @@ IMPORTANT: Return ONLY valid JSON with no markdown or explanation:
     const timeoutId = setTimeout(() => controller.abort(), 50000);
 
     try {
-      // Use Lovable AI gateway
-      const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      // Use Bytez API with correct parameters
+      const resp = await fetch("https://api.bytez.com/models/v2/openai/v1/chat/completions", {
         method: "POST",
         headers: { 
-          Authorization: `Bearer ${lovableKey}`, 
+          Authorization: `Bearer ${key}`, 
           "Content-Type": "application/json" 
         },
         body: JSON.stringify({
           model: "google/gemini-2.5-flash",
           messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt }
+            { role: "user", content: `${systemPrompt}\n\n${userPrompt}` }
           ],
+          max_tokens: 4000,
+          temperature: 0.7,
         }),
         signal: controller.signal,
       });
