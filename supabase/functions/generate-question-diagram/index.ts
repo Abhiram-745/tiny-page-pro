@@ -30,73 +30,9 @@ serve(async (req) => {
       );
     }
 
-    console.log("[generate-question-diagram] Analyzing question for diagram need:", subject, topic);
+    console.log("[generate-question-diagram] Generating diagram for question:", subject, topic);
 
-    // First, analyze if this question would benefit from a diagram
-    const needsDiagramPrompt = `Analyze this GCSE exam question and determine if it would benefit from a diagram.
-
-Question: "${questionText}"
-Subject: ${subject || 'general'}
-Marks: ${marks || 'unknown'}
-
-Questions that NEED diagrams:
-- Questions about biological structures (cells, organs, systems, tissues)
-- Questions about chemical processes (reaction profiles, apparatus, bonding)
-- Questions about physical systems (circuits, forces, waves, energy transfers)
-- Questions asking to "describe", "explain how", or "compare" visual concepts
-- Questions about graphs, data interpretation, or experimental setups
-- Questions about geographical features or economic models
-
-Questions that do NOT need diagrams:
-- Simple definition questions ("What is...")
-- List/recall questions ("State three...")
-- Calculation questions (unless showing a circuit/diagram)
-- Opinion or evaluation questions
-- Short 1-2 mark questions about simple facts
-
-Return ONLY: {"needsDiagram": true} or {"needsDiagram": false}`;
-
-    const analysisResp = await fetch("https://api.bytez.com/models/v2/openai/v1/chat/completions", {
-      method: "POST",
-      headers: { 
-        Authorization: `Bearer ${key}`, 
-        "Content-Type": "application/json" 
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [{ role: "user", content: needsDiagramPrompt }],
-        max_completion_tokens: 100,
-      }),
-    });
-
-    if (!analysisResp.ok) {
-      console.error("[generate-question-diagram] Analysis API error");
-      return new Response(
-        JSON.stringify({ svg: null }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const analysisData = await analysisResp.json();
-    const analysisContent = analysisData.choices?.[0]?.message?.content || "";
-    
-    let needsDiagram = false;
-    try {
-      const parsed = JSON.parse(analysisContent.match(/\{[\s\S]*\}/)?.[0] || "{}");
-      needsDiagram = parsed.needsDiagram === true;
-    } catch {
-      needsDiagram = analysisContent.toLowerCase().includes('"needsdiagram": true') || 
-                     analysisContent.toLowerCase().includes('"needsdiagram":true');
-    }
-
-    console.log("[generate-question-diagram] Needs diagram:", needsDiagram);
-
-    if (!needsDiagram) {
-      return new Response(
-        JSON.stringify({ svg: null }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
+    // ALWAYS generate a diagram for every question
 
     // Generate the diagram
     const systemPrompt = `You are an expert GCSE exam diagram creator. Create accurate, educational SVG diagrams that match the quality and style of official AQA/Edexcel/OCR exam papers.

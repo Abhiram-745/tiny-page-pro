@@ -81,58 +81,59 @@ function extractKeywords(text: string, max = 24): string[] {
 }
 
 function makeExamFallback({ studyContent, numQuestions, previousQuestions, difficulty }: { studyContent: string; numQuestions: number; previousQuestions: string[]; difficulty?: string }) {
+  // Extract meaningful topic keywords from study content
   const kws = extractKeywords(studyContent, 30);
   console.log("[generate-varied-questions] Fallback keywords extracted:", kws.slice(0, 10));
+  
+  // Extract specific facts and concepts from study content for context-aware questions
+  const sentences = studyContent.split(/[.!?]+/).filter(s => s.trim().length > 30);
+  const topics = kws.filter(kw => kw.length >= 5 && !kw.endsWith('ing')).slice(0, 5);
   
   const prevSet = new Set((previousQuestions || []).map(String));
   const questions: any[] = [];
   
-  // Difficulty-based templates
+  // Context-aware templates that reference actual content
   const easyTemplates = [
-    (kw: string) => `State what is meant by the term ${kw}. (1 mark)`,
-    (kw: string) => `Name one example of ${kw}. (1 mark)`,
-    (kw: string) => `Give two properties of ${kw}. (2 marks)`,
-    (kw: string) => `Identify one use of ${kw}. (1 mark)`,
+    (topic: string, context: string) => `Explain what ${topic} is and give one example from the notes. (2 marks)`,
+    (topic: string, context: string) => `Describe the role of ${topic} based on what you have learned. (2 marks)`,
+    (topic: string, context: string) => `Give two reasons why ${topic} is important. (2 marks)`,
   ];
   
   const mediumTemplates = [
-    (kw: string) => `Explain why ${kw} is important in chemistry. (3 marks)`,
-    (kw: string) => `Describe what happens during ${kw}. (3 marks)`,
-    (kw: string) => `Compare ${kw} with another related concept. (4 marks)`,
-    (kw: string) => `Suggest one reason why ${kw} is used in industry. (2 marks)`,
+    (topic: string, context: string) => `Explain how ${topic} works. Include specific details from your notes. (3 marks)`,
+    (topic: string, context: string) => `Describe the process involving ${topic}. Include the key steps. (4 marks)`,
+    (topic: string, context: string) => `Compare two different aspects of ${topic}. (4 marks)`,
   ];
   
   const hardTemplates = [
-    (kw: string) => `A student investigates ${kw} in an experiment. (a) Describe how they would set up the experiment. (3 marks) (b) Explain the expected results. (3 marks) (c) Evaluate the reliability of this method. (2 marks)`,
-    (kw: string) => `Explain fully how ${kw} affects chemical reactions. Include specific examples and relate your answer to particle theory. (6 marks)`,
-    (kw: string) => `Discuss the advantages and disadvantages of using ${kw} in industrial processes. (6 marks)`,
+    (topic: string, context: string) => `Explain in detail how ${topic} affects the overall process. Include specific examples and explain the underlying mechanisms. (6 marks)`,
+    (topic: string, context: string) => `A student is investigating ${topic}. (a) Describe the key principles involved. (2 marks) (b) Explain what results would be expected. (2 marks) (c) Suggest how the process could be improved. (2 marks)`,
+    (topic: string, context: string) => `Evaluate the importance of ${topic}. Consider both its benefits and any limitations. (6 marks)`,
   ];
   
   const templates = difficulty === 'easy' ? easyTemplates : difficulty === 'hard' ? hardTemplates : mediumTemplates;
-  const marksRange = difficulty === 'easy' ? [1, 2, 3] : difficulty === 'hard' ? [6, 7, 8] : [3, 4, 5];
+  const marksRange = difficulty === 'easy' ? [2, 2, 3] : difficulty === 'hard' ? [6, 6, 7] : [3, 4, 4];
   
-  for (const kw of kws) {
-    if (!isValidKeyword(kw)) continue;
-    if (isChemicalFormula(kw)) continue;
-    if (kw.length === 2 && kw === kw.toLowerCase()) continue;
-    if (/ly$|ive$|ous$/.test(kw)) continue;
+  for (let i = 0; i < topics.length && questions.length < numQuestions; i++) {
+    const topic = topics[i];
+    const context = sentences.slice(0, 3).join('. ');
     
     const template = templates[Math.floor(Math.random() * templates.length)];
-    const questionText = template(kw);
+    const questionText = template(topic, context);
     
     if (!prevSet.has(questionText)) {
       const marks = marksRange[Math.floor(Math.random() * marksRange.length)];
-      questions.push({ question: questionText, marks, expectedKeyPoints: [kw] });
+      questions.push({ question: questionText, marks, expectedKeyPoints: [topic] });
     }
-    if (questions.length >= numQuestions) break;
   }
   
   if (!questions.length) {
     const defaultMarks = difficulty === 'easy' ? 2 : difficulty === 'hard' ? 6 : 4;
+    const topicSummary = topics.slice(0, 2).join(' and ') || 'this topic';
     questions.push({ 
-      question: `Describe one key concept from these notes. (${defaultMarks} marks)`, 
+      question: `Describe the key concepts related to ${topicSummary} from your notes. (${defaultMarks} marks)`, 
       marks: defaultMarks, 
-      expectedKeyPoints: [] 
+      expectedKeyPoints: topics.slice(0, 2) 
     });
   }
   
@@ -226,14 +227,21 @@ function validateQuestionFormat(questionText: string): { valid: boolean; error?:
 function getDifficultyPrompt(difficulty: string, studyContent: string, kws: string[]): { system: string; user: string; marksRange: string } {
   const shuffledKws = [...kws].sort(() => Math.random() - 0.5);
   
+  // Extract key topics from study content for grounding
+  const contentPreview = studyContent.substring(0, 2000);
+  
   if (difficulty === 'easy') {
     return {
       marksRange: "2-3",
       system: `You are an expert GCSE AQA examiner creating EASY difficulty EXAM questions (2-3 marks each).
 
+🎯 CRITICAL: QUESTIONS MUST BE DIRECTLY GROUNDED IN THE STUDY CONTENT PROVIDED
+- Read the study content carefully and create questions about the ACTUAL topics, processes, and concepts described
+- DO NOT make up random topics or use generic templates
+- Every question must be answerable using information from the study content
+
 🎯 EXAM QUESTIONS TEST UNDERSTANDING - NOT JUST RECALL
 These questions require EXPLANATION or DESCRIPTION, not just naming/defining.
-(Simple recall is tested separately in Blurt practice)
 
 📝 EASY EXAM QUESTION TYPES:
 - "Explain briefly why..." (2 marks)
@@ -242,42 +250,20 @@ These questions require EXPLANATION or DESCRIPTION, not just naming/defining.
 - "Using the data, explain..." (2-3 marks)
 
 🚫 DO NOT USE THESE (reserved for Blurt practice):
-- "Define..." 
-- "Name..."
-- "State..."
-- "What is..."
-- "Give an example of..."
-
-✅ GOOD EASY EXAM QUESTIONS:
-- "Explain why transition metals have higher melting points than Group 1 metals. (2 marks)"
-- "Describe what happens to the particles during osmosis. (2 marks)"
-- "Give a reason why plants wilt in salt water. (2 marks)"
-
-❌ BAD (too simple - these are Blurt questions):
-- "Define osmosis."
-- "Name two transition metals."
-- "What is a catalyst?"
-
-📊 DATA INTERPRETATION:
-Include simple data tables for students to interpret and explain patterns.
+- "Define..." / "Name..." / "State..." / "What is..."
 
 🔴 REQUIREMENTS:
 1. Total marks: 2-3 marks per question
 2. Maximum 2 parts (a) and (b) only
 3. Require EXPLANATION or DESCRIPTION (not just recall)
-4. Use simple real-world contexts
+4. MUST relate to specific content from the provided study notes
 
 Output ONLY valid JSON format`,
-      user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 EASY AQA-style EXAM question (2-3 marks total).
+      user: `Study Content:\n\n${studyContent}\n\n🔴 CRITICAL: Read the study content above carefully. Create exactly 1 EASY AQA-style EXAM question (2-3 marks total) that is DIRECTLY related to the content provided.
 
-⚠️ IMPORTANT: This is an EXAM question, not a flashcard.
-- Require EXPLANATION or DESCRIPTION
-- Do NOT ask simple definitions or naming (those are for Blurt practice)
+The question MUST be answerable using information from these notes.
 
-GOOD: "Explain why..." / "Describe what happens when..." / "Give a reason for..."
-BAD: "Define..." / "Name..." / "State..." / "What is..."
-
-Include keywords from: ${shuffledKws.slice(0, 8).join(", ")}
+Key topics from the content: ${shuffledKws.slice(0, 8).join(", ")}
 
 Return ONLY this JSON:
 { "questions": [ { "question": string, "marks": number (2-3), "expectedKeyPoints": string[], "markscheme": string } ] }`
@@ -288,6 +274,11 @@ Return ONLY this JSON:
     return {
       marksRange: "5-8",
       system: `You are an expert GCSE AQA examiner creating HARD difficulty EXAM questions (5-8 marks each) for Grade 8-9 students.
+
+🎯 CRITICAL: QUESTIONS MUST BE DIRECTLY GROUNDED IN THE STUDY CONTENT PROVIDED
+- Read the study content carefully and create questions about the ACTUAL topics, processes, and concepts described
+- DO NOT make up random topics or use generic templates
+- Every question must be answerable using information from the study content
 
 🎯 HARD EXAM QUESTIONS TEST ANALYSIS & EVALUATION
 These require multi-step reasoning, calculations, and critical thinking.
@@ -304,31 +295,20 @@ These require multi-step reasoning, calculations, and critical thinking.
 - Calculations with working
 - Data analysis with conclusions
 - Evaluation of methods or outcomes
-- Application to unfamiliar contexts
-
-📊 INCLUDE:
-- Data tables for analysis
-- Graphs or trends to interpret
-- Experimental scenarios to evaluate
-- Industrial applications to discuss
 
 🔴 REQUIREMENTS:
 1. Total marks: 5-8 marks per question
 2. 3-4 parts: (a), (b), (c), and optionally (d)
 3. Require ANALYSIS, EVALUATION, or CALCULATION
-4. Multi-step reasoning required
+4. MUST relate to specific content from the provided study notes
 
 Output ONLY valid JSON format`,
-      user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 HARD AQA-style EXAM question (5-8 marks total).
+      user: `Study Content:\n\n${studyContent}\n\n🔴 CRITICAL: Read the study content above carefully. Create exactly 1 HARD AQA-style EXAM question (5-8 marks total) that is DIRECTLY related to the content provided.
 
-⚠️ IMPORTANT: This is a CHALLENGING exam question.
-- Require ANALYSIS, EVALUATION, or CALCULATION
-- Include multi-step reasoning
-- Use data interpretation where appropriate
-
+The question MUST be answerable using information from these notes.
 Include 3-4 parts: (a), (b), (c), and optionally (d)
 
-Include keywords from: ${shuffledKws.slice(0, 10).join(", ")}
+Key topics from the content: ${shuffledKws.slice(0, 10).join(", ")}
 
 Return ONLY this JSON:
 { "questions": [ { "question": string, "marks": number (5-8), "expectedKeyPoints": string[], "markscheme": string } ] }`
@@ -339,6 +319,11 @@ Return ONLY this JSON:
   return {
     marksRange: "3-4",
     system: `You are an expert GCSE AQA examiner creating MEDIUM difficulty EXAM questions (3-4 marks each).
+
+🎯 CRITICAL: QUESTIONS MUST BE DIRECTLY GROUNDED IN THE STUDY CONTENT PROVIDED
+- Read the study content carefully and create questions about the ACTUAL topics, processes, and concepts described
+- DO NOT make up random topics or use generic templates
+- Every question must be answerable using information from the study content
 
 🎯 MEDIUM EXAM QUESTIONS TEST APPLICATION & COMPARISON
 These require applying knowledge to scenarios and comparing concepts.
@@ -351,42 +336,20 @@ These require applying knowledge to scenarios and comparing concepts.
 - "Suggest why..." (2-3 marks)
 
 🚫 DO NOT USE (reserved for Blurt practice):
-- "Define..."
-- "Name..."
-- "State..."
-- "What is..."
-
-✅ GOOD MEDIUM EXAM QUESTIONS:
-- "Explain why copper is used for electrical wiring. (3 marks)"
-- "Compare the reactivity of Group 1 metals with transition metals. (4 marks)"
-- "Describe what happens to plant cells in a concentrated salt solution. (3 marks)"
-
-❌ BAD (too simple):
-- "Define a transition metal."
-- "Name two properties of copper."
-
-📊 INCLUDE:
-- Data tables showing properties or results
-- Real-world applications and contexts
-- Comparison scenarios
+- "Define..." / "Name..." / "State..." / "What is..."
 
 🔴 REQUIREMENTS:
 1. Total marks: 3-4 marks per question
 2. 2-3 parts maximum: (a), (b), and optionally (c)
 3. Require EXPLANATION, COMPARISON, or APPLICATION
-4. Use realistic contexts
+4. MUST relate to specific content from the provided study notes
 
 Output ONLY valid JSON format`,
-    user: `Study Content:\n\n${studyContent}\n\nCreate exactly 1 MEDIUM AQA-style EXAM question (3-4 marks total).
+    user: `Study Content:\n\n${studyContent}\n\n🔴 CRITICAL: Read the study content above carefully. Create exactly 1 MEDIUM AQA-style EXAM question (3-4 marks total) that is DIRECTLY related to the content provided.
 
-⚠️ IMPORTANT: This is an EXAM question, not a flashcard.
-- Require EXPLANATION, COMPARISON, or APPLICATION
-- Do NOT ask simple definitions or naming (those are for Blurt practice)
+The question MUST be answerable using information from these notes.
 
-GOOD: "Explain why..." / "Compare..." / "Describe the process..." / "Suggest why..."
-BAD: "Define..." / "Name..." / "State..." / "What is..."
-
-Include keywords from: ${shuffledKws.slice(0, 8).join(", ")}
+Key topics from the content: ${shuffledKws.slice(0, 8).join(", ")}
 
 Return ONLY this JSON:
 { "questions": [ { "question": string, "marks": number (3-4), "expectedKeyPoints": string[], "markscheme": string } ] }`
