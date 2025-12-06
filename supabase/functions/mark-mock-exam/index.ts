@@ -125,19 +125,19 @@ IMPORTANT:
 
       try {
         // Use the correct Bytez API endpoint format
-        const response = await fetch('https://api.bytez.com/chat/completions', {
+        const response = await fetch('https://api.bytez.com/models/v2/openai/v1/chat/completions', {
           method: 'POST',
           headers: {
-            'Authorization': `Key ${BYTEZ_API_KEY}`,
+            'Authorization': `Bearer ${BYTEZ_API_KEY}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'google/gemini-2.5-flash-preview-05-20',
+            model: 'google/gemini-2.5-flash',
             messages: [
               { role: 'system', content: 'You are an expert exam marker. Return only valid JSON.' },
               { role: 'user', content: prompt }
             ],
-            max_tokens: 1500
+            max_tokens: 2000
           }),
         });
 
