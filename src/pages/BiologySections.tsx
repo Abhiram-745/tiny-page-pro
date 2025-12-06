@@ -327,6 +327,7 @@ const BiologySections = () => {
                   };
                 })
           }
+          subject="biology"
         />
       </div>
     </div>
