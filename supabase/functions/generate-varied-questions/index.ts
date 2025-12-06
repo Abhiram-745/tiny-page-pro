@@ -107,8 +107,8 @@ function makeExamFallback({ studyContent, numQuestions, previousQuestions, diffi
   
   const hardTemplates = [
     (topic: string, context: string) => `Explain in detail how ${topic} affects the overall process. Include specific examples and explain the underlying mechanisms. (6 marks)`,
-    (topic: string, context: string) => `A student is investigating ${topic}. (a) Describe the key principles involved. (2 marks) (b) Explain what results would be expected. (2 marks) (c) Suggest how the process could be improved. (2 marks)`,
-    (topic: string, context: string) => `Evaluate the importance of ${topic}. Consider both its benefits and any limitations. (6 marks)`,
+    (topic: string, context: string) => `A student is investigating ${topic} in a laboratory experiment. (a) Describe the key principles involved in this process. (2 marks) (b) Explain what results would be expected from this investigation. (2 marks) (c) Suggest how the experimental method could be improved. (2 marks)`,
+    (topic: string, context: string) => `Evaluate the importance of ${topic} in biological systems. Consider both its benefits and any limitations. (6 marks)`,
   ];
   
   const templates = difficulty === 'easy' ? easyTemplates : difficulty === 'hard' ? hardTemplates : mediumTemplates;
@@ -540,7 +540,42 @@ Return ONLY this JSON:
       await Promise.all(diagramPromises);
     }
 
+    // If no valid questions, generate diagrams for fallback questions too
     if (!out.length) {
+      console.log("[generate-varied-questions] Using fallback - generating diagrams for fallback questions");
+      
+      if (fallback.questions.length && supabaseUrl && supabaseKey) {
+        const fallbackDiagramPromises = fallback.questions.map(async (q: any, idx: number) => {
+          try {
+            const diagramResp = await fetch(`${supabaseUrl}/functions/v1/generate-question-diagram`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${supabaseKey}`,
+              },
+              body: JSON.stringify({
+                questionText: q.question,
+                subject: subject || 'biology',
+                topic: kws.slice(0, 3).join(', '),
+                marks: q.marks
+              }),
+            });
+            
+            if (diagramResp.ok) {
+              const diagramData = await diagramResp.json();
+              if (diagramData.svg) {
+                fallback.questions[idx].diagramSvg = diagramData.svg;
+                console.log(`[generate-varied-questions] ✓ Diagram generated for fallback Q${idx + 1}`);
+              }
+            }
+          } catch (diagramError) {
+            console.log(`[generate-varied-questions] Diagram generation failed for fallback Q${idx + 1}:`, diagramError);
+          }
+        });
+        
+        await Promise.all(fallbackDiagramPromises);
+      }
+      
       return new Response(JSON.stringify(fallback), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
