@@ -426,7 +426,88 @@ Return ONLY valid JSON, no markdown code blocks, no other text.`;
 
     console.log(`Generated ${allQuestions.length} questions total`);
 
-    // Step 4: Insert all questions
+    // Step 4: Enhance questions with SVG diagrams using the dedicated Flash API function
+    const BYTEZ_API_KEY_FLASH = Deno.env.get('BYTEZ_API_KEY_FLASH');
+    if (BYTEZ_API_KEY_FLASH && shouldIncludeDiagrams) {
+      console.log("Enhancing questions with SVG diagrams using Flash API...");
+      
+      // Select ~40% of questions to add diagrams to (those that don't already have one)
+      const questionsWithoutDiagrams = allQuestions.filter(q => !q.diagram_svg);
+      const diagramCount = Math.ceil(questionsWithoutDiagrams.length * 0.4);
+      const questionsToEnhance = questionsWithoutDiagrams.slice(0, diagramCount);
+      
+      // Generate diagrams in parallel batches
+      const batchSize = 3;
+      for (let i = 0; i < questionsToEnhance.length; i += batchSize) {
+        const batch = questionsToEnhance.slice(i, i + batchSize);
+        
+        const diagramPromises = batch.map(async (question) => {
+          try {
+            const diagramResponse = await fetch("https://api.bytez.com/models/v2/openai/v1/chat/completions", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${BYTEZ_API_KEY_FLASH}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                model: "google/gemini-2.5-flash",
+                messages: [
+                  { 
+                    role: "system", 
+                    content: `You are an expert educational diagram creator. Generate SVG diagrams for GCSE exam questions.
+                    
+SVG REQUIREMENTS:
+- viewBox="0 0 400 300"
+- Use "currentColor" for text (dark mode support)
+- Use colors like #3b82f6 (blue), #ef4444 (red), #22c55e (green)
+- Include clear labels
+- Make diagrams educational and visually appealing
+
+Subject: ${subject}
+
+Return ONLY valid JSON: { "svg": "<svg>...</svg>" } or { "svg": null }` 
+                  },
+                  { 
+                    role: "user", 
+                    content: `Create an educational SVG diagram for this GCSE ${subject} question:\n\n${question.question_text}\n\nTopic: ${question.topic}` 
+                  }
+                ],
+                max_completion_tokens: 2000,
+              }),
+            });
+            
+            if (diagramResponse.ok) {
+              const diagramData = await diagramResponse.json();
+              const content = diagramData.choices?.[0]?.message?.content;
+              if (content) {
+                try {
+                  const parsed = JSON.parse(content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim());
+                  if (parsed.svg) {
+                    question.diagram_svg = parsed.svg;
+                    console.log(`Added diagram to question ${question.question_number}`);
+                  }
+                } catch (e) {
+                  // Try extracting SVG directly
+                  const svgMatch = content.match(/<svg[\s\S]*?<\/svg>/);
+                  if (svgMatch) {
+                    question.diagram_svg = svgMatch[0];
+                    console.log(`Extracted diagram for question ${question.question_number}`);
+                  }
+                }
+              }
+            }
+          } catch (e) {
+            console.log(`Diagram generation skipped for question ${question.question_number}:`, e);
+          }
+        });
+        
+        await Promise.all(diagramPromises);
+      }
+      
+      console.log("Diagram enhancement complete");
+    }
+
+    // Step 5: Insert all questions
     const { error: insertError } = await supabase
       .from('mock_exam_questions')
       .insert(allQuestions);

@@ -44,3 +44,6 @@ verify_jwt = false
 
 [functions.generate-priority-analysis]
 verify_jwt = false
+
+[functions.generate-question-diagram]
+verify_jwt = false
