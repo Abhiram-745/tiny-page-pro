@@ -108,6 +108,117 @@ GEOGRAPHY QUESTION EXAMPLES:
   return contexts[subjectLower] || contexts['chemistry'];
 }
 
+// Validation function for generated questions
+function isGenericQuestion(questionText: string): boolean {
+  const text = questionText.toLowerCase();
+  const genericPatterns = [
+    /explain\s+the\s+importance\s+of\s+\w+\s+in\s+this\s+topic/i,
+    /describe\s+(?:key\s+)?concepts?\s+from\s+the\s+(?:notes?|content|study)/i,
+    /explain\s+\w+\s+from\s+the\s+notes/i,
+    /in\s+this\s+topic\s*[.?]/i,
+    /from\s+the\s+(?:notes?|content|study\s+content)\s*[.?]/i,
+    /the\s+content\s+(?:above|provided|given)/i,
+    /explain\s+the\s+(?:role|importance|significance)\s+of\s+standard/i,
+    /describe\s+the\s+key\s+points/i,
+    /what\s+are\s+the\s+main\s+(?:points|concepts|ideas)/i,
+    /summarise?\s+the\s+(?:key|main)\s+(?:points|concepts)/i,
+    /list\s+the\s+(?:key|main)\s+(?:points|facts|concepts)/i,
+  ];
+  
+  for (const pattern of genericPatterns) {
+    if (pattern.test(text)) {
+      console.log("[generate-simple-questions] Detected generic question pattern:", pattern.source);
+      return true;
+    }
+  }
+  
+  // Check for too-short questions
+  const words = text.split(/\s+/).filter(w => w.length > 0);
+  if (words.length < 8) {
+    console.log("[generate-simple-questions] Question too short:", words.length, "words");
+    return true;
+  }
+  
+  return false;
+}
+
+// Extract actual topic keywords from content for fallback
+function extractTopicKeywords(content: string): string[] {
+  const keywords: string[] = [];
+  const patterns = [
+    /\b(exothermic|endothermic)\b/gi,
+    /\b(photosynthesis|respiration|fermentation)\b/gi,
+    /\b(oxidation|reduction|neutralisation|neutralization)\b/gi,
+    /\b(activation\s+energy)\b/gi,
+    /\b(reaction\s+profile)\b/gi,
+    /\b(bond\s+energy)\b/gi,
+    /\b(rate\s+of\s+reaction)\b/gi,
+    /\b(limiting\s+reactant)\b/gi,
+    /\b(equilibrium)\b/gi,
+    /\b(catalyst)\b/gi,
+    /\b(enzyme|protein)\b/gi,
+    /\b(osmosis|diffusion)\b/gi,
+    /\b(mitosis|meiosis)\b/gi,
+    /\b(velocity|acceleration|momentum)\b/gi,
+    /\b(voltage|current|resistance)\b/gi,
+    /\b(supply|demand)\b/gi,
+  ];
+  
+  for (const pattern of patterns) {
+    const matches = content.matchAll(pattern);
+    for (const match of matches) {
+      keywords.push(match[0].toLowerCase());
+    }
+  }
+  
+  return [...new Set(keywords)];
+}
+
+// Create specific fallback questions based on content
+function createSpecificFallback(studyContent: string, marks: number, subject: string): any {
+  const keywords = extractTopicKeywords(studyContent);
+  console.log("[generate-simple-questions] Creating fallback with keywords:", keywords);
+  
+  // Subject-specific fallback templates that use actual content keywords
+  const fallbacksBySubject: Record<string, (kw: string) => string[]> = {
+    'chemistry': (kw) => [
+      `Explain why ${kw} reactions are important in everyday chemistry. [${marks} marks]`,
+      `Describe the energy changes that occur during a ${kw} reaction. [${marks} marks]`,
+      `Compare ${kw} reactions with an example from the study content. [${marks} marks]`,
+    ],
+    'biology': (kw) => [
+      `Explain the role of ${kw} in living organisms. [${marks} marks]`,
+      `Describe how ${kw} helps cells function. [${marks} marks]`,
+      `Explain why ${kw} is essential for life processes. [${marks} marks]`,
+    ],
+    'physics': (kw) => [
+      `Explain how ${kw} affects motion in real-world situations. [${marks} marks]`,
+      `Describe the relationship between ${kw} and energy. [${marks} marks]`,
+      `Calculate an example involving ${kw} and explain your working. [${marks} marks]`,
+    ],
+    'economics': (kw) => [
+      `Explain how changes in ${kw} affect market equilibrium. [${marks} marks]`,
+      `Describe the impact of ${kw} on consumer behaviour. [${marks} marks]`,
+      `Analyse the relationship between ${kw} and prices. [${marks} marks]`,
+    ],
+  };
+  
+  const subjectLower = (subject || 'chemistry').toLowerCase();
+  const templates = fallbacksBySubject[subjectLower] || fallbacksBySubject['chemistry'];
+  
+  // Use first keyword found, or a generic term
+  const keyword = keywords[0] || 'chemical reactions';
+  const questions = templates(keyword);
+  const selectedQuestion = questions[Math.floor(Math.random() * questions.length)];
+  
+  return {
+    question: selectedQuestion,
+    marks: marks,
+    expectedKeyPoints: keywords.slice(0, 3),
+    markscheme: `Award ${marks} marks for correct explanation referencing: ${keywords.slice(0, 3).join(', ') || 'key concepts from the content'}`
+  };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -358,7 +469,7 @@ REJECT ANY OUTPUT where marks ≠ ${marks}`;
       }
     }
 
-if (!parsed.questions || !Array.isArray(parsed.questions)) {
+    if (!parsed.questions || !Array.isArray(parsed.questions)) {
       throw new Error("Invalid response structure");
     }
 
@@ -368,15 +479,45 @@ if (!parsed.questions || !Array.isArray(parsed.questions)) {
       marks: marks // Force the marks to match the requested value
     }));
 
-    console.log("[generate-simple-questions] Successfully generated", parsed.questions.length, "questions with enforced marks:", marks);
+    // VALIDATE QUESTIONS: Filter out generic/template questions
+    const validQuestions = parsed.questions.filter((q: any) => {
+      const isGeneric = isGenericQuestion(q.question);
+      if (isGeneric) {
+        console.log("[generate-simple-questions] Filtered out generic question:", q.question.substring(0, 60));
+      }
+      return !isGeneric;
+    });
+
+    // If all questions were filtered out, create a specific fallback
+    if (validQuestions.length === 0) {
+      console.log("[generate-simple-questions] All questions filtered - creating specific fallback");
+      const fallback = createSpecificFallback(studyContent, marks, subject);
+      return new Response(
+        JSON.stringify({ questions: [fallback] }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log("[generate-simple-questions] Successfully generated", validQuestions.length, "valid questions with enforced marks:", marks);
 
     return new Response(
-      JSON.stringify(parsed),
+      JSON.stringify({ questions: validQuestions }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
 
   } catch (error) {
     console.error("[generate-simple-questions] Error:", error);
+    
+    // Return a specific fallback instead of empty array
+    const { studyContent, marks = 4, subject = 'chemistry' } = await req.json().catch(() => ({}));
+    if (studyContent) {
+      const fallback = createSpecificFallback(studyContent, marks, subject);
+      return new Response(
+        JSON.stringify({ questions: [fallback] }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+    
     return new Response(
       JSON.stringify({ 
         error: error instanceof Error ? error.message : "Unknown error",

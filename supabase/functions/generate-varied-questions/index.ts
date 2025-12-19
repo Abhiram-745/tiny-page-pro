@@ -204,6 +204,41 @@ async function callLovableAIWithTimeout(payload: any, timeoutMs = 30000) {
   } finally { clearTimeout(id); }
 }
 
+// Check if a question is generic/template
+function isGenericQuestion(questionText: string): boolean {
+  const text = questionText.toLowerCase();
+  const genericPatterns = [
+    /explain\s+the\s+importance\s+of\s+\w+\s+in\s+this\s+topic/i,
+    /describe\s+(?:key\s+)?concepts?\s+from\s+the\s+(?:notes?|content|study)/i,
+    /explain\s+\w+\s+from\s+the\s+notes/i,
+    /in\s+this\s+topic\s*[.?]/i,
+    /from\s+the\s+(?:notes?|content|study\s+content)\s*[.?]/i,
+    /the\s+content\s+(?:above|provided|given)/i,
+    /explain\s+the\s+(?:role|importance|significance)\s+of\s+standard/i,
+    /describe\s+the\s+key\s+points/i,
+    /what\s+are\s+the\s+main\s+(?:points|concepts|ideas)/i,
+    /summarise?\s+the\s+(?:key|main)\s+(?:points|concepts)/i,
+    /list\s+the\s+(?:key|main)\s+(?:points|facts|concepts)/i,
+    /describe\s+one\s+key\s+concept\s+from\s+these\s+notes/i,
+  ];
+  
+  for (const pattern of genericPatterns) {
+    if (pattern.test(text)) {
+      console.log("[generate-varied-questions] Generic pattern detected:", pattern.source);
+      return true;
+    }
+  }
+  
+  // Check for too-short questions
+  const words = text.split(/\s+/).filter(w => w.length > 0);
+  if (words.length < 8) {
+    console.log("[generate-varied-questions] Question too short:", words.length, "words");
+    return true;
+  }
+  
+  return false;
+}
+
 function validateQuestionFormat(questionText: string): { valid: boolean; error?: string } {
   if (!questionText.trim().match(/[.!?)\]"]$/)) {
     return { valid: false, error: "Question doesn't end with proper punctuation" };
@@ -517,6 +552,13 @@ Return ONLY this JSON:
       
       if (text.includes("...") || !text.trim().match(/[.!?)"]$/)) {
         console.log("[generate-varied-questions] ❌ REJECTED: Question appears incomplete");
+        continue;
+      }
+      
+      // NEW: Check for generic/template questions
+      const isGeneric = isGenericQuestion(text);
+      if (isGeneric) {
+        console.log(`[generate-varied-questions] ❌ REJECTED: Generic template question detected`);
         continue;
       }
       
