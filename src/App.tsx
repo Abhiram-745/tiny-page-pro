@@ -46,6 +46,7 @@ import BiologySections from "./pages/BiologySections";
 import BiologyTopicView from "./pages/BiologyTopicView";
 import MockExam from "./pages/MockExam";
 import MockExamResults from "./pages/MockExamResults";
+import QuestionActivity from "./pages/QuestionActivity";
 
 const queryClient = new QueryClient();
 
@@ -108,6 +109,7 @@ const App = () => (
             <Route path="/help" element={<Help />} />
             <Route path="/mock-exam/:examId" element={<MockExam />} />
             <Route path="/mock-exam-results/:examId" element={<MockExamResults />} />
+            <Route path="/activity" element={<QuestionActivity />} />
           </Route>
           
           <Route path="*" element={<NotFound />} />

@@ -29,6 +29,7 @@ import {
   GraduationCap,
   Dna,
   Star,
+  Activity,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -46,6 +47,7 @@ const subjects = [
 const navigation = [
   { name: "Dashboard", icon: Home, route: "/dashboard" },
   { name: "Progress", icon: TrendingUp, route: "/progress" },
+  { name: "Activity", icon: Activity, route: "/activity" },
   { name: "History", icon: Clock, route: "/history" },
   { name: "Question Bank", icon: Star, route: "/question-bank" },
   { name: "Settings", icon: Settings, route: "/settings" },
